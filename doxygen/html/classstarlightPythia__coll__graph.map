@@ -1,0 +1,12 @@
+<map id="starlightPythia" name="starlightPythia">
+<area shape="rect" id="node2" href="$classeventChannel.html" title="{eventChannel\n||+ eventChannel()\l+ ~eventChannel()\l+ nmbAttempts()\l+ nmbAccepted()\l+ produceEvent()\l+ produceEvent()\l+ e_produceEvent()\l+ getTotalChannelCrossSection()\l+ setTotalChannelCrossSection()\l+ transform()\l+ pseudoRapidity()\l}" alt="" coords="561,1137,778,1344"/>
+<area shape="rect" id="node3" href="$classreadLuminosity.html" title="{readLuminosity\n|+ _BWarray\l+ _Yarray\l+ _Farray2\l+ _f_max2\l+ _g_Emax\l+ _g_EQ2max\l|+ readLuminosity()\l+ ~readLuminosity()\l+ read()\l+ e_read()\l}" alt="" coords="526,829,666,1009"/>
+<area shape="rect" id="node15" href="$classbeamBeamSystem.html" title="{beamBeamSystem\n||+ beamBeamSystem()\l+ beamBeamSystem()\l+ ~beamBeamSystem()\l+ beam1()\l+ beam2()\l+ probabilityOfBreakup()\l+ cmsBoost()\l+ beamLorentzGamma()\l+ init()\l&#45; generateBreakupProbabilities()\l&#45; probabilityOfHadronBreakup()\l&#45; probabilityOfPhotonBreakup()\l}" alt="" coords="1007,809,1220,1029"/>
+<area shape="rect" id="node17" href="$classbeam.html" title="{beam\n||+ beam()\l+ ~beam()\l+ photonDensity()\l+ rapidity()\l+ setBeamLorentzGamma()\l}" alt="" coords="792,608,979,735"/>
+<area shape="rect" id="node18" href="$classnucleus.html" title="{nucleus\n||+ nucleus()\l+ nucleus()\l+ ~nucleus()\l+ init()\l+ Z()\l+ A()\l+ productionMode()\l+ formFactor()\l+ dipoleFormFactor()\l+ thickness()\l+ nuclearRadius()\l+ rho0()\l&#45; woodSaxonSkinDepth()\l&#45; rws()\l}" alt="" coords="597,167,766,413"/>
+<area shape="rect" id="node20" href="$classspectrum.html" title="{spectrum\n||+ spectrum()\l+ generateKsingle()\l+ generateKdouble()\l+ drawKsingle()\l+ drawKdouble()\l+ setBeamBeamSystem()\l+ setMinGammaEnergy()\l+ setMaxGammaEnergy()\l+ setBmin()\l+ setBmax()\l# generateBreakupProbabilities()\l# getSigma()\l# getTransformedNofe()\l&#45; getFnSingle()\l&#45; getFnDouble()\l&#45; spectrum()\l}" alt="" coords="935,1104,1151,1377"/>
+<area shape="rect" id="node13" href="$classrandomGenerator.html" title="{randomGenerator\n||+ SetSeed()\l+ Rndom()\l}" alt="" coords="326,876,453,963"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="421,635,500,708"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="391,247,516,333"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="1722,253,1836,327"/>
+</map>

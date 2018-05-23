@@ -1,0 +1,9 @@
+<map id="photonElectronLuminosity" name="photonElectronLuminosity">
+<area shape="rect" id="node2" href="$classphotonNucleusCrossSection.html" title="{photonNucleusCrossSection\n|# _beamLorentzGamma\l&#45; _protonEnergy\l&#45; _slopeParameter\l&#45; _vmQ2Power_c1\l&#45; _vmQ2Power_c2\l&#45; _ANORM\l&#45; _BNORM\l&#45; _defaultC\l&#45; _minQ2\l&#45; _maxPhotonEnergy\l&#45; _cmsMinPhotonEnergy\l&#45; _targetRadii\l|+ photonNucleusCrossSection()\l+ ~photonNucleusCrossSection()\l+ slopeParameter()\l+ getChannelMass()\l+ getBNORM()\l+ getbbs()\l+ vmPhotonCoupling()\l+ vmQ2Power()\l+ getDefaultC()\l+ maxPhotonEnergy()\land 17 more...\l}" alt="" coords="859,1204,1076,1557"/>
+<area shape="rect" id="node6" href="$classbeamBeamSystem.html" title="{beamBeamSystem\n||+ beamBeamSystem()\l+ beamBeamSystem()\l+ ~beamBeamSystem()\l+ beam1()\l+ beam2()\l+ probabilityOfBreakup()\l+ cmsBoost()\l+ beamLorentzGamma()\l+ init()\l&#45; generateBreakupProbabilities()\l&#45; probabilityOfHadronBreakup()\l&#45; probabilityOfPhotonBreakup()\l}" alt="" coords="558,923,771,1143"/>
+<area shape="rect" id="node8" href="$classbeam.html" title="{beam\n||+ beam()\l+ ~beam()\l+ photonDensity()\l+ rapidity()\l+ setBeamLorentzGamma()\l}" alt="" coords="625,591,811,718"/>
+<area shape="rect" id="node9" href="$classnucleus.html" title="{nucleus\n||+ nucleus()\l+ nucleus()\l+ ~nucleus()\l+ init()\l+ Z()\l+ A()\l+ productionMode()\l+ formFactor()\l+ dipoleFormFactor()\l+ thickness()\l+ nuclearRadius()\l+ rho0()\l&#45; woodSaxonSkinDepth()\l&#45; rws()\l}" alt="" coords="760,167,930,413"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="5,253,119,327"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="1371,1344,1450,1417"/>
+<area shape="rect" id="node14" title="STL class. " alt="" coords="1359,989,1485,1076"/>
+</map>

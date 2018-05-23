@@ -1,0 +1,6 @@
+<map id="upcEvent" name="upcEvent">
+<area shape="rect" id="node3" href="$classstarlightParticle.html" title="{starlightParticle\n||+ starlightParticle()\l+ starlightParticle()\l+ ~starlightParticle()\l+ setPdgCode()\l+ getPdgCode()\l+ setCharge()\l+ getCharge()\l+ setMass()\l+ getMass()\l+ setFirstParent()\land 11 more...\l}" alt="" coords="89,849,229,1056"/>
+<area shape="rect" id="node4" href="$classlorentzVector.html" title="{lorentzVector\n||+ lorentzVector()\l+ ~lorentzVector()\l+ lorentzVector()\l+ SetXYZT()\l+ SetPxPyPzE()\l+ GetPx()\l+ GetPy()\l+ GetPz()\l+ GetE()\l+ operator+=()\l+ operator&#45;=()\l+ M2()\l+ M()\l+ BoostVector()\l+ Boost()\l}" alt="" coords="35,461,163,721"/>
+<area shape="rect" id="node6" href="$classvector3.html" title="{vector3\n||+ vector3()\l+ vector3()\l+ vector3()\l+ ~vector3()\l+ GetVector()\l+ SetVector()\l+ SetVector()\l+ operator=()\l+ operator+=()\l+ operator&#45;=()\l+ X()\l+ Y()\l+ Z()\l+ Mag2()\l+ Mag()\l}" alt="" coords="147,140,254,400"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="349,916,462,989"/>
+</map>
