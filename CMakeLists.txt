@@ -248,14 +248,12 @@ set(SOURCES
   src/readinluminosity.cpp
   src/twophotonluminosity.cpp
   src/gammagammaleptonpair.cpp
-  src/starlight.cpp
   src/upcevent.cpp
   src/vector3.cpp
   src/lorentzvector.cpp
   src/filewriter.cpp
   src/eventfilewriter.cpp
   src/starlightparticlecodes.cpp
-  src/starlightStandalone.cpp
   src/nBodyPhaseSpaceGen.cpp
   src/inputParser.cpp
   src/incoherentPhotonNucleusLuminosity.cpp
@@ -316,13 +314,8 @@ if(ENABLE_PYTHIA6)
 endif()
 
 # add starlight executable to the build system
-add_executable(starlight src/main.cpp)
 add_executable(e_starlight src/e_main.cpp)
-#target_link_libraries(starlight Starlib ${PYTHIA8_LIBRARY} ${LHAPDF_LIBRARIES} ${PYTHIA6_LIBRARY} ${DPMJET_LIB} )
-target_link_libraries(starlight Starlib ${optionalLibs})# ${CMAKE_THREAD_LIBS_INIT}) 
 target_link_libraries(e_starlight Starlib ${optionalLibs})# ${CMAKE_THREAD_LIBS_INIT}) 
-
-#make_executable(starlight src/main.cpp ${THIS_LIB})
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/starlightconfig.h.in"
