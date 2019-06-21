@@ -1,0 +1,46 @@
+digraph "eXEvent"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{eXEvent\n||+ eXEvent()\l+ eXEvent()\l+ ~eXEvent()\l+ addParticle()\l+ addVertex()\l+ addGamma()\l+ addSourceElectron()\l+ addScatteredTarget()\l+ getParticles()\l+ getVertices()\land 9 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [color="grey25",fontsize="10",style="solid",label=" -_particles" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node2 [label="{std::vector\< starlightParticle \>\n||}",height=0.2,width=0.4,color="grey75",tooltip=" "];
+  Node3 -> Node2 [color="grey25",fontsize="10",style="solid",label=" +elements" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node3 [label="{starlightParticle\n||+ starlightParticle()\l+ starlightParticle()\l+ ~starlightParticle()\l+ setPdgCode()\l+ getPdgCode()\l+ setCharge()\l+ getCharge()\l+ setMass()\l+ getMass()\l+ setFirstParent()\land 11 more...\l}",height=0.2,width=0.4,color="black",URL="$classstarlightParticle.html",tooltip=" "];
+  Node4 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node4 [label="{lorentzVector\n||+ lorentzVector()\l+ ~lorentzVector()\l+ lorentzVector()\l+ SetXYZT()\l+ SetPxPyPzE()\l+ GetPx()\l+ GetPy()\l+ GetPz()\l+ GetE()\l+ operator+=()\l+ operator -=()\l+ M2()\l+ M()\l+ BoostVector()\l+ Boost()\l}",height=0.2,width=0.4,color="black",URL="$classlorentzVector.html",tooltip=" "];
+  Node5 -> Node4 [color="grey25",fontsize="10",style="solid",label=" -fTime" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node5 [label="{double\n||}",height=0.2,width=0.4,color="grey75",tooltip=" "];
+  Node6 -> Node4 [color="grey25",fontsize="10",style="solid",label=" -fSpaceVec" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node6 [label="{vector3\n||+ vector3()\l+ vector3()\l+ vector3()\l+ ~vector3()\l+ GetVector()\l+ SetVector()\l+ SetVector()\l+ operator=()\l+ operator+=()\l+ operator -=()\l+ X()\l+ Y()\l+ Z()\l+ Mag2()\l+ Mag()\l}",height=0.2,width=0.4,color="black",URL="$classvector3.html",tooltip=" "];
+  Node5 -> Node6 [color="grey25",fontsize="10",style="solid",label=" -_vec" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node5 -> Node3 [color="grey25",fontsize="10",style="solid",label=" -_mass" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node7 -> Node3 [color="grey25",fontsize="10",style="solid",label=" -_charge" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node7 [label="{short\n||}",height=0.2,width=0.4,color="grey75",tooltip=" "];
+  Node4 -> Node3 [color="grey25",fontsize="10",style="solid",label=" -_vertex" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node8 -> Node3 [color="grey25",fontsize="10",style="solid",label=" -_lastParent\n-_lastDaughter\n-_firstDaughter\n-_status\n-_pdgCode\n-_firstParent" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node8 [label="{int\n||}",height=0.2,width=0.4,color="grey75",tooltip=" "];
+  Node9 -> Node2 [dir="back",color="orange",fontsize="10",style="solid",label=" \< starlightParticle \>" ,fontname="Helvetica"];
+  Node9 [label="{std::vector\< T \>\n||}",height=0.2,width=0.4,color="grey75",tooltip="STL class."];
+  Node10 -> Node9 [color="grey25",fontsize="10",style="solid",label=" +elements" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node10 [label="{T\n||}",height=0.2,width=0.4,color="grey75",tooltip=" "];
+  Node11 -> Node1 [color="grey25",fontsize="10",style="solid",label=" -_gammaMasses\n-_gammaEnergies" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node11 [label="{std::vector\< float \>\n||}",height=0.2,width=0.4,color="grey75",tooltip=" "];
+  Node12 -> Node11 [color="grey25",fontsize="10",style="solid",label=" +elements" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node12 [label="{float\n||}",height=0.2,width=0.4,color="grey75",tooltip=" "];
+  Node9 -> Node11 [dir="back",color="orange",fontsize="10",style="solid",label=" \< float \>" ,fontname="Helvetica"];
+  Node13 -> Node1 [color="grey25",fontsize="10",style="solid",label=" -_vertices" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node13 [label="{std::vector\< vector3 \>\n||}",height=0.2,width=0.4,color="grey75",tooltip=" "];
+  Node6 -> Node13 [color="grey25",fontsize="10",style="solid",label=" +elements" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node9 -> Node13 [dir="back",color="orange",fontsize="10",style="solid",label=" \< vector3 \>" ,fontname="Helvetica"];
+  Node14 -> Node1 [color="grey25",fontsize="10",style="solid",label=" -_gamma\n-_sources\n-_target" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node14 [label="{std::vector\< lorentzVector \>\n||}",height=0.2,width=0.4,color="grey75",tooltip=" "];
+  Node4 -> Node14 [color="grey25",fontsize="10",style="solid",label=" +elements" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node9 -> Node14 [dir="back",color="orange",fontsize="10",style="solid",label=" \< lorentzVector \>" ,fontname="Helvetica"];
+  Node15 -> Node1 [color="grey25",fontsize="10",style="solid",label=" -_vertext" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node15 [label="{std::vector\< double \>\n||}",height=0.2,width=0.4,color="grey75",tooltip=" "];
+  Node5 -> Node15 [color="grey25",fontsize="10",style="solid",label=" +elements" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node9 -> Node15 [dir="back",color="orange",fontsize="10",style="solid",label=" \< double \>" ,fontname="Helvetica"];
+}
