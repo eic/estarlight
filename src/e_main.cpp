@@ -36,7 +36,6 @@
 
 #include "reportingUtils.h"
 #include "e_starlight.h"
-#include "eventfilewriter.h"
 #include "e_starlightStandalone.h"
 
 

@@ -61,7 +61,6 @@
 #include "gammaeluminosity.h"
 #include "incoherentPhotonNucleusLuminosity.h"
 #include "upcevent.h"
-#include "eventfilewriter.h"
 #include "e_starlight.h"
 
 
