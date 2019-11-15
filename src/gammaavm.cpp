@@ -1322,6 +1322,7 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 	  theta_e = acos(cos_theta_e);
 	  double beam_y = acosh(_beamLorentzGamma);	
 	  gamma_pt = E_prime*sin(theta_e);
+	  
 	  double pz_squared = targetEgamma*targetEgamma - Q2 - gamma_pt*gamma_pt;
 	  if( pz_squared < 0 )
 	    continue;
@@ -1460,7 +1461,8 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  event.addParticle(particle2);
 	  // - Scattered target and transfered momenta at target vertex
 	  double target_pz =  - _beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) ) + t_pz;
-	  lorentzVector target(-t_px, -t_py, target_pz, _beamNucleus*_pEnergy - t_E);
+	  //Sign of t_px in following equation changed to fix sign error and conserve p_z.  Change made by Spencer Klein based on a bug report from Ya-Ping Xie.  Nov. 14, 2019
+	  lorentzVector target(t_px, -t_py, target_pz, _beamNucleus*_pEnergy - t_E);
 	  double t_var = t_E*t_E - t_px*t_px - t_py*t_py - t_pz*t_pz;
 	  event.addScatteredTarget(target, t_var);
 	}
