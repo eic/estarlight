@@ -320,7 +320,7 @@ void readLuminosity::e_read()
 	_g_EQ2max = p[iQ2-1];
       }
     }
-    for( uint iQ2=2; iQ2 < p.size(); ++iQ2)
+    for( unsigned int iQ2=2; iQ2 < p.size(); ++iQ2)
       p[iQ2] = p[iQ2]/_g_EQ2max;
     
     _g_EQ2array->push_back(std::pair< double, std::vector<double> >(integral,p));
@@ -336,7 +336,7 @@ void readLuminosity::e_read()
     std::string key = it->first;
     if(key=="")
       continue;
-    for( uint iQ2=2; iQ2 < it->second.size(); ++iQ2)
+    for(unsigned int iQ2=2; iQ2 < it->second.size(); ++iQ2)
       it->second[iQ2] = it->second[iQ2]/_g_EQ2max;
       }*/
   EQlumfile.close();

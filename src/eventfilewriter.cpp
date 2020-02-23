@@ -144,18 +144,18 @@ int eventFileWriter::writeEvent(eXEvent &event, int eventnumber)
 
       _fileStream <<"VERTEX: "<<0.<<" "<<0.<<" "<<0.<<" "<<0.<<" "<<1<<" "<<0<<" "<<0<<" "<<numberoftracks<<std::endl;
 
-      for( uint igam = 0 ; igam < event.getGammaEnergies()->size(); ++igam){
+      for(unsigned int igam = 0 ; igam < event.getGammaEnergies()->size(); ++igam){
 	_fileStream <<"GAMMA: "<<event.getGammaEnergies()->at(igam)<<" "<<event.getGammaMasses()->at(igam)<<std::endl;
 	lorentzVector gam = event.getGamma()->at(igam);
 	// Write the photon 4-vector out to file. Might be used in later iterations, so I keep it here
 	//_fileStream <<"GAMMA VECTOR: "<<gam.GetPx()<<" "<<gam.GetPy()<<" "<<gam.GetPz()<<" "<<gam.GetE()<<" "<<-temp<<std::endl;
       }
-      for( uint itarget = 0 ; itarget < event.getTarget()->size(); ++itarget){
+      for(unsigned int itarget = 0 ; itarget < event.getTarget()->size(); ++itarget){
 	lorentzVector target = event.getTarget()->at(itarget);
 	_fileStream <<"t: "<<event.getVertext()->at(itarget)<<std::endl;
 	_fileStream <<"TARGET: "<<target.GetPx()<<" "<<target.GetPy()<<" "<<target.GetPz()<<" "<<target.GetE()<<std::endl;
       }
-      for( uint iel = 0 ; iel < event.getSources()->size(); ++iel){
+      for(unsigned int iel = 0 ; iel < event.getSources()->size(); ++iel){
 	lorentzVector el = event.getSources()->at(iel); 
 	_fileStream <<"SOURCE: "<<el.GetPx()<<" "<<el.GetPy()<<" "<<el.GetPz()<<" "<<el.GetE()<<std::endl;
       }
