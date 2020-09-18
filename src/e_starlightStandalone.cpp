@@ -32,7 +32,6 @@
 
 
 #include <iostream>
-
 #include <chrono>
 #include "reportingUtils.h"
 #include "e_starlight.h"
@@ -136,6 +135,7 @@ e_starlightStandalone::run()
 			eXEvent event = _starlight->produceEvent();
 			// Boost event from back to lab reference frame
 			boostEvent(event);
+			// flipZEvent(event);
 			fileWriter.writeEvent(event, iEvent);
 		}
 	}
@@ -176,5 +176,12 @@ void e_starlightStandalone::boostEvent(eXEvent &event)
    double boost = (rap1+rap2)/2.;
    event.boost(boost, rap2); //  Boost back to laboratory reference frame. Electron initially in target frame and V.M. in CMS
                              //  Assuming electron is beam1
+
+
 }
 
+
+void e_starlightStandalone::flipZEvent(eXEvent &event)
+{
+   event.flipZ(); //Change all z to -z
+}

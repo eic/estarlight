@@ -124,3 +124,18 @@ void eXEvent::boost(double rapidity, double e_rapidity)
       (*target).Boost(boostVector);
     }
 }
+
+void eXEvent::flipZ()
+{
+
+    std::vector<starlightParticle>::iterator part = _particles.begin();
+
+    for (part = _particles.begin(); part != _particles.end(); part++)
+      {
+	lorentzVector v = (*part).getVertex();
+	(*part).SetXYZT( -1.0*(*part).GetPx(), -1.0*(*part).GetPy() , -1.0*(*part).GetPz() ,(*part).GetE() );
+	(*part).setVertex( lorentzVector(-1.0*v.GetPx(),-1.0*v.GetPy(),-1.0*v.GetPz(),v.GetE()) );
+	
+      }
+
+}
