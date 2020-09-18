@@ -33,6 +33,7 @@
 
 #include <iostream>
 
+#include <chrono>
 #include "reportingUtils.h"
 #include "e_starlight.h"
 #include "inputParameters.h"

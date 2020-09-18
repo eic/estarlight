@@ -71,138 +71,135 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	_quantumGlauber = inputParametersInstance.quantumGlauber();
 	switch(_particleType) {
 	case RHO:
-		_slopeParameter = 11.0;  // [(GeV/c)^{-2}]
-		_vmPhotonCoupling = 2.02;
-		_vmQ2Power_c1 = 2.09;
-		_vmQ2Power_c2 = 0.0073; // [ GeV^{-2}]
-		_ANORM       = -2.75;
-		_BNORM       = 0.0;
-		_defaultC    = 1.0;
-		_channelMass = starlightConstants::rho0Mass; 
-		_width       = starlightConstants::rho0Width; 
-		break;
+	  _slopeParameter = 11.0;  // [(GeV/c)^{-2}]
+	  _vmPhotonCoupling = 2.02;
+	  _vmQ2Power_c1 = 2.09;
+	  _vmQ2Power_c2 = 0.0073; // [ GeV^{-2}]
+	  _ANORM       = -2.75;
+	  _BNORM       = 0.0;
+	  _defaultC    = 1.0;
+	  _channelMass = starlightConstants::rho0Mass; 
+	  _width       = starlightConstants::rho0Width; 
+	  break;
 	case RHOZEUS:
-		_slopeParameter =11.0;
-		_vmPhotonCoupling=2.02;
-		_vmQ2Power_c1 = 2.09;
-		_vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
-		_ANORM=-2.75;
-		_BNORM=1.84;
-		_defaultC=1.0;
-		_channelMass  = starlightConstants::rho0Mass;
-		_width        = starlightConstants::rho0Width;
-		break;
+	  _slopeParameter =11.0;
+	  _vmPhotonCoupling=2.02;
+	  _vmQ2Power_c1 = 2.09;
+	  _vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
+	  _ANORM=-2.75;
+	  _BNORM=1.84;
+	  _defaultC=1.0;
+	  _channelMass  = starlightConstants::rho0Mass;
+	  _width        = starlightConstants::rho0Width;
+	  break;
 	case FOURPRONG:
-		_slopeParameter      = 11.0;
-		_vmPhotonCoupling      = 2.02;
-		_vmQ2Power_c1 = 2.09;
-		_vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
-		_ANORM       = -2.75;
-		_BNORM       = 0;  
-		_defaultC    = 11.0;
-		_channelMass  = starlightConstants::rho0PrimeMass;
-		_width        = starlightConstants::rho0PrimeWidth;
-		break;
+	  _slopeParameter      = 11.0;
+	  _vmPhotonCoupling      = 2.02;
+	  _vmQ2Power_c1 = 2.09;
+	  _vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
+	  _ANORM       = -2.75;
+	  _BNORM       = 0;  
+	  _defaultC    = 11.0;
+	  _channelMass  = starlightConstants::rho0PrimeMass;
+	  _width        = starlightConstants::rho0PrimeWidth;
+	  break;
 	case OMEGA:
-		_slopeParameter=10.0;
-		_vmPhotonCoupling=23.13;
-		_vmQ2Power_c1 = 2.09;
-		_vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
-		_ANORM=-2.75;
-		_BNORM=0.0;
-		_defaultC=1.0;
-		_channelMass  = starlightConstants::OmegaMass;
-		_width        = starlightConstants::OmegaWidth;
-		break;
+	  _slopeParameter=10.0;
+	  _vmPhotonCoupling=23.13;
+	  _vmQ2Power_c1 = 2.09;
+	  _vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
+	  _ANORM=-2.75;
+	  _BNORM=0.0;
+	  _defaultC=1.0;
+	  _channelMass  = starlightConstants::OmegaMass;
+	  _width        = starlightConstants::OmegaWidth;
+	  break;
 	case PHI:
-	        _slopeParameter=7.0;
-		_vmPhotonCoupling=13.71;
-		_vmQ2Power_c1 = 2.15;
-		_vmQ2Power_c2 = 0.0074; // [GeV^{-2}]
-		//_vmQ2Power_c1 = 2.45;
-		//_vmQ2Power_c2 = 0.0011; // [GeV^{-2}]
-		_ANORM=-2.75;
-		_BNORM=0.0;
-		_defaultC=1.0;
-		_channelMass  = starlightConstants::PhiMass;
-		_width        = starlightConstants::PhiWidth;
-		break;
+	  _slopeParameter=7.0;
+	  _vmPhotonCoupling=13.71;
+	  _vmQ2Power_c1 = 2.15;
+	  _vmQ2Power_c2 = 0.0074; // [GeV^{-2}]
+	  _ANORM=-2.75;
+	  _BNORM=0.0;
+	  _defaultC=1.0;
+	  _channelMass  = starlightConstants::PhiMass;
+	  _width        = starlightConstants::PhiWidth;
+	  break;
 	case JPSI:
 	case JPSI_ee:
-	  //_vmQ2Power_c1 = 2.44;
-	  // _vmQ2Power_c2 = 0.0074; // [GeV^{-2}]
+	  _slopeParameter=4.0;
+	  _vmPhotonCoupling=10.45;
 	  _vmQ2Power_c1 = 2.45;
 	  _vmQ2Power_c2 = 0.00084; // [GeV^{-2}]
+	  _ANORM=-2.75; 
+	  _BNORM=0.0;
+	  _defaultC=1.0;
+	  _channelMass  = starlightConstants::JpsiMass; 
+	  _width        = starlightConstants::JpsiWidth; 
+	  break;
 	case JPSI_mumu:
-		_slopeParameter=4.0;
-		_vmPhotonCoupling=10.45;
-		// Best so far
-		//_vmQ2Power_c1 = 2.60;
-		//_vmQ2Power_c2 = 0.0057; // [GeV^{-2}]
-		//Clsoe second
-		//_vmQ2Power_c1 = 2.30;
-		//_vmQ2Power_c2 = 0.0098; // [GeV^{-2}]
-		//New winner
-		_vmQ2Power_c1 = 2.36;
-		_vmQ2Power_c2 = 0.0029; // [GeV^{-2}]
-		_ANORM=-2.75; 
-		_BNORM=0.0;
-		_defaultC=1.0;
-		_channelMass  = starlightConstants::JpsiMass; 
-		_width        = starlightConstants::JpsiWidth; 
-		break;
+	  _slopeParameter=4.0;
+	  _vmPhotonCoupling=10.45;
+	  _vmQ2Power_c1 = 2.36;
+	  _vmQ2Power_c2 = 0.0029; // [GeV^{-2}]
+	  _ANORM=-2.75; 
+	  _BNORM=0.0;
+	  _defaultC=1.0;
+	  _channelMass  = starlightConstants::JpsiMass; 
+	  _width        = starlightConstants::JpsiWidth; 
+	  break;
 	case JPSI2S:
 	case JPSI2S_ee:
 	case JPSI2S_mumu:
-		_slopeParameter=4.3;
-		_vmPhotonCoupling=26.39;
-		_vmQ2Power_c1 = 2.09;
-		_vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
-		_ANORM=-2.75; 
-		_BNORM=0.0;
-		_defaultC=1.0;
-		_channelMass  = starlightConstants::Psi2SMass;
-		_width        = starlightConstants::Psi2SWidth;
-		break;
+	  _slopeParameter=4.3;
+	  _vmPhotonCoupling=26.39;
+	  _vmQ2Power_c1 = 2.09;
+	  _vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
+	  _ANORM=-2.75; 
+	  _BNORM=0.0;
+	  _defaultC=1.0;
+	  _channelMass  = starlightConstants::Psi2SMass;
+	  _width        = starlightConstants::Psi2SWidth;
+	  break;
 	case UPSILON:
 	case UPSILON_ee:
 	case UPSILON_mumu:
-		_slopeParameter=4.0;
-		_vmPhotonCoupling=125.37;
-		_vmQ2Power_c1 = 2.09;
-		_vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
-		_ANORM=-2.75; 
-		_BNORM=0.0;
-		_defaultC=1.0;
-		_channelMass  = starlightConstants::Upsilon1SMass;
-		_width        = starlightConstants::Upsilon1SWidth;
-		break;
+	  _slopeParameter=4.0;
+	  _vmPhotonCoupling=125.37;
+	  _vmQ2Power_c1 = 2.09;
+	  _vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
+	  _ANORM=-2.75; 
+	  _BNORM=0.0;
+	  _defaultC=1.0;
+	  _channelMass  = starlightConstants::Upsilon1SMass;
+	  _width        = starlightConstants::Upsilon1SWidth;
+	  break;
 	case UPSILON2S:
 	case UPSILON2S_ee:
 	case UPSILON2S_mumu:
-		_slopeParameter=4.0;
-		_vmPhotonCoupling=290.84;
-		_vmQ2Power_c1 = 2.09;
-		_vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
-		_ANORM=-2.75;
-		_BNORM=0.0;
-		_defaultC=1.0;
-		_channelMass  = starlightConstants::Upsilon2SMass;
-		_width        = starlightConstants::Upsilon2SWidth;		
-		break;
+	  _slopeParameter=4.0;
+	  _vmPhotonCoupling=290.84;
+	  _vmQ2Power_c1 = 2.09;
+	  _vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
+	  _ANORM=-2.75;
+	  _BNORM=0.0;
+	  _defaultC=1.0;
+	  _channelMass  = starlightConstants::Upsilon2SMass;
+	  _width        = starlightConstants::Upsilon2SWidth;		
+	  break;
 	case UPSILON3S:
 	case UPSILON3S_ee:
 	case UPSILON3S_mumu:
-		_slopeParameter=4.0;
-		_vmPhotonCoupling=415.10;
-		_vmQ2Power_c1 = 2.09;
-		_vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
-		_ANORM=-2.75;
-		_BNORM=0.0;
-		_defaultC=1.0;
-		_channelMass  = starlightConstants::Upsilon3SMass;
-		_width        = starlightConstants::Upsilon3SWidth;
-		break;
+	  _slopeParameter=4.0;
+	  _vmPhotonCoupling=415.10;
+	  _vmQ2Power_c1 = 2.09;
+	  _vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
+	  _ANORM=-2.75;
+	  _BNORM=0.0;
+	  _defaultC=1.0;
+	  _channelMass  = starlightConstants::Upsilon3SMass;
+	  _width        = starlightConstants::Upsilon3SWidth;
+	  break;
 	default:
 		cout <<"No sigma constants parameterized for pid: "<<_particleType
 		     <<" GammaAcrosssection"<<endl;
@@ -370,10 +367,6 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
 	NGAUSS = 6;
   
 	//       Find gamma-proton CM energy
-	double proton_pz  = sqrt(_protonEnergy * _protonEnergy - protonMass * protonMass);
-	proton_pz = 0 ;
-	/*	Wgp = sqrt( 2.*(_protonEnergy*Egamma + proton_pz*(Egamma+Q2/(2.*_electronEnergy)))
-		+protonMass*protonMass - Q2);*/
 	Wgp = sqrt( 2.*(protonMass*Egamma)
 		    +protonMass*protonMass + Q2);
 	

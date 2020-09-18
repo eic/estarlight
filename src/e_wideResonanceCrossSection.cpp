@@ -80,15 +80,10 @@ e_wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 	double ega[3] = {0};
 	double int_r,dR;
 	double int_r2,dR2;
-	double Eth;
 	int    iW,nW,iEgamma,nEgamma,beam;
 
 	double bwnorm = bwnormsave; //used to transfer the bwnorm from the luminosity tables
-
-	//gamma+nucleon threshold.
-	Eth=0.5*(((_wideWmin+protonMass)*(_wideWmin+protonMass)
-	          -protonMass*protonMass)/(_Ep+sqrt(_Ep*_Ep-protonMass*protonMass)));
-        
+	
 	// For W integration           
 	nW   = 100;
 	dW   = (_wideWmax-_wideWmin)/double(nW);
@@ -151,7 +146,6 @@ e_wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 		    double lnQ2ratio = std::log(Q2_max/Q2_min)/nQ2;
 		    double lnQ2_min = std::log(Q2_min);
 		    //
-		    int q2end = -99;
 		    for( int iQ2 = 0 ; iQ2 < nQ2; ++iQ2){     // Integral over photon virtuality
 		      //
 		      double q2_1 = exp( lnQ2_min + iQ2*lnQ2ratio);	    
@@ -167,7 +161,6 @@ e_wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 						    +getcsgA_Q2_dep(q2_2)*photonFlux(ega[iEgaInt],q2_2)
 						    +4.*getcsgA_Q2_dep(q2_12)*photonFlux(ega[iEgaInt],q2_12) );
 		    }
-		    q2end = -99 ;
 		    full_int[iEgaInt] = full_int[iEgaInt]/6.;
 		    dndE[iEgaInt] = dndE[iEgaInt]/6.;
 		  }
