@@ -535,7 +535,7 @@ void Gammaavectormeson::momenta(double W,double Y,double &E,double &px,double &p
  
 	double Egam,Epom,tmin,pt1,pt2,phi1,phi2;
 	double px1,py1,px2,py2;
-	double pt,xt,xtest,ytest;
+	double pt, xt,xtest,ytest;
 	double t2;
 
   
@@ -708,7 +708,7 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
  
 	double Pom_pz,tmin,pt2,phi1,phi2;
 	double px1,py1,px2,py2;
-	double pt,xt,xtest,ytest;
+	double xt,xtest,ytest;
 	double t2;
       
 	phi1 = 2.*starlightConstants::pi*_randy.Rndom();
@@ -812,7 +812,7 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	// Compute vector sum Pt = Pt1 + Pt2 to find pt for the vector meson
 	px = px1 + px2;
 	py = py1 + py2;
-	pt = sqrt( px*px + py*py );
+	//	pt = sqrt( px*px + py*py );
 	// Computing the pomeron energy using the fact that the target invariant mass is unchanged in collision
 	double target_pz = _beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) );
 	double complementM2 = pow(_beamNucleus*starlightConstants::protonMass,2.) + t_px*t_px + t_py*t_py + (target_pz-t_pz)*(target_pz-t_pz);
@@ -1258,7 +1258,7 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 				 )
 {
         double dW, dEgamma;
-	double xw,xEgamma, xQ2, xtest, q2test, btest;
+	double xw,xEgamma, xQ2, xtest, q2test; // btest;
 	int  IW,IGamma, IQ2;
 	// ---------
 	//	int egamma_draws = 0, cms_egamma_draws =0, q2_draws =0 ;
@@ -1291,7 +1291,7 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 	    continue;
 	  }
 	  N0++; 
-	  btest = _randy.Rndom();
+	  //	  btest = _randy.Rndom();
 	  // Load double differential photon flux table for selected energy
 	  std::vector<double> photon_flux = this_energy.second;
 	  double VMQ2min = photon_flux[0];

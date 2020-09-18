@@ -82,7 +82,7 @@ e_narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnorm
         // This subroutine calculates the vector meson cross section assuming
         // a narrow resonance.  For reference, see STAR Note 386.
   
-        double W, dEgamma, minEgamma;
+        double dEgamma, minEgamma;
 	double ega[3] = {0};
 	double int_r,dR;
 	double int_r2, dR2;
@@ -96,7 +96,6 @@ e_narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnorm
   
 	cout<<" Using Narrow Resonance ..."<<endl;
   
-	W = getChannelMass();
 	//
         printf(" gamma+nucleon threshold (CMS): %e GeV \n", _cmsMinPhotonEnergy);
 
@@ -145,7 +144,7 @@ e_narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnorm
 	    double lnQ2ratio = std::log(Q2_max/Q2_min)/nQ2;
 	    double lnQ2_min = std::log(Q2_min);
 	    //
-	    int q2end = -99;
+
 	    for( int iQ2 = 0 ; iQ2 < nQ2; ++iQ2){     // Integral over photon virtuality
 	      //
 	      double q2_1 = exp( lnQ2_min + iQ2*lnQ2ratio);	    
@@ -160,7 +159,7 @@ e_narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnorm
 						 + g(ega[iEgaInt],q2_2)*getcsgA(ega[iEgaInt],q2_2,beam)
 						 + 4.*g(ega[iEgaInt],q2_12)*getcsgA(ega[iEgaInt],q2_12,beam) );	      
 	    }
-	    q2end = -99 ;
+
 	    // Finish the Q2 integration for the three end-points (Siumpsons rule)
 	    dndE[iEgaInt] = dndE[iEgaInt]/6.; 
 	    full_int[iEgaInt] = full_int[iEgaInt]/6.;
@@ -223,13 +222,12 @@ e_narrowResonanceCrossSection::makeGammaPQ2dependence()
 	gamma_flux.open("estarlight_gamma_flux.csv");
 	total_xsec.open("estarlight_total_xsec.csv");
 	//
-        double W, dEgamma, minEgamma;
+        double dEgamma, minEgamma;
 	double ega[3] = {0};
-	double int_r,dR;
-	double int_r2, dR2;
+	double dR;
+	double dR2;
 	int    iEgamma, nEgamma,beam;
-	int_r = 0;
-	int_r2 = 0;
+
 	//Integration is done with exponential steps, in target frame
 	//nEgamma = _VMnumEgamma;
 	nEgamma = 1000;
@@ -237,9 +235,7 @@ e_narrowResonanceCrossSection::makeGammaPQ2dependence()
 	minEgamma = std::log(_targetMinPhotonEnergy);
   
 	//cout<<" Using Narrow Resonance ..."<<endl;
-  
-	W = getChannelMass();
-	//
+	
         //printf(" gamma+nucleon threshold (CMS): %e GeV \n", _cmsMinPhotonEnergy);
 
         int A_1 = getbbs().beam1().A(); 
@@ -308,8 +304,6 @@ e_narrowResonanceCrossSection::makeGammaPQ2dependence()
 	    dR2 += 4.*dndE[2];
 	    dR2 = dR2*(ega[1]-ega[0])/6.;
 	    //
-	    //	    int_r = int_r+dR;
-	    //	    int_r2 = int_r2 + dR2;
 	    full_x_section[iQ2Bin] += dR;
 	    effective_flux[iQ2Bin] += dR2;	      
 	  }
