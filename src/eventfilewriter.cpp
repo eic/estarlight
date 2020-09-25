@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////
+
 //
 //    Copyright 2010
 //
@@ -30,16 +30,25 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#ifdef HEPMC3_ON
+#include "hepmc3writer.h"
+#endif
+
+#include <iostream>
+#include <exception>
+#include <cstdlib>
 
 #include "eventfilewriter.h"
 #include "starlightparticlecodes.h"
+
+using namespace std;
 
 //______________________________________________________________________________
 eventFileWriter::eventFileWriter()
 : fileWriter()
 ,_writeFullPythia(false)
+,_writeFullHepMC3(false)
 { }
-
 
 //______________________________________________________________________________
 eventFileWriter::eventFileWriter(std::string filename)
@@ -55,6 +64,17 @@ int eventFileWriter::writeInit(inputParameters &_p)
   _fileStream<<"BEAM_2: "<<_p.beam2Z()<<" "<<_p.beam2A()<<" "<<_p.beam2LorentzGamma()<<std::endl;
   _fileStream<<"PHOTON: "<<_p.nmbEnergyBins()<<" "<<_p.fixedQ2Range()<<" "<<_p.nmbGammaQ2Bins()
 	     <<" "<<_p.minGammaQ2()<<" "<<_p.maxGammaQ2()<<std::endl;
+  
+  if ( _writeFullHepMC3 )
+    {
+#ifdef HEPMC3_ON
+      _hepmc3writer = new hepMC3Writer();
+      _hepmc3writer->initWriter(_p);
+#else
+      std::cout << "***HepMC3 file format not written --- eStarlight not compiled with HepMC3 Enabled***" << std::endl;
+      _writeFullHepMC3 = false;
+#endif
+    }
   
   return 0;
 }
@@ -76,7 +96,6 @@ int eventFileWriter::writeEvent(upcEvent &event, int eventnumber)
         }
     }
     
-
     // sometimes we don't have tracks due to wrongly picked W , check it
     if(numberoftracks){
       eventnumber++;
@@ -113,7 +132,7 @@ int eventFileWriter::writeEvent(upcEvent &event, int eventnumber)
 	  _fileStream <<std::endl;
 	}
     }
-
+    
     return 0;
 }
 
@@ -144,18 +163,18 @@ int eventFileWriter::writeEvent(eXEvent &event, int eventnumber)
 
       _fileStream <<"VERTEX: "<<0.<<" "<<0.<<" "<<0.<<" "<<0.<<" "<<1<<" "<<0<<" "<<0<<" "<<numberoftracks<<std::endl;
 
-      for(unsigned int igam = 0 ; igam < event.getGammaEnergies()->size(); ++igam){
+      for( uint igam = 0 ; igam < event.getGammaEnergies()->size(); ++igam){
 	_fileStream <<"GAMMA: "<<event.getGammaEnergies()->at(igam)<<" "<<event.getGammaMasses()->at(igam)<<std::endl;
 	lorentzVector gam = event.getGamma()->at(igam);
 	// Write the photon 4-vector out to file. Might be used in later iterations, so I keep it here
 	//_fileStream <<"GAMMA VECTOR: "<<gam.GetPx()<<" "<<gam.GetPy()<<" "<<gam.GetPz()<<" "<<gam.GetE()<<" "<<-temp<<std::endl;
       }
-      for(unsigned int itarget = 0 ; itarget < event.getTarget()->size(); ++itarget){
+      for( uint itarget = 0 ; itarget < event.getTarget()->size(); ++itarget){
 	lorentzVector target = event.getTarget()->at(itarget);
 	_fileStream <<"t: "<<event.getVertext()->at(itarget)<<std::endl;
 	_fileStream <<"TARGET: "<<target.GetPx()<<" "<<target.GetPy()<<" "<<target.GetPz()<<" "<<target.GetE()<<std::endl;
       }
-      for(unsigned int iel = 0 ; iel < event.getSources()->size(); ++iel){
+      for( uint iel = 0 ; iel < event.getSources()->size(); ++iel){
 	lorentzVector el = event.getSources()->at(iel); 
 	_fileStream <<"SOURCE: "<<el.GetPx()<<" "<<el.GetPy()<<" "<<el.GetPz()<<" "<<el.GetE()<<std::endl;
       }
@@ -184,6 +203,32 @@ int eventFileWriter::writeEvent(eXEvent &event, int eventnumber)
 	}
     }
 
+#ifdef HEPMC3_ON
+    if ( _writeFullHepMC3 ){
+      _hepmc3writer->writeEvent(event,eventnumber);
+    }
+#endif
+    
     return 0;
 }
 
+int eventFileWriter::close()
+{
+  
+#ifdef HEPMC3_ON
+    if ( _writeFullHepMC3 ){
+      _hepmc3writer->close();
+    }
+#endif
+  
+    try
+    {
+        _fileStream.close();
+    }
+    catch (const ios::failure & error)
+    {
+        cerr << "I/O exception: " << error.what() << endl;
+        return EXIT_FAILURE;
+    }
+    return 0;
+}

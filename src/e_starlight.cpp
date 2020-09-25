@@ -115,19 +115,19 @@ e_starlight::init()
 
 	// Do some sanity checks of the input parameters here.
 	if( _inputParameters->beam1A() != 0 && _inputParameters->beam2A() != 0 ){
-	  printErr << endl << "One of the two beams must be an electron in eSTARlight" << endl;
+	  //	  printErr << endl << "One of the two beams must be an electron in eSTARlight" << endl;
 	  return false;
 	}
 	if( _inputParameters->beam1A() == 0 && _inputParameters->beam2A() == 0 ){
-	  printErr << endl << "Only one of the two beams can be electron in eSTARlight"<< endl;
+	  //	  printErr << endl << "Only one of the two beams can be electron in eSTARlight"<< endl;
 	  return false;
 	}
 	if( _inputParameters->beam1A() == 0 && std::abs(_inputParameters->beam1Z()) != 1 ){
-	  printErr << endl << "Beam 1 should be electron, but has wrong Z"<< endl;	  
+	  //	  printErr << endl << "Beam 1 should be electron, but has wrong Z"<< endl;	  
 	  return false;
 	}
 	if( _inputParameters->beam2A() == 0 && _inputParameters->beam2Z() != std::abs(1) ){
-	  printErr << endl << "Beam 1 should be electron, but has wrong Z"<< endl;
+	  //	  printErr << endl << "Beam 1 should be electron, but has wrong Z"<< endl;
 	  return false;
 	}
 
@@ -179,7 +179,7 @@ eXEvent
 e_starlight::produceEvent()
 {
 	if (!_isInitialised) {
-		printErr << "trying to generate event but Starlight is not initialised. aborting." << endl;
+	  //		printErr << "trying to generate event but Starlight is not initialised. aborting." << endl;
 		exit(-1);
 	}
 	return _eventChannel->e_produceEvent();
@@ -261,15 +261,16 @@ e_starlight::createEventChannel()
 	case ETAC:      // jetset/pythia
 	case F0:        // jetset/pythia
 		{
-#ifdef ENABLE_PYTHIA
+
+		  //#ifdef ENABLE_PYTHIA
 			// PythiaOutput = true;
- 		        cout<<"Pythia is enabled!"<<endl;
+		  // 		        cout<<"Pythia is enabled!"<<endl;
 // 			return true;
-#else
-			printWarn << "Starlight is not compiled against Pythia8; "
-			          << "jetset event channel cannot be used." << endl;
- 			return false;
-#endif
+//#else
+//			printWarn << "Starlight is not compiled against Pythia8; "
+//			          << "jetset event channel cannot be used." << endl;
+// 			return false;
+//#endif
 		}
 	case F2:
 	case F2PRIME:

@@ -34,6 +34,9 @@
 #ifndef EVENTFILEWRITER_H
 #define EVENTFILEWRITER_H
 
+#ifdef HEPMC3_ON
+class hepMC3Writer;
+#endif
 
 #include <string>
 
@@ -61,11 +64,22 @@ class eventFileWriter : public fileWriter
 
       /** Set if we want to write full pythia information */
       void writeFullPythiaInfo(bool v) { _writeFullPythia = v; }
+
+      /** Set if we want to write full pythia information */
+      void writeFullHepMC3Info(bool v) { _writeFullHepMC3 = v; }
+
+      /** close the file */
+      int close();
       
 private:
   
   bool _writeFullPythia;
-      
+  bool _writeFullHepMC3;
+
+#ifdef HEPMC3_ON
+  hepMC3Writer * _hepmc3writer;
+#endif
+  
 };
 
 

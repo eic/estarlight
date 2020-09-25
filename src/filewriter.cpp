@@ -52,10 +52,8 @@ fileWriter::fileWriter(const string& fileName) :
         ,_fileStream(fileName.c_str())
 { }
 
-
 fileWriter::~fileWriter()
 { }
-
 
 int fileWriter::open()
 {

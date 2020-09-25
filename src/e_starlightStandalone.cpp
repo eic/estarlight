@@ -119,6 +119,7 @@ e_starlightStandalone::run()
 	// open output file
 	eventFileWriter fileWriter;
 	fileWriter.writeFullPythiaInfo(_inputParameters->pythiaFullEventRecord());
+	fileWriter.writeFullHepMC3Info(_inputParameters->hepmc3FullEventRecord());
         _baseFileName = _inputParameters->baseFileName();
         _eventDataFileName = _baseFileName +".out";
 	fileWriter.open(_eventDataFileName);
@@ -135,7 +136,7 @@ e_starlightStandalone::run()
 			eXEvent event = _starlight->produceEvent();
 			// Boost event from back to lab reference frame
 			boostEvent(event);
-			// flipZEvent(event);
+			flipZEvent(event);
 			fileWriter.writeEvent(event, iEvent);
 		}
 	}

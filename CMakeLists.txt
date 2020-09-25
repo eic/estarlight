@@ -34,7 +34,6 @@
 # check if cmake has the required version
 cmake_minimum_required(VERSION 2.6.0 FATAL_ERROR)
 
-
 # set verbosity
 set(CMAKE_VERBOSE_MAKEFILE 0)  # if set to 1 compile and link commands are displayed during build
 # the same effect can be achieved by calling 'make VERBOSE=1'
@@ -67,7 +66,7 @@ endif()
 message(STATUS "Detected host system '${CMAKE_HOST_SYSTEM_NAME}' version '${CMAKE_HOST_SYSTEM_VERSION}' architecture '${CMAKE_HOST_SYSTEM_PROCESSOR}'")
 message(STATUS "Compiling for system '${CMAKE_SYSTEM_NAME}' version '${CMAKE_SYSTEM_VERSION}' architecture '${CMAKE_SYSTEM_PROCESSOR}'")
 
-option (CPP11 "Enable compilation with C++11 features" OFF) 
+option (CPP11 "Enable compilation with C++11 features" ON) 
 
 # define build types
 # set a default build type for single-configuration CMake generators, if no build type is set.
@@ -179,6 +178,16 @@ else()
 		)
 endif()
 
+option (ENABLE_HEPMC3  "Enable compilation against hepmc3 (necessary for hepmc3 output)" OFF) 
+if(ENABLE_HEPMC3)
+  find_package(HepMC3)
+  if(HEPMC3_FOUND)
+    set(optionalLibs ${optionalLibs} ${HEPMC3_LIBRARY})
+    option(ENABLE_HEPMC3  "Should we use the HepMC3 library" ON) 
+  else() 
+    option(ENABLE_HEPMC3  "Should we use the HepMC3 library" OFF) 
+  endif()
+endif()
 
 # setup Pythia 8
 option (ENABLE_PYTHIA  "Enable compilation against pythia (necessary for certain processes)" OFF) 
@@ -266,6 +275,15 @@ set(SOURCES
   src/e_starlight.cpp
   src/e_starlightStandalone.cpp
   )
+
+if (ENABLE_HEPMC3)
+  set (SOURCES
+		${SOURCES}
+                src/hepmc3writer.cpp
+		)
+  include_directories(${HEPMC3_INCLUDE_DIR})
+  add_definitions( -DHEPMC3_ON )
+endif()
 if(ENABLE_PYTHIA) 
   set (SOURCES
 		${SOURCES}

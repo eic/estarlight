@@ -62,6 +62,7 @@ public:
 	void setEventDataFileName(const std::string& eventDataFileName) { _eventDataFileName = eventDataFileName; }  ///< sets path to output file
 	
 	void boostEvent(eXEvent &e); ///< Boost event from beam CMS to lab system
+	void flipZEvent(eXEvent &e); ///< flip z to -z for all output particles
 
 private:
 

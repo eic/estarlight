@@ -60,7 +60,7 @@ public:
     int open(const std::string& fileName);
     
     /** close the file */
-    int close();
+    virtual int close();
 
     /** Set the filename we're writing to */
     void setFileName(const std::string& fileName) { _fileName = fileName; }
