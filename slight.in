@@ -1,0 +1,34 @@
+s# This file is a template for e-p collisions at eRHIC
+#
+# To use, rename this file slight.in
+baseFileName = slight
+BEAM_1_Z = 1    #Z of projectile
+BEAM_1_A = 0   #A of projectile
+BEAM_2_Z = 1   #Z of target
+BEAM_2_A = 1   #A of target
+#
+# Energies (accel)
+#
+BEAM_1_GAMMA = 35295 #18 GeV electrons from eRHIC
+BEAM_2_GAMMA = 293.2 #275 GeV protons from eRHIC
+#
+#
+W_MAX = -1   #Max value of w from HERA
+W_MIN = -1    #Min value of w from HERA
+W_N_BINS = 50    #Bins i w
+EGA_N_BINS = 400
+CUT_PT = 0 #Cut in pT? 0 = (no, 1 = yes)
+PT_MIN = 1.0 #Minimum pT in GeV
+PT_MAX = 3.0 #Maximum pT in GeV
+PROD_MODE = 12     #gg or gP switch (1 = 2-photon, 2 = coherent vector meson (narrow), 3 = coherent vector meson (wide), 4 = incoherent vector meson)
+N_EVENTS = 10
+PROD_PID = 113
+RND_SEED = 5574531 #Random number seed
+BREAKUP_MODE = 5     #Controls the nuclear breakup; a 5 here makes no requirement on the breakup of the ions
+PYTHIA_FULL_EVENTRECORD = 0 # Write full pythia information to output (vertex, parents, daughter etc).
+HEPMC3_FULL_EVENTRECORD = 0 # Write hepmc3 information to output (vertex, parents, daughter etc).
+MIN_GAMMA_Q2 = 0.
+MAX_GAMMA_Q2 = 0.01
+#
+QUANTUM_GLAUBER = 1 # Do a quantum Glauber calculation instead of a classical one
+SELECT_IMPULSE_VM = 0   # Impulse VM parameter
