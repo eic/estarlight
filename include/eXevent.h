@@ -68,7 +68,7 @@ class eXEvent
       eXEvent & operator+(const eXEvent&);
       
       void boost(double rapidity, double e_rapiditya);
-      void flipZ();
+      void reflect();
       
    private:
       

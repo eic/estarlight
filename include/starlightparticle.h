@@ -73,6 +73,13 @@ class starlightParticle : public lorentzVector
       
       void setVertex(lorentzVector v) { _vertex = v; }
       lorentzVector getVertex() const { return _vertex; }
+
+      void reflect()
+      {
+	this->SetXYZT(-1.0*this->GetPx(),-1.0*this->GetPy(),-1.0*this->GetPz(),this->GetE());
+	_vertex.reflect();
+      };
+      
       
    private:
      

@@ -61,6 +61,16 @@ int hepMC3Writer::writeEvent(const eXEvent &event, int eventnumber)
       hepmc3_vertex_to_write->add_particle_out( hepmc3_particle );
     }
 
+  lorentzVector electron_lorentzVec = (*event.getSources())[0];
+  FourVector hepmc3_electron_four_vector = FourVector(electron_lorentzVec.GetPx(),
+						   electron_lorentzVec.GetPy(),
+						   electron_lorentzVec.GetPz(),
+						   electron_lorentzVec.GetE());
+
+  HepMC3::GenParticlePtr hepmc3_electron = std::make_shared<HepMC3::GenParticle>( hepmc3_electron_four_vector, 11, 0 ); // status currently set to 0... need to double check
+
+  hepmc3_vertex_to_write->add_particle_out( hepmc3_electron );
+  
   /** add vertex to HepMC3 Event**/
   hepmc3_evt.add_vertex( hepmc3_vertex_to_write );
   _hepmc3_output->write_event(hepmc3_evt);

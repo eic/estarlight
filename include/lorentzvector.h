@@ -55,7 +55,8 @@ class lorentzVector
       double GetPy() const { return fSpaceVec.GetVector()[1]; }
       double GetPz() const { return fSpaceVec.GetVector()[2]; }
       double GetE() const { return fTime; }
-
+      virtual void reflect(){fSpaceVec.SetVector(-1.0*fSpaceVec.X(),-1.0*fSpaceVec.Y(),-1.0*fSpaceVec.Z());};
+      
 	    lorentzVector& operator +=(const lorentzVector& vec)
 	    {
 		    fSpaceVec += vec.fSpaceVec;

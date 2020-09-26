@@ -136,7 +136,7 @@ e_starlightStandalone::run()
 			eXEvent event = _starlight->produceEvent();
 			// Boost event from back to lab reference frame
 			boostEvent(event);
-			flipZEvent(event);
+			reflectEvent(event);
 			fileWriter.writeEvent(event, iEvent);
 		}
 	}
@@ -182,7 +182,7 @@ void e_starlightStandalone::boostEvent(eXEvent &event)
 }
 
 
-void e_starlightStandalone::flipZEvent(eXEvent &event)
+void e_starlightStandalone::reflectEvent(eXEvent &event)
 {
-   event.flipZ(); //Change all z to -z
+   event.reflect(); //Change all z to -z
 }
