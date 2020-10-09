@@ -4,8 +4,8 @@ eSTARlight is a Monte Carlo that simulates coherent vector meson photo- and elec
 
 
 ## Papers and presentations
-* (Exclusive vector meson production at an electron-ion collider)[https://arxiv.org/abs/1803.06420]: M. Lomnitz & S. Klein, Submitted to Phys. Rev. C and currently under review arXiv:1803.06420
-* (Coherent vector meson production at an EIC)[https://arxiv.org/abs/1805.08586]: M. Lomnitz and S. Klein, Presented at the Workshop for Deep Inelastic Scattering, Kobe Japan, 2018.
+* [Exclusive vector meson production at an electron-ion collider](https://arxiv.org/abs/1803.06420): M. Lomnitz & S. Klein, Submitted to Phys. Rev. C and currently under review arXiv:1803.06420
+* [Coherent vector meson production at an EIC](https://arxiv.org/abs/1805.08586): M. Lomnitz and S. Klein, Presented at the Workshop for Deep Inelastic Scattering, Kobe Japan, 2018.
 
 ## Authors
 * Michael Lomnitz<sup>1</sup>
@@ -16,7 +16,7 @@ eSTARlight is a Monte Carlo that simulates coherent vector meson photo- and elec
 All rights rights reserved.
 
 ## Declaration
-Portions of this package were originally inherited/based on the (STARlight Monte Carlo)[https://starlight.hepforge.org/] generator. We would like to acknowledge the authors J. Nystrand, J. Seger and Y. Gorbunov for their contributions to STARlight. This work was funded by the U.S. Department of Energy under contract number DE-AC-76SF00098.
+Portions of this package were originally inherited/based on the [STARlight Monte Carlo](https://starlight.hepforge.org/) generator. We would like to acknowledge the authors J. Nystrand, J. Seger and Y. Gorbunov for their contributions to STARlight. This work was funded by the U.S. Department of Energy under contract number DE-AC-76SF00098.
 
 ## Instructions for use
 The following instructions illustrate the procedure to install and run eSTARlight in a *nix based environment:
@@ -78,8 +78,8 @@ A more detailed version of the README is included as part of the software packag
 
 Finally, the full documentation with class description and dependencies is also available. We have included a config file to generate a fresh version of the documentation. The following steps can be used to generate the documentation:
 
-* Download and install the (Doxygen0[https://www.stack.nl/~dimitri/doxygen/manual/install.html]
-* Move into the source code:
+* Download and install [Doxygen](https://www.stack.nl/~dimitri/doxygen/manual/install.html)
+* Move into the source directory:
 ```
 cd ~/the_path/estarlight/
 ```
