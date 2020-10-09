@@ -8,10 +8,10 @@ eSTARlight is a Monte Carlo that simulates coherent vector meson photo- and elec
 * (Coherent vector meson production at an EIC)[https://arxiv.org/abs/1805.08586]: M. Lomnitz and S. Klein, Presented at the Workshop for Deep Inelastic Scattering, Kobe Japan, 2018.
 
 ## Authors
-* Michael Lomnitz[^1]
-* Spencer Klein[^1]
+* Michael Lomnitz<sup>1</sup>
+* Spencer Klein<sup>1</sup>
 
-[^1]: Lawrence Berkeley National Laboratory, Relativistic Nuclear Collisions Program, Nuclear Science Division.
+<sup>1</sup>: Lawrence Berkeley National Laboratory, Relativistic Nuclear Collisions Program, Nuclear Science Division.
 
 All rights rights reserved.
 
