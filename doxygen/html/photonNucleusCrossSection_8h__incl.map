@@ -1,9 +1,0 @@
-<map id="photonNucleusCrossSection.h" name="photonNucleusCrossSection.h">
-<area shape="rect" id="node2" href="$starlightconstants_8h.html" title="starlightconstants.h" alt="" coords="615,225,751,251"/>
-<area shape="rect" id="node3" href="$beambeamsystem_8h.html" title="beambeamsystem.h" alt="" coords="64,79,206,104"/>
-<area shape="rect" id="node8" href="$inputParameters_8h.html" title="inputParameters.h" alt="" coords="299,152,429,177"/>
-<area shape="rect" id="node4" href="$nucleus_8h.html" title="nucleus.h" alt="" coords="25,225,103,251"/>
-<area shape="rect" id="node6" href="$beam_8h.html" title="beam.h" alt="" coords="31,152,97,177"/>
-<area shape="rect" id="node9" href="$inputParser_8h.html" title="inputParser.h" alt="" coords="314,225,414,251"/>
-<area shape="rect" id="node14" href="$reportingUtils_8h.html" title="reportingUtils.h" alt="" coords="163,299,274,324"/>
-</map>

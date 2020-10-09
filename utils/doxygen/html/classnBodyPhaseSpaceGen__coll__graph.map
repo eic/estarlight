@@ -1,6 +1,0 @@
-<map id="nBodyPhaseSpaceGen" name="nBodyPhaseSpaceGen">
-<area shape="rect" id="node6" href="$classlorentzVector.html" title="{lorentzVector\n||+ lorentzVector()\l+ ~lorentzVector()\l+ lorentzVector()\l+ SetXYZT()\l+ SetPxPyPzE()\l+ GetPx()\l+ GetPy()\l+ GetPz()\l+ GetE()\l+ operator+=()\l+ operator&#45;=()\l+ M2()\l+ M()\l+ BoostVector()\l+ Boost()\l}" alt="" coords="395,461,522,721"/>
-<area shape="rect" id="node7" href="$classvector3.html" title="{vector3\n||+ vector3()\l+ vector3()\l+ vector3()\l+ ~vector3()\l+ GetVector()\l+ SetVector()\l+ SetVector()\l+ operator=()\l+ operator+=()\l+ operator&#45;=()\l+ X()\l+ Y()\l+ Z()\l+ Mag2()\l+ Mag()\l}" alt="" coords="320,140,427,400"/>
-<area shape="rect" id="node3" href="$classrandomGenerator.html" title="{randomGenerator\n||+ SetSeed()\l+ Rndom()\l}" alt="" coords="487,796,614,883"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="222,555,335,628"/>
-</map>

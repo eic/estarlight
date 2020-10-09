@@ -1,7 +1,0 @@
-<map id="spectrum" name="spectrum">
-<area shape="rect" id="node10" href="$classbeamBeamSystem.html" title="{beamBeamSystem\n||+ beamBeamSystem()\l+ beamBeamSystem()\l+ ~beamBeamSystem()\l+ beam1()\l+ beam2()\l+ probabilityOfBreakup()\l+ cmsBoost()\l+ beamLorentzGamma()\l+ init()\l&#45; generateBreakupProbabilities()\l&#45; probabilityOfHadronBreakup()\l&#45; probabilityOfPhotonBreakup()\l}" alt="" coords="513,783,727,1003"/>
-<area shape="rect" id="node12" href="$classbeam.html" title="{beam\n||+ beam()\l+ ~beam()\l+ photonDensity()\l+ rapidity()\l+ setBeamLorentzGamma()\l}" alt="" coords="750,581,936,708"/>
-<area shape="rect" id="node13" href="$classnucleus.html" title="{nucleus\n||+ nucleus()\l+ nucleus()\l+ ~nucleus()\l+ init()\l+ Z()\l+ A()\l+ productionMode()\l+ formFactor()\l+ dipoleFormFactor()\l+ thickness()\l+ nuclearRadius()\l+ rho0()\l&#45; woodSaxonSkinDepth()\l&#45; rws()\l}" alt="" coords="694,167,863,413"/>
-<area shape="rect" id="node3" href="$classrandomGenerator.html" title="{randomGenerator\n||+ SetSeed()\l+ Rndom()\l}" alt="" coords="26,454,153,541"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="215,253,329,327"/>
-</map>

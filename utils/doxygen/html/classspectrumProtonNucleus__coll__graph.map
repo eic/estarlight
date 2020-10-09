@@ -1,8 +1,0 @@
-<map id="spectrumProtonNucleus" name="spectrumProtonNucleus">
-<area shape="rect" id="node2" href="$classspectrum.html" title="{spectrum\n||+ spectrum()\l+ generateKsingle()\l+ generateKdouble()\l+ drawKsingle()\l+ drawKdouble()\l+ setBeamBeamSystem()\l+ setMinGammaEnergy()\l+ setMaxGammaEnergy()\l+ setBmin()\l+ setBmax()\l# generateBreakupProbabilities()\l# getSigma()\l# getTransformedNofe()\l&#45; getFnSingle()\l&#45; getFnDouble()\l&#45; spectrum()\l}" alt="" coords="235,1077,451,1351"/>
-<area shape="rect" id="node11" href="$classbeamBeamSystem.html" title="{beamBeamSystem\n||+ beamBeamSystem()\l+ beamBeamSystem()\l+ ~beamBeamSystem()\l+ beam1()\l+ beam2()\l+ probabilityOfBreakup()\l+ cmsBoost()\l+ beamLorentzGamma()\l+ init()\l&#45; generateBreakupProbabilities()\l&#45; probabilityOfHadronBreakup()\l&#45; probabilityOfPhotonBreakup()\l}" alt="" coords="513,783,727,1003"/>
-<area shape="rect" id="node13" href="$classbeam.html" title="{beam\n||+ beam()\l+ ~beam()\l+ photonDensity()\l+ rapidity()\l+ setBeamLorentzGamma()\l}" alt="" coords="750,581,936,708"/>
-<area shape="rect" id="node14" href="$classnucleus.html" title="{nucleus\n||+ nucleus()\l+ nucleus()\l+ ~nucleus()\l+ init()\l+ Z()\l+ A()\l+ productionMode()\l+ formFactor()\l+ dipoleFormFactor()\l+ thickness()\l+ nuclearRadius()\l+ rho0()\l&#45; woodSaxonSkinDepth()\l&#45; rws()\l}" alt="" coords="694,167,863,413"/>
-<area shape="rect" id="node4" href="$classrandomGenerator.html" title="{randomGenerator\n||+ SetSeed()\l+ Rndom()\l}" alt="" coords="26,454,153,541"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="215,253,329,327"/>
-</map>

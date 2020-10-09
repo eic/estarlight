@@ -1,3 +1,0 @@
-<map id="twoPhotonLuminosity" name="twoPhotonLuminosity">
-<area shape="rect" id="node2" href="$classbeamBeamSystem.html" title="{beamBeamSystem\n|&#45; _pHadronBreakup\l&#45; _pPhotonBreakup\l&#45; _beamLorentzGamma\l&#45; _beamLorentzGamma1\l&#45; _beamLorentzGamma2\l&#45; _beamBreakupMode\l&#45; _beam1\l&#45; _beam2\l&#45; _cmsBoost\l&#45; _breakupProbabilities\l&#45; _breakupImpactParameterStep\l&#45; _breakupCutOff\l|+ beamBeamSystem()\l+ beamBeamSystem()\l+ ~beamBeamSystem()\l+ beam1()\l+ beam2()\l+ probabilityOfBreakup()\l+ cmsBoost()\l+ beamLorentzGamma()\l+ init()\l&#45; generateBreakupProbabilities()\l&#45; probabilityOfHadronBreakup()\l&#45; probabilityOfPhotonBreakup()\l}" alt="" coords="12,5,227,372"/>
-</map>

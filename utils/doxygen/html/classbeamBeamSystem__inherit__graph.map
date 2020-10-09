@@ -1,3 +1,0 @@
-<map id="beamBeamSystem" name="beamBeamSystem">
-<area shape="rect" id="node2" href="$classtwoPhotonLuminosity.html" title="{twoPhotonLuminosity\n|&#45; _W1\l&#45; _W2\l&#45; _gamma\l&#45; _nWbins\l&#45; _nYbins\l&#45; _wMin\l&#45; _yMin\l&#45; _wMax\l&#45; _yMax\l&#45; _productionMode\land 7 more...\l|+ twoPhotonLuminosity()\l+ ~twoPhotonLuminosity()\l&#45; twoPhotonDifferentialLuminosity()\l&#45; D2LDMDY()\l&#45; D2LDMDY()\l&#45; integral()\l&#45; radmul()\l&#45; integrand()\l&#45; Nphoton()\l&#45; D2LDMDY_Threaded()\l}" alt="" coords="5,420,234,747"/>
-</map>

@@ -1,6 +1,0 @@
-<map id="photonNucleusCrossSection" name="photonNucleusCrossSection">
-<area shape="rect" id="node5" href="$classbeamBeamSystem.html" title="{beamBeamSystem\n||+ beamBeamSystem()\l+ beamBeamSystem()\l+ ~beamBeamSystem()\l+ beam1()\l+ beam2()\l+ probabilityOfBreakup()\l+ cmsBoost()\l+ beamLorentzGamma()\l+ init()\l&#45; generateBreakupProbabilities()\l&#45; probabilityOfHadronBreakup()\l&#45; probabilityOfPhotonBreakup()\l}" alt="" coords="573,803,786,1023"/>
-<area shape="rect" id="node7" href="$classbeam.html" title="{beam\n||+ beam()\l+ ~beam()\l+ photonDensity()\l+ rapidity()\l+ setBeamLorentzGamma()\l}" alt="" coords="638,591,825,718"/>
-<area shape="rect" id="node8" href="$classnucleus.html" title="{nucleus\n||+ nucleus()\l+ nucleus()\l+ ~nucleus()\l+ init()\l+ Z()\l+ A()\l+ productionMode()\l+ formFactor()\l+ dipoleFormFactor()\l+ thickness()\l+ nuclearRadius()\l+ rho0()\l&#45; woodSaxonSkinDepth()\l&#45; rws()\l}" alt="" coords="753,167,923,413"/>
-<area shape="rect" id="node10" title="STL class. " alt="" coords="5,253,119,327"/>
-</map>

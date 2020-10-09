@@ -1,9 +1,0 @@
-<map id="incoherentPhotonNucleusLuminosity" name="incoherentPhotonNucleusLuminosity">
-<area shape="rect" id="node2" href="$classphotonNucleusCrossSection.html" title="{photonNucleusCrossSection\n|# _beamLorentzGamma\l&#45; _protonEnergy\l&#45; _slopeParameter\l&#45; _vmQ2Power_c1\l&#45; _vmQ2Power_c2\l&#45; _ANORM\l&#45; _BNORM\l&#45; _defaultC\l&#45; _minQ2\l&#45; _maxPhotonEnergy\l&#45; _cmsMinPhotonEnergy\l&#45; _targetRadii\l|+ photonNucleusCrossSection()\l+ ~photonNucleusCrossSection()\l+ slopeParameter()\l+ getChannelMass()\l+ getBNORM()\l+ getbbs()\l+ vmPhotonCoupling()\l+ vmQ2Power()\l+ getDefaultC()\l+ maxPhotonEnergy()\land 17 more...\l}" alt="" coords="836,1151,1054,1504"/>
-<area shape="rect" id="node6" href="$classbeamBeamSystem.html" title="{beamBeamSystem\n||+ beamBeamSystem()\l+ beamBeamSystem()\l+ ~beamBeamSystem()\l+ beam1()\l+ beam2()\l+ probabilityOfBreakup()\l+ cmsBoost()\l+ beamLorentzGamma()\l+ init()\l&#45; generateBreakupProbabilities()\l&#45; probabilityOfHadronBreakup()\l&#45; probabilityOfPhotonBreakup()\l}" alt="" coords="535,869,749,1089"/>
-<area shape="rect" id="node8" href="$classbeam.html" title="{beam\n||+ beam()\l+ ~beam()\l+ photonDensity()\l+ rapidity()\l+ setBeamLorentzGamma()\l}" alt="" coords="602,591,789,718"/>
-<area shape="rect" id="node9" href="$classnucleus.html" title="{nucleus\n||+ nucleus()\l+ nucleus()\l+ ~nucleus()\l+ init()\l+ Z()\l+ A()\l+ productionMode()\l+ formFactor()\l+ dipoleFormFactor()\l+ thickness()\l+ nuclearRadius()\l+ rho0()\l&#45; woodSaxonSkinDepth()\l&#45; rws()\l}" alt="" coords="737,167,907,413"/>
-<area shape="rect" id="node11" title="STL class. " alt="" coords="5,253,119,327"/>
-<area shape="rect" id="node13" title="STL class. " alt="" coords="1348,1291,1427,1364"/>
-<area shape="rect" id="node14" title="STL class. " alt="" coords="1337,936,1462,1023"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="starlightParticle" name="starlightParticle">
-<area shape="rect" id="node2" href="$classlorentzVector.html" title="{lorentzVector\n||+ lorentzVector()\l+ ~lorentzVector()\l+ lorentzVector()\l+ SetXYZT()\l+ SetPxPyPzE()\l+ GetPx()\l+ GetPy()\l+ GetPz()\l+ GetE()\l+ operator+=()\l+ operator&#45;=()\l+ M2()\l+ M()\l+ BoostVector()\l+ Boost()\l}" alt="" coords="39,461,166,721"/>
-<area shape="rect" id="node4" href="$classvector3.html" title="{vector3\n||+ vector3()\l+ vector3()\l+ vector3()\l+ ~vector3()\l+ GetVector()\l+ SetVector()\l+ SetVector()\l+ operator=()\l+ operator+=()\l+ operator&#45;=()\l+ X()\l+ Y()\l+ Z()\l+ Mag2()\l+ Mag()\l}" alt="" coords="134,140,241,400"/>
-</map>

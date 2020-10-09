@@ -1,8 +1,0 @@
-<map id="twoPhotonLuminosity" name="twoPhotonLuminosity">
-<area shape="rect" id="node2" href="$classbeamBeamSystem.html" title="{beamBeamSystem\n||+ beamBeamSystem()\l+ beamBeamSystem()\l+ ~beamBeamSystem()\l+ beam1()\l+ beam2()\l+ probabilityOfBreakup()\l+ cmsBoost()\l+ beamLorentzGamma()\l+ init()\l&#45; generateBreakupProbabilities()\l&#45; probabilityOfHadronBreakup()\l&#45; probabilityOfPhotonBreakup()\l}" alt="" coords="369,783,582,1003"/>
-<area shape="rect" id="node5" href="$classbeam.html" title="{beam\n||+ beam()\l+ ~beam()\l+ photonDensity()\l+ rapidity()\l+ setBeamLorentzGamma()\l}" alt="" coords="545,581,731,708"/>
-<area shape="rect" id="node6" href="$classnucleus.html" title="{nucleus\n||+ nucleus()\l+ nucleus()\l+ ~nucleus()\l+ init()\l+ Z()\l+ A()\l+ productionMode()\l+ formFactor()\l+ dipoleFormFactor()\l+ thickness()\l+ nuclearRadius()\l+ rho0()\l&#45; woodSaxonSkinDepth()\l&#45; rws()\l}" alt="" coords="627,167,796,413"/>
-<area shape="rect" id="node9" title="STL class. " alt="" coords="5,253,119,327"/>
-<area shape="rect" id="node11" title="STL class. " alt="" coords="1135,856,1214,929"/>
-<area shape="rect" id="node12" title="STL class. " alt="" coords="1190,601,1315,688"/>
-</map>

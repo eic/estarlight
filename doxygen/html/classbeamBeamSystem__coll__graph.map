@@ -1,5 +1,0 @@
-<map id="beamBeamSystem" name="beamBeamSystem">
-<area shape="rect" id="node4" href="$classbeam.html" title="{beam\n||+ beam()\l+ ~beam()\l+ photonDensity()\l+ rapidity()\l+ setBeamLorentzGamma()\l}" alt="" coords="464,581,650,708"/>
-<area shape="rect" id="node5" href="$classnucleus.html" title="{nucleus\n||+ nucleus()\l+ nucleus()\l+ ~nucleus()\l+ init()\l+ Z()\l+ A()\l+ productionMode()\l+ formFactor()\l+ dipoleFormFactor()\l+ thickness()\l+ nuclearRadius()\l+ rho0()\l&#45; woodSaxonSkinDepth()\l&#45; rws()\l}" alt="" coords="339,167,508,413"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="28,253,141,327"/>
-</map>
