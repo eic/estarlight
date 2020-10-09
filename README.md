@@ -63,14 +63,14 @@ BEAM_1_A = 0
 
    * TTree is output to starlight.root
 * Analyze your data:
-   * We have included template analysis (~/the_path/estarlight/analysis/) code that reads   slight.root and fill histograms. For more details please look at the README
+   * We have included template [analysis](../blob/master/analysis)) (~/the_path/estarlight/analysis/) code that reads   slight.root and fill histograms. For more details please look at the [README](../blob/master/README.pdf).
 ```
 cd ~/the_path/eSTARlight/analysis
 sh e_run.sh ~/the_path/starlight.root
 ```
 
 ## Documentation
-A more detailed version of the README is included as part of the software package, located in:
+A more detailed version of the [README](../blob/master/README.pdf) is included as part of the software package, located in:
 ```
 ~/the_path/estarlight/Readme.pdf
 ~/the_path/estarlight/Readme.docx
