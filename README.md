@@ -13,7 +13,7 @@ eSTARlight is a Monte Carlo that simulates coherent vector meson photo- and elec
 
 <sup>1</sup>: Lawrence Berkeley National Laboratory, Relativistic Nuclear Collisions Program, Nuclear Science Division.
 
-All rights rights reserved.
+All rights reserved.
 
 ## Declaration
 Portions of this package were originally inherited/based on the [STARlight Monte Carlo](https://starlight.hepforge.org/) generator. We would like to acknowledge the authors J. Nystrand, J. Seger and Y. Gorbunov for their contributions to STARlight. This work was funded by the U.S. Department of Energy under contract number DE-AC-76SF00098.
