@@ -76,7 +76,8 @@ A more detailed version of the [README](../blob/master/README.pdf) is included a
 ~/the_path/estarlight/Readme.docx
 ```
 
-Finally, the full documentation with class description and dependencies is also available. We have included a config file to generate a fresh version of the documentation. The following steps can be used to generate the documentation:
+Finally, the full documentation with class description and dependencies is also available
+as part of the EIC-related software documentation, e.g. [here](https://eic.github.io/doxygen/d9/da4/classe__starlight.html). We have included a config file to generate a fresh version of the doxygen documentation. The following steps can be used to generate the documentation:
 
 * Download and install [Doxygen](https://www.stack.nl/~dimitri/doxygen/manual/install.html)
 * Move into the source directory:
