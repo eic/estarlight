@@ -27,7 +27,7 @@ CUT_ETA = 0 #Cut in pseudorapidity? (0 = no, 1 = yes)
 ETA_MIN = -10 #Minimum pseudorapidity
 ETA_MAX = 10 #Maximum pseudorapidity
 PROD_MODE = 12     #gg or gP switch (1 = 2-photon, 2 = coherent vector meson (narrow), 3 = coherent vector meson (wide), 4 = incoherent vector meson)
-N_EVENTS = 0  #Number of events
+N_EVENTS = 10000  #Number of events
 #PROD_PID = 113   #Channel of interest; this is rho->pipi
 #PROD_PID = 333   #Channel of interest; this is phi->KK
 PROD_PID = 443011  # J/Psi --> ee

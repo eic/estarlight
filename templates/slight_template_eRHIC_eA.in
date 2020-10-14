@@ -26,7 +26,7 @@ CUT_ETA = 0 #Cut in pseudorapidity? (0 = no, 1 = yes)
 ETA_MIN = -10 #Minimum pseudorapidity
 ETA_MAX = 10 #Maximum pseudorapidity
 PROD_MODE = 12     #gg or gP switch (1 = 2-photon, 2 = coherent vector meson (narrow), 3 = coherent vector meson (wide), 4 = incoherent vector meson)
-N_EVENTS = 0  #Number of events
+N_EVENTS = 10000  #Number of events
 PROD_PID = 113   #Channel of interest; this is rho->pipi
 RND_SEED = 5574531 #Random number seed
 BREAKUP_MODE = 5     #Controls the nuclear breakup; a 5 here makes no requirement on the breakup of the ions
