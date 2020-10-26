@@ -50,9 +50,9 @@ void AnalyzeTree::Loop()
    if (fChain == 0) return;
 
 //  define histos
-    TH1D* D1Rapidity     = new TH1D("D1Rapidity","Rapidity of Daughter 1",200, -10, 10);
+    TH1D* D1Prapidity     = new TH1D("D1Prapidity","Prapidity of Daughter 1",200, -10, 10);
     TH1D* D1Pt     = new TH1D("D1Pt","Transverse Momentum of Daughter 1",100, 0, 2.);
-    TH1D* D2Rapidity     = new TH1D("D2Rapidity","Rapidity of Daughter 2",200, -10, 10);
+    TH1D* D2Prapidity     = new TH1D("D2Prapidity","Prapidity of Daughter 2",200, -10, 10);
     TH1D* D2Pt     = new TH1D("D2Pt","Transverse Momentum of Daughter 2",100, 0, 2.);
     TH1D* ParentRapidity     = new TH1D("ParentRapidity","Rapidity of Parent",200, -10, 10);
     TH1D* ParentPt     = new TH1D("ParentPt","Transverse Momentum of Parent",100, 0, 2.);
@@ -63,21 +63,18 @@ void AnalyzeTree::Loop()
 
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
-      daughters->Clear();
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
-	TLorentzVector *D1 = (TLorentzVector*)daughters->At(0);
-	TLorentzVector *D2 = (TLorentzVector*)daughters->At(1);
 	// if desired, acceptance or analysis cuts can be applied here, before filling histograms
       // if (Cut(ientry) < 0) continue;
-	D1Rapidity->Fill(D1->Rapidity());
-	D2Rapidity->Fill(D2->Rapidity());
-	D1Pt->Fill(D1->Pt());
-	D2Pt->Fill(D2->Pt());
-	ParentRapidity->Fill(parent->Rapidity());
-	ParentPt->Fill(parent->Pt());
-	ParentMass->Fill(parent->M());
+	D1Prapidity->Fill( p1prap_ );
+	D2Prapidity->Fill( p2prap_ );
+	D1Pt->Fill( p1pt_ );
+	D2Pt->Fill( p2pt_ );
+	ParentRapidity->Fill( fsrap_ );
+	ParentPt->Fill( fspt_ );
+	ParentMass->Fill( fsmass_ );
    }// jentry
 
 
@@ -85,8 +82,8 @@ void AnalyzeTree::Loop()
      TFile *histofile = new TFile("starlight_histos.root","recreate");
 //     f->cd;
     
-    D1Rapidity->Write();
-    D2Rapidity->Write();
+    D1Prapidity->Write();
+    D2Prapidity->Write();
     D1Pt->Write();
     D2Pt->Write();
     ParentRapidity->Write();
