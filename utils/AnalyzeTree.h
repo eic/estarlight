@@ -31,7 +31,7 @@ public :
    TBranch        *b_parent;   //!
    TBranch        *b_daughters;   //!
 
-   AnalyzeTree(TTree *tree=0);
+   AnalyzeTree(TString fileName,TString treeName = "esNT");
    virtual ~AnalyzeTree();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
@@ -40,24 +40,22 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+
+   //Data members to be filled
+   float fspt_, fspz_, fsrap_, fsmass_, p1pt_, p1z_, p1prap_, p2pt_, p2z_, p2prap_, kg_, qsq_, xbj_;
+   
 };
 
 #endif
 
 #ifdef AnalyzeTree_cxx
-AnalyzeTree::AnalyzeTree(TTree *tree) : fChain(0) 
+AnalyzeTree::AnalyzeTree(TString fileName,TString treeName) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
-   if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("starlight.root");
-      if (!f || !f->IsOpen()) {
-         f = new TFile("starlight.root");
-      }
-      f->GetObject("starlightTree",tree);
-
-   }
-   Init(tree);
+  TFile * infile = new TFile(fileName,"read");
+  TTree * tree = (TTree*) infile->Get( treeName );
+  Init(tree);
 }
 
 AnalyzeTree::~AnalyzeTree()
@@ -104,8 +102,20 @@ void AnalyzeTree::Init(TTree *tree)
    fCurrent = -1;
    fChain->SetMakeClass(1);
 
-   fChain->SetBranchAddress("parent", &parent, &b_parent);
-   fChain->SetBranchAddress("daughters", &daughters, &b_daughters);
+   fChain->SetBranchAddress("fspt",&fspt_);
+   fChain->SetBranchAddress("fsrap",&fsrap_);
+   fChain->SetBranchAddress("fspz",&fspz_);
+   fChain->SetBranchAddress("fsmass",&fsmass_);
+   fChain->SetBranchAddress("p1pt",&p1pt_);
+   fChain->SetBranchAddress("p1z",&p1z_);
+   fChain->SetBranchAddress("p1prap",&p1prap_);
+   fChain->SetBranchAddress("p2pt",&p2pt_);
+   fChain->SetBranchAddress("p2z",&p2z_);
+   fChain->SetBranchAddress("p2prap",&p2prap_);
+   fChain->SetBranchAddress("kg",&kg_);
+   fChain->SetBranchAddress("qsq",&qsq_);
+   fChain->SetBranchAddress("xbj",&xbj_);
+      
    Notify();
 }
 
