@@ -55,9 +55,6 @@ class eventFileWriter : public fileWriter
 
       /** Write out simulation set up */
       int writeInit(inputParameters &param );
-
-      /** Write an UPC event to file */
-      int writeEvent(upcEvent &event, int eventnumber);
       
       /** Write an eX event to file */
       int writeEvent(eXEvent &event, int eventnumber);

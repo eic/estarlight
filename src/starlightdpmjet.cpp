@@ -20,6 +20,7 @@
 
 #include "starlightdpmjet.h"
 #include "spectrum.h"
+#include "eXevent.h"
 #include <iostream>
 #include <spectrumprotonnucleus.h>
 #include "starlightconfig.h"
@@ -83,10 +84,10 @@ int starlightDpmJet::init()
 }
 
 
-upcEvent starlightDpmJet::produceEvent()
+eXEvent starlightDpmJet::produceEvent()
 {
 
-    upcEvent event;
+    eXEvent event;
 
     if (!_doDoubleEvent)
     {
@@ -103,10 +104,10 @@ upcEvent starlightDpmJet::produceEvent()
     return event;
 }
 
-upcEvent starlightDpmJet::produceSingleEvent(int zdirection, float gammaE)
+eXEvent starlightDpmJet::produceSingleEvent(int zdirection, float gammaE)
 {
 
-    upcEvent event;
+    eXEvent event;
     event.addGamma(gammaE);
 
     int nParticles = 0;
@@ -127,9 +128,9 @@ upcEvent starlightDpmJet::produceSingleEvent(int zdirection, float gammaE)
     return event;
 }
 
-upcEvent starlightDpmJet::produceDoubleEvent()
+eXEvent starlightDpmJet::produceDoubleEvent()
 {
-    upcEvent event;
+    eXEvent event;
 
     float gammaE1 = 0.0;
     float gammaE2 = 0.0;

@@ -37,7 +37,6 @@
 
 #include <string>
 
-class upcEvent;
 
 class e_starlight;
 class inputParameters;

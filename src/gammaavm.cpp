@@ -821,7 +821,7 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	E = Egam + t_E;
 	pz = gamma_pz - t_pz;
 	Y = 0.5*std::log( (E+fabs(pz))/(E-fabs(pz)) );
-	  
+	
 }
 
 
@@ -1027,132 +1027,7 @@ starlightConstants::event Gammaavectormeson::produceEvent(int&)
 	return starlightConstants::event();
 }
 
-
 //______________________________________________________________________________
-upcEvent Gammaavectormeson::produceEvent()
-{
-	// The new event type
-	upcEvent event;
-
-	int iFbadevent=0;
-	int tcheck=0;
-	starlightConstants::particleTypeEnum ipid = starlightConstants::UNKNOWN;
-        starlightConstants::particleTypeEnum vmpid = starlightConstants::UNKNOWN; 
-
-	if (_VMpidtest == starlightConstants::FOURPRONG) {
-		double        comenergy = 0;
-		double        mom[3]    = {0, 0, 0};
-		double        E         = 0;
-		lorentzVector decayVecs[4];
-		do {
-			double rapidity = 0;
-			pickwy(comenergy, rapidity);
-			if (_VMinterferencemode == 0)
-				momenta(comenergy, rapidity, E, mom[0], mom[1], mom[2], tcheck);
-			else if (_VMinterferencemode==1)
-				vmpt(comenergy, rapidity, E, mom[0], mom[1], mom[2], tcheck);
-		} while (!fourBodyDecay(ipid, E, comenergy, mom, decayVecs, iFbadevent));
-		if ((iFbadevent == 0) and (tcheck == 0))
-			for (unsigned int i = 0; i < 4; ++i) {
-				starlightParticle daughter(decayVecs[i].GetPx(),
-				                           decayVecs[i].GetPy(),
-				                           decayVecs[i].GetPz(),
-				                           starlightConstants::UNKNOWN,  // energy 
-				                           starlightConstants::UNKNOWN,  // _mass
-				                           ipid,
-				                           (i < 2) ? -1 : +1);
-				event.addParticle(daughter);
-			}
-	} else {
-		double comenergy = 0.;
-		double rapidity = 0.;
-		double E = 0.;
-		double momx=0.,momy=0.,momz=0.;
-
-		double px2=0.,px1=0.,py2=0.,py1=0.,pz2=0.,pz1=0.;
-		bool accepted = false;
-		do{
-			pickwy(comenergy,rapidity);
-
-			if (_VMinterferencemode==0){
-				momenta(comenergy,rapidity,E,momx,momy,momz,tcheck);
-			
-			} else if (_VMinterferencemode==1){
-				vmpt(comenergy,rapidity,E,momx,momy,momz,tcheck);
-			}
-	   
-			_nmbAttempts++;
-
-                        vmpid = ipid; 
-			twoBodyDecay(ipid,comenergy,momx,momy,momz,px1,py1,pz1,px2,py2,pz2,iFbadevent);
-			double pt1chk = sqrt(px1*px1+py1*py1);
-			double pt2chk = sqrt(px2*px2+py2*py2);
-			double eta1 = pseudoRapidity(px1, py1, pz1);
-			double eta2 = pseudoRapidity(px2, py2, pz2);
-                        
-
-			if(_ptCutEnabled && !_etaCutEnabled){
-				if(pt1chk > _ptCutMin && pt1chk < _ptCutMax &&  pt2chk > _ptCutMin && pt2chk < _ptCutMax){
-					accepted = true;
-					_nmbAccepted++;
-				}
-			}
-			else if(!_ptCutEnabled && _etaCutEnabled){
-				if(eta1 > _etaCutMin && eta1 < _etaCutMax && eta2 > _etaCutMin && eta2 < _etaCutMax){
-					accepted = true;
-					_nmbAccepted++;
-				}
-			}
-			else if(_ptCutEnabled && _etaCutEnabled){
-				if(pt1chk > _ptCutMin && pt1chk < _ptCutMax &&  pt2chk > _ptCutMin && pt2chk < _ptCutMax){
-					if(eta1 > _etaCutMin && eta1 < _etaCutMax && eta2 > _etaCutMin && eta2 < _etaCutMax){
-						accepted = true;
-						_nmbAccepted++;
-					}
-				}
-			}
-			else if(!_ptCutEnabled && !_etaCutEnabled)
-				_nmbAccepted++;
-		}while((_ptCutEnabled || _etaCutEnabled) && !accepted);
-		if (iFbadevent==0&&tcheck==0) {
-			int q1=0,q2=0;
-                        int ipid1,ipid2=0;
-
-			double xtest = _randy.Rndom(); 
-			if (xtest<0.5)
-				{
-					q1=1;
-					q2=-1;
-				}
-			else {
-				q1=-1;
-				q2=1;
-			}
-
-                        if ( ipid == 11 || ipid == 13 ){
-                          ipid1 = -q1*ipid;
-                          ipid2 = -q2*ipid;
-                        } else {
-                          ipid1 = q1*ipid;
-                          ipid2 = q2*ipid;
-                        }
-
-			double md = getDaughterMass(vmpid); 
-                        double Ed1 = sqrt(md*md+px1*px1+py1*py1+pz1*pz1); 
-			starlightParticle particle1(px1, py1, pz1, Ed1, starlightConstants::UNKNOWN, ipid1, q1);
-			event.addParticle(particle1);
-
-                        double Ed2 = sqrt(md*md+px2*px2+py2*py2+pz2*pz2); 
-			starlightParticle particle2(px2, py2, pz2, Ed2, starlightConstants::UNKNOWN, ipid2, q2);
-			event.addParticle(particle2);
-
-
-		}
-	}
-
-	return event;
-
-}
 double Gammaavectormeson::pseudoRapidity(double px, double py, double pz)
 {
 	double pT = sqrt(px*px + py*py);

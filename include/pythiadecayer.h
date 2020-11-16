@@ -3,7 +3,7 @@
 
 #include "Pythia8/Pythia.h"
 #include "starlightparticle.h"
-#include "upcevent.h"
+#include "eXevent.h"
 
 class pythiaDecayer
 {
@@ -25,7 +25,7 @@ public:
     void addParticle(const starlightParticle &p);
     
     // Execute event and return starlight type event
-    upcEvent execute();
+    eXEvent execute();
 
 
 private:
