@@ -21,7 +21,7 @@
 #ifndef STARLIGHTPYTHIA_H
 #define STARLIGHTPYTHIA_H
 
-#include "upcevent.h"
+#include "eXevent.h"
 #include "inputParameters.h"
 #include "beambeamsystem.h"
 #include "eventchannel.h"
@@ -38,11 +38,11 @@ public:
 
     int init(std::string pythiaParams, bool fullEventRecord = false);
 
-    virtual upcEvent produceEvent();
+    virtual eXEvent produceEvent();
 
-    virtual upcEvent produceSingleEvent(int /*zdirection*/, float /*egamma*/){return upcEvent();}
+    virtual eXEvent produceSingleEvent(int /*zdirection*/, float /*egamma*/){return eXEvent();}
 
-    virtual upcEvent produceDoubleEvent(){return upcEvent();}
+    virtual eXEvent produceDoubleEvent(){return eXEvent();}
 
     virtual starlightConstants::event produceEvent(int& /*ievent*/){ return starlightConstants::event();}
 

@@ -22,6 +22,7 @@
 #include "starlightpythia.h"
 #include "pythiaInterface.h"
 #include "spectrumprotonnucleus.h"
+#include "eXevent.h"
 #include <cmath>
 #include <sstream>
 
@@ -75,19 +76,17 @@ int starlightPythia::init(std::string pythiaParams, bool fullEventRecord)
     return 0;
 }
 
-upcEvent starlightPythia::produceEvent()
+eXEvent starlightPythia::produceEvent()
 {
-  upcEvent event;
+  eXEvent event;
   
-  
-  
-    if (!_doDoubleEvent)
+  if (!_doDoubleEvent)
     {
       double gammaE = 0;
       do
-      {
-	gammaE = _spectrum->drawKsingle();
-      } while(isnan(gammaE));
+	{
+	  gammaE = _spectrum->drawKsingle();
+	} while(isnan(gammaE));
       event.addGamma(gammaE);
 
       char opt[32];
@@ -101,30 +100,29 @@ upcEvent starlightPythia::produceEvent()
       vector3 boostVector(0, 0, tanh(boost));
       
       for(int idx = 0; idx < pyjets_.n; idx++)
-      {
-	if(pyjets_.k[0][idx] > 10 && _fullEventRecord==false) continue;
-	int pdgCode = pyjets_.k[1][idx];
-	int charge = 0;
-	if( pdgCode == 12 || pdgCode == 14 || pdgCode == 16 ||  pdgCode == 22 || pdgCode == 111 || pdgCode == 130 || pdgCode == 321 || pdgCode == 2112)
 	{
-	  charge = 0;
-	}
-	else
-	{
-	  charge = (pdgCode > 0) - (pdgCode < 0);
-	}
-	
-	starlightParticle particle(pyjets_.p[0][idx], pyjets_.p[1][idx], -zdirection*pyjets_.p[2][idx], pyjets_.p[3][idx], pyjets_.p[4][idx], pyjets_.k[1][idx], charge);
-	if(_fullEventRecord)
-	{
-	  particle.setFirstDaughter(pyjets_.k[3][idx]);
-	  particle.setLastDaughter(pyjets_.k[4][idx]);
-	  particle.setStatus(pyjets_.k[0][idx]);
-	}
-	particle.Boost(boostVector);
-        event.addParticle(particle);
-      }
-      
+	  if(pyjets_.k[0][idx] > 10 && _fullEventRecord==false) continue;
+	  int pdgCode = pyjets_.k[1][idx];
+	  int charge = 0;
+	  if( pdgCode == 12 || pdgCode == 14 || pdgCode == 16 ||  pdgCode == 22 || pdgCode == 111 || pdgCode == 130 || pdgCode == 321 || pdgCode == 2112)
+	    {
+	      charge = 0;
+	    }
+	  else
+	    {
+	      charge = (pdgCode > 0) - (pdgCode < 0);
+	    }
+	  
+	  starlightParticle particle(pyjets_.p[0][idx], pyjets_.p[1][idx], -zdirection*pyjets_.p[2][idx], pyjets_.p[3][idx], pyjets_.p[4][idx], pyjets_.k[1][idx], charge);
+	  if(_fullEventRecord)
+	    {
+	      particle.setFirstDaughter(pyjets_.k[3][idx]);
+	      particle.setLastDaughter(pyjets_.k[4][idx]);
+	      particle.setStatus(pyjets_.k[0][idx]);
+	    }
+	  particle.Boost(boostVector);
+	  event.addParticle(particle);
+	}  
     }
-    return event;
+  return event;
 }

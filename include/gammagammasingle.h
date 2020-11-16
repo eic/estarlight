@@ -57,7 +57,6 @@ class Gammagammasingle : public eventChannel
   void singleCrossSection();
   starlightConstants::event produceEvent(int &ievent);
 
-  upcEvent produceEvent();
   eXEvent e_produceEvent();
 
  private:

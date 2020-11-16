@@ -42,7 +42,6 @@
 #include "beambeamsystem.h"
 #include "randomgenerator.h"
 #include "eventchannel.h"
-#include "upcevent.h"
 #include "eXevent.h"
 #include "nBodyPhaseSpaceGen.h"
 //Now here for eSTARlight
@@ -56,7 +55,6 @@ class Gammaavectormeson : public eventChannel
   virtual ~Gammaavectormeson();
   starlightConstants::event produceEvent(int &ievent);
   
-  upcEvent produceEvent();
   eXEvent e_produceEvent();
 
   void pickwy(double &W, double &Y);

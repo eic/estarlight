@@ -260,8 +260,6 @@ set(SOURCES
   src/narrowResonanceCrossSection.cpp
   src/readinluminosity.cpp
   src/twophotonluminosity.cpp
-  src/gammagammaleptonpair.cpp
-  src/upcevent.cpp
   src/vector3.cpp
   src/lorentzvector.cpp
   src/filewriter.cpp
