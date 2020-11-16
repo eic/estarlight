@@ -45,7 +45,8 @@ int hepMC3Writer::initBeamHepMC3(const inputParameters &param)
   hepmc3_beam1_four_vector_ = FourVector(0,0,beam1_pz,beam1_E);
   hepmc3_beam2_four_vector_ = FourVector(0,0,beam2_pz,beam2_E);
   beam1_pdg_id_ = 11;
-  beam2_pdg_id_ = ( param.beam2A() > 1 ) ? 2212 : 2212; //Everything is a proton right now
+  int nuclear_pid = param.beam2A()*10 + param.beam2Z()*10000 + 1000000000;// Form 100ZZZAAAl; l=0
+  beam2_pdg_id_ = ( param.beam2A() > 1 ) ? nuclear_pid : 2212; //Everything is a proton right now
 
   return 0;
 }
