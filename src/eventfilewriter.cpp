@@ -80,64 +80,6 @@ int eventFileWriter::writeInit(inputParameters &_p)
 }
 
 //______________________________________________________________________________
-int eventFileWriter::writeEvent(upcEvent &event, int eventnumber)
-{
-   
-    int numberoftracks = 0;
-    if(_writeFullPythia)
-    {
-        numberoftracks = event.getParticles()->size();
-    }
-    else
-    {
-        for(unsigned int i = 0; i<event.getParticles()->size(); ++i)
-        {
-            if(event.getParticles()->at(i).getStatus() >= 0) numberoftracks++;
-        }
-    }
-    
-    // sometimes we don't have tracks due to wrongly picked W , check it
-    if(numberoftracks){
-      eventnumber++;
-      
-      _fileStream << "EVENT: " << eventnumber << " " << numberoftracks << " " << 1 << std::endl;
-      if(event.getGammaEnergies()->size()) _fileStream << "GAMMAENERGIES:";
-      for(unsigned int n = 0; n < event.getGammaEnergies()->size(); n++)
-      {
-	_fileStream << " " << event.getGammaEnergies()->at(n);
-      }
-      if(event.getGammaEnergies()->size()) _fileStream<< std::endl;
-      _fileStream <<"VERTEX: "<<0.<<" "<<0.<<" "<<0.<<" "<<0.<<" "<<1<<" "<<0<<" "<<0<<" "<<numberoftracks<<std::endl;
-
-      int ipart = 0;
-      std::vector<starlightParticle>::const_iterator part = (event.getParticles())->begin();
-      
-      for (part = event.getParticles()->begin(); part != event.getParticles()->end(); part++, ipart++)
-	{
-          if(!_writeFullPythia) 
-          {
-              if((*part).getStatus() < 0) continue;
-          }
-	  _fileStream << "TRACK: " << " " << starlightParticleCodes::jetsetToGeant((*part).getPdgCode()) <<" "<< (*part).GetPx() << " " << (*part).GetPy()
-		      << " "<< (*part).GetPz() << " " << eventnumber << " " << ipart << " " << 0 << " "
-		      << (*part).getPdgCode();
-		      
-	  if(_writeFullPythia)
-	  {
-	    lorentzVector vtx = (*part).getVertex();
-	    _fileStream << " " << vtx.GetPx() << " " << vtx.GetPy() << " " << vtx.GetPz() << " " << vtx.GetE();
-	    _fileStream << " " << (*part).getFirstParent() << " " << (*part).getLastParent() << " " << (*part).getFirstDaughter() << " " << (*part).getLastDaughter() << " " << (*part).getStatus();
-	  }
-		      
-	  _fileStream <<std::endl;
-	}
-    }
-    
-    return 0;
-}
-
-
-//______________________________________________________________________________
 int eventFileWriter::writeEvent(eXEvent &event, int eventnumber)
 {
    

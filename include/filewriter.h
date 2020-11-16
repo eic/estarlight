@@ -38,7 +38,6 @@
 #include <string>
 #include <fstream>
 
-#include "upcevent.h"
 #include "eXevent.h"
 class fileWriter
 {

@@ -53,14 +53,12 @@
 #include "reportingUtils.h"
 #include "inputParameters.h"
 #include "eventchannel.h"
-#include "gammagammaleptonpair.h"
 #include "gammagammasingle.h"
 #include "gammaavm.h"
 #include "twophotonluminosity.h"
 #include "gammaaluminosity.h"
 #include "gammaeluminosity.h"
 #include "incoherentPhotonNucleusLuminosity.h"
-#include "upcevent.h"
 #include "e_starlight.h"
 
 
@@ -246,15 +244,9 @@ e_starlight::createEventChannel()
 	case MUON:
 	case TAUON:
         case TAUONDECAY:
-		{
-			_eventChannel = new Gammagammaleptonpair(*_inputParameters, *_beamSystem);
-			if (_eventChannel)
-				return true;
-			else {
-				printWarn << "cannot construct Gammagammaleptonpair event channel." << endl;
-				return false;
-			}
-		}
+	  printWarn << "cannot construct Gammagammaleptonpair event channel." << endl;
+	  return false;
+	
 	case A2:        // jetset/pythia
 	case ETA:       // jetset/pythia
 	case ETAPRIME:  // jetset/pythia

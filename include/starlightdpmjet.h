@@ -34,11 +34,11 @@ public:
 
     int init();
     
-    virtual upcEvent produceEvent();
+    virtual eXEvent produceEvent();
     
-    virtual upcEvent produceSingleEvent(int zdirection, float egamma);
+    virtual eXEvent produceSingleEvent(int zdirection, float egamma);
     
-    virtual upcEvent produceDoubleEvent();
+    virtual eXEvent produceDoubleEvent();
     
     virtual starlightConstants::event produceEvent(int& /*ievent*/) { return starlightConstants::event(); }
     
