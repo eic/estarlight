@@ -222,18 +222,6 @@ if(ENABLE_PYTHIA6)
    endif(PYTHIA6_FOUND)
 endif()
 
-# setup DPMJET
-option (ENABLE_DPMJET  "Enable compilation against DPMJet" OFF)
-if(ENABLE_DPMJET)
-   find_package(DPMJet REQUIRED)
-   if(DPMJET_FOUND)
-      option (ENABLE_DPMJET  "Enable compilation against DPMJet" ON)       
-   else(DPMJET_FOUND)
-      option (ENABLE_DPMJET  "Enable compilation against DPMJet" OFF)
-   endif(DPMJET_FOUND)
- endif(ENABLE_DPMJET)
-
-
 # set include directories
 set(INCLUDE_DIRECTORIES
 	${CMAKE_SOURCE_DIR}/include
@@ -302,14 +290,6 @@ if(ENABLE_PYTHIA6)
 		src/spectrumprotonnucleus.cpp
 		)
 endif()
-if(ENABLE_DPMJET)
-  set (SOURCES 
-		${SOURCES}
-		src/starlightdpmjet.cpp
-		src/spectrum.cpp
-		src/spectrumprotonnucleus.cpp
-		)
-endif()
 
 # add Starlight library to the build system
 set(THIS_LIB "Starlib")
@@ -318,16 +298,6 @@ add_library(${THIS_LIB} STATIC ${SOURCES})
 #	"${PYTHIA8_LIBRARY}"
 #	"${LHAPDF_LIBRARIES}"
 #)
-
-if(ENABLE_DPMJET)
-  enable_language(Fortran)
-  set(DPMJET_LIB "DpmJetLib")
-  message(STATUS "DPMJet objects: ${DPMJET_OBJECTS}")
-  add_library(${DPMJET_LIB} STATIC dpmjet/dpmjetint.f ${DPMJET_OBJECTS})
-  set(optionalLibs ${optionalLibs} ${DPMJET_LIB})
-  set(optionalLibs ${optionalLibs} "gfortran")
-
-endif()
 
 if(ENABLE_PYTHIA6)
   enable_language(Fortran)

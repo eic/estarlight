@@ -42,10 +42,6 @@
 #include "PythiaStarlight.h"
 #endif
 
-#ifdef ENABLE_DPMJET
-#include "starlightdpmjet.h"
-#endif
-
 #ifdef ENABLE_PYTHIA6
 #include "starlightpythia.h"
 #endif
