@@ -622,6 +622,23 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	E = Egam + t_E;
 	pz = gamma_pz - t_pz;
 	Y = 0.5*std::log( (E+fabs(pz))/(E-fabs(pz)) );
+
+
+	if (_ip->backProd()) {
+	  // use backward production
+	  double m_tar = _ip->protonMass() * _ip->targetBeamA();
+	  double E_tar_i_lab = m_tar * _ip->targetBeamLorentzGamma();
+	  double pz_tar_i_lab = -sqrt(E_tar_i_lab*E_tar_i_lab - m_tar*m_tar);
+	  double pz_gam_i_lab = Egam;
+
+	  double pz_tar_f_lab = (pz_tar_i_lab + pz_gam_i_lab) + pz;
+	  // in a backward production event this value will
+	  // become the vm pz
+	  pz = pz_tar_f_lab;
+	  // and the energy is updated
+	  E = sqrt(W*W + pt*pt + pz*pz);
+	  Y = 0.5*std::log( (E+fabs(pz))/(E-fabs(pz)) );
+	}
 	
 }
 
