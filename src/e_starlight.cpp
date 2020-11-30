@@ -108,20 +108,8 @@ e_starlight::init()
 	const bool lumTableIsValid = luminosityTableIsValid();
 
 	// Do some sanity checks of the input parameters here.
-	if( _inputParameters->beam1A() != 0 && _inputParameters->beam2A() != 0 ){
+	if( _inputParameters->targetBeamA() == 0 ){
 	  //	  printErr << endl << "One of the two beams must be an electron in eSTARlight" << endl;
-	  return false;
-	}
-	if( _inputParameters->beam1A() == 0 && _inputParameters->beam2A() == 0 ){
-	  //	  printErr << endl << "Only one of the two beams can be electron in eSTARlight"<< endl;
-	  return false;
-	}
-	if( _inputParameters->beam1A() == 0 && std::abs(_inputParameters->beam1Z()) != 1 ){
-	  //	  printErr << endl << "Beam 1 should be electron, but has wrong Z"<< endl;	  
-	  return false;
-	}
-	if( _inputParameters->beam2A() == 0 && _inputParameters->beam2Z() != std::abs(1) ){
-	  //	  printErr << endl << "Beam 1 should be electron, but has wrong Z"<< endl;
 	  return false;
 	}
 
@@ -191,7 +179,7 @@ e_starlight::luminosityTableIsValid() const
 		return false;
 	}
 
-	unsigned int beam1Z, beam1A, beam2Z, beam2A;
+	unsigned int targetBeamZ, targetBeamA;
 	double       beamLorentzGamma = 0;
 	double       maxW = 0, minW = 0;
 	unsigned int nmbWBins;
@@ -207,8 +195,7 @@ e_starlight::luminosityTableIsValid() const
 	std::string  validationKey;
 	if (!(lumLookUpTableFile
 	      >> validationKey
-	      >> beam1Z >> beam1A
-	      >> beam2Z >> beam2A
+	      >> targetBeamZ >> targetBeamA
 	      >> beamLorentzGamma
 	      >> maxW >> minW >> nmbWBins
 	      >> maxRapidity >> nmbRapidityBins

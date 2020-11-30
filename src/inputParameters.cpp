@@ -52,12 +52,10 @@ parameterlist parameterbase::_parameters;
 //______________________________________________________________________________
 inputParameters::inputParameters()
         : _baseFileName          ("baseFileName","slight"),
- 	  _beam1Z                ("BEAM_1_Z",0),
-	  _beam1A                ("BEAM_1_A",0),
-	  _beam2Z                ("BEAM_2_Z",0),
-	  _beam2A                ("BEAM_2_A",0),
-	  _beam1LorentzGamma     ("BEAM_1_GAMMA",0),
-	  _beam2LorentzGamma     ("BEAM_2_GAMMA",0),
+	  _targetBeamZ                ("TARGET_BEAM_Z",0),
+	  _targetBeamA                ("TARGET_BEAM_A",0),
+	  _electronBeamLorentzGamma     ("ELECTRON_BEAM_GAMMA",0),
+	  _targetBeamLorentzGamma     ("TARGET_BEAM_GAMMA",0),
 	  _maxW                  ("W_MAX",0),
 	  _minW                  ("W_MIN",0),
 	  _nmbWBins              ("W_N_BINS",0),
@@ -103,13 +101,11 @@ inputParameters::inputParameters()
 	
         _ip.addParameter(_baseFileName);
 
-	_ip.addParameter(_beam1Z);
-	_ip.addParameter(_beam2Z);
-	_ip.addParameter(_beam1A);
-	_ip.addParameter(_beam2A);
+	_ip.addParameter(_targetBeamZ);
+	_ip.addParameter(_targetBeamA);
 
-	_ip.addParameter(_beam1LorentzGamma);
-	_ip.addParameter(_beam2LorentzGamma);
+	_ip.addParameter(_targetBeamLorentzGamma);
+	_ip.addParameter(_electronBeamLorentzGamma);
 	
 	_ip.addParameter(_maxW);
 	_ip.addParameter(_minW);
@@ -187,32 +183,26 @@ inputParameters::configureFromFile(const std::string &_configFileName)
  {
 	
  	// Calculate beam gamma in CMS frame
- 	double rap1 = acosh(beam1LorentzGamma());
-	double rap2 = -acosh(beam2LorentzGamma());
+ 	double rap1 = acosh(electronBeamLorentzGamma());
+	double rap2 = -acosh(targetBeamLorentzGamma());
 	_beamLorentzGamma = cosh((rap1-rap2)/2);
 	_targetLorentzGamma = cosh(rap1-rap2);
 
-	if( beam2A() == 1) //proton case 0.87 fm = 4.4 GeV^{-1}
+	if( targetBeamA() == 1) //proton case 0.87 fm = 4.4 GeV^{-1}
 	  _targetR = 4.4;
 	else
-	  _targetR = 6.1 * pow(beam2A(), 1./3.);
+	  _targetR = 6.1 * pow(targetBeamA(), 1./3.);
 	  //_targetR = 4.4/2.;
 
 	_fixedQ2Range = false;
-	std::cout << "Rapidity beam 1: " << rap1 << ", rapidity beam 2: " << rap2 << ", rapidity CMS system: " << (rap1+rap2)/2 << ", beam gamma in CMS: " << _beamLorentzGamma<< std::endl;
+	std::cout << "Rapidity electron beam: " << rap1 << ", rapidity target beam: " << rap2 << ", rapidity CMS system: " << (rap1+rap2)/2 << ", beam gamma in CMS: " << _beamLorentzGamma<< std::endl;
 	std::cout << "Rapidity beam 1 in beam 2 frame: " << rap1-rap2 << ", beam 1 gamma in beam 2 frame: " << _targetLorentzGamma<< std::endl;
 	_ptBinWidthInterference = maxPtInterference() / nmbPtBinsInterference();
 	_protonEnergy           = _beamLorentzGamma * protonMass;
 	// Electron energy in the target frame of reference
 	_electronEnergy         = _targetLorentzGamma * starlightConstants::mel;
-	if((beam1Z()==1) && (beam1A()==2)){
-		if((beam2Z()==1) && (beam2A()==2)){
-		printWarn << "deuteron-deuteron collisions are not supported" << endl;
-		return false;}
-		printWarn << "deuterium must be listed as the second nucleus" << endl;
-		return false;}
 
-	if( ((beam1Z()==1) && (beam1A()==3)) || ((beam2Z()==1) && (beam2A()==3)) ){
+	if( (targetBeamZ()==1) && (targetBeamA()==3) ){
 		printWarn << "tritium is not currently supported" << endl;
 		return false;}
 	// check that rho production uses wide resonance option
@@ -273,35 +263,6 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 	double defaultMinW = 0;  // default for _minW, unless it is defined later [GeV/c^2]
 	double defaultMaxW = 0;  // default for _maxW, unless it is defined later [GeV/c^2]
 	switch (prodParticleId()) {
-	case 11:  // e+e- pair
-		_particleType = ELECTRON;
-		_decayType    = LEPTONPAIR;
-		mass          = starlightConstants::mel;
-		defaultMinW   = 2*mass; // default is 0.01; up to 0.15 is safe for Summer 2000 triggering for e+e- pairs
-                defaultMaxW     = sqrt(beam1LorentzGamma()*beam2LorentzGamma())*2*(starlightConstants::hbarc)/(1.2*pow(float(beam1A()),1./6.)*pow(float(beam2A()),1./6.)); // JES 6.17.2015 to avoid problems with no default
-                _inputBranchingRatio = 1.0; 
-		break;
-	case 13:  // mu+mu- pair
-		_particleType = MUON;
-		_decayType    = LEPTONPAIR;
-		defaultMinW   = 2 * muonMass;
-                defaultMaxW     = sqrt(beam1LorentzGamma()*beam2LorentzGamma())*2*(starlightConstants::hbarc)/(1.2*pow(float(beam1A()),1./6.)*pow(float(beam2A()),1./6.)); // JES 6.17.2015 to avoid problems with no default
-                _inputBranchingRatio = 1.0; 
-		break;
-	case 15:  // tau+tau- pair
-		_particleType = TAUON;
-		_decayType    = LEPTONPAIR;
-		defaultMinW   = 2 * tauMass;
-                defaultMaxW     = sqrt(beam1LorentzGamma()*beam2LorentzGamma())*2*(starlightConstants::hbarc)/(1.2*pow(float(beam1A()),1./6.)*pow(float(beam2A()),1./6.)); // JES 6.17.2015 to avoid problems with no default
-                _inputBranchingRatio = 1.0; 
-		break;
-	case 10015:  // tau+tau- pair
-		_particleType = TAUONDECAY;
-		_decayType    = LEPTONPAIR;
-		defaultMinW   = 2 * tauMass;
-                defaultMaxW   = sqrt(beam1LorentzGamma()*beam2LorentzGamma())*2*(starlightConstants::hbarc)/(1.2*pow(float(beam1A()),1./6.)*pow(float(beam2A()),1./6.)); // JES 6.17.2015 to avoid problems with no default
-                _inputBranchingRatio = 1.0; 
-		break;
 
 // 	case 24:  // W+W- pair
 // 		_particleType = W;
@@ -408,15 +369,15 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 		defaultMaxW         = mass + 5 * width;  // use the same 1.5GeV max mass as ZEUS
 		_inputBranchingRatio = starlightConstants::rho0BrPiPi; 
 		break;
-	case 999:  // pi+pi-pi+pi- phase space decay
-		_particleType = FOURPRONG;
-		_decayType    = WIDEVMDEFAULT;
-		mass          = starlightConstants::rho0PrimeMass;
-		width         = starlightConstants::rho0PrimeWidth;		
-		defaultMinW   = 4 * pionChargedMass;
-                defaultMaxW     = sqrt(beam1LorentzGamma()*beam2LorentzGamma())*2*(starlightConstants::hbarc)/(1.2*pow(float(beam1A()),1./6.)*pow(float(beam2A()),1./6.)); // JES 6.17.2015 to avoid problems with no default
-		_inputBranchingRatio = 1.0; 
-		break;
+		//	case 999:  // pi+pi-pi+pi- phase space decay
+		//		_particleType = FOURPRONG;
+		//		_decayType    = WIDEVMDEFAULT;
+		//		mass          = starlightConstants::rho0PrimeMass;
+		//		width         = starlightConstants::rho0PrimeWidth;		
+		//		defaultMinW   = 4 * pionChargedMass;
+		//                defaultMaxW     = sqrt(beam1LorentzGamma()*beam2LorentzGamma())*2*(starlightConstants::hbarc)/(1.2*pow(float(beam1A()),1./6.)*pow(float(beam2A()),1./6.)); // JES 6.17.2015 to avoid problems with no default
+		//		_inputBranchingRatio = 1.0; 
+		//		break;
 	case 223:  // omega(782)
 		_particleType = OMEGA;
 		_decayType    = NARROWVMDEFAULT;  
@@ -612,10 +573,8 @@ inputParameters::print(ostream& out) const
 {
 	out << "starlight parameters:" << endl
 	    << "    base file name  ...................... '"  << _baseFileName.value() << "'" << endl
-	    << "    beam 1 atomic number ................... " << _beam1Z.value() << endl
-	    << "    beam 1 atomic mass number .............. " << _beam1A.value() << endl
-	    << "    beam 2 atomic number ................... " << _beam2Z.value() << endl
-	    << "    beam 2 atomic mass number .............. " << _beam2A.value() << endl
+	    << "    target beam atomic number .............. " << _targetBeamZ.value() << endl
+	    << "    target beam atomic mass number ......... " << _targetBeamA.value() << endl
 	    << "    Lorentz gamma of beams in CM frame ..... " << _beamLorentzGamma << endl
 	    << "    mass W of produced hadronic system ..... " << _minW.value() << " < W < " << _maxW.value() << " GeV/c^2" << endl
 	    << "    # of W bins ............................ " << _nmbWBins.value() << endl
@@ -664,10 +623,8 @@ inputParameters::write(ostream& out) const
 {
   
         out << "baseFileName"  << baseFileName         () <<endl
-	    << "BEAM_1_Z"      << beam1Z               () <<endl
-	    << "BEAM_2_Z"      << beam1A               () <<endl
-	    << "BEAM_1_A"      << beam2Z               () <<endl
-	    << "BEAM_2_A"      << beam2A               () <<endl
+	    << "TARGET_BEAM_Z" << targetBeamZ          () <<endl
+	    << "TARGET_BEAM_A" << targetBeamA          () <<endl
 	    << "BEAM_GAMMA"    << beamLorentzGamma     () <<endl
 	    << "W_MAX"         << maxW                 () <<endl
 	    << "W_MIN"         << minW                 () <<endl

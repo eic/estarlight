@@ -48,14 +48,14 @@ using namespace starlightConstants;
 
 //______________________________________________________________________________
 beamBeamSystem::beamBeamSystem(const inputParameters& inputParametersInstance,
-			       const beam&            beam1,
-                               const beam&            beam2)
+			       const beam&            electronBeam,
+                               const beam&            targetBeam)
   : _beamLorentzGamma(inputParametersInstance.beamLorentzGamma()),
-    _beamLorentzGamma1(inputParametersInstance.beam1LorentzGamma()),
-    _beamLorentzGamma2(inputParametersInstance.beam2LorentzGamma()),
+    _electronBeamLorentzGamma(inputParametersInstance.electronBeamLorentzGamma()),
+    _targetBeamLorentzGamma(inputParametersInstance.targetBeamLorentzGamma()),
     _beamBreakupMode (inputParametersInstance.beamBreakupMode()),
-    _beam1           (beam1),
-    _beam2           (beam2),
+    _electronBeam           (electronBeam),
+    _targetBeam           (targetBeam),
     _breakupProbabilities(0),
     _breakupImpactParameterStep(1.007),
     _breakupCutOff(10e-6)
@@ -69,17 +69,17 @@ beamBeamSystem::beamBeamSystem(const inputParameters& inputParametersInstance,
 //______________________________________________________________________________
 beamBeamSystem::beamBeamSystem(const inputParameters& inputParametersInstance)
 	: _beamLorentzGamma(inputParametersInstance.beamLorentzGamma()),
-          _beamLorentzGamma1(inputParametersInstance.beam1LorentzGamma()),
-          _beamLorentzGamma2(inputParametersInstance.beam2LorentzGamma()),
+          _electronBeamLorentzGamma(inputParametersInstance.electronBeamLorentzGamma()),
+          _targetBeamLorentzGamma(inputParametersInstance.targetBeamLorentzGamma()),
 	  _beamBreakupMode (inputParametersInstance.beamBreakupMode()),
-	  _beam1           (inputParametersInstance.beam1Z(),
-	                    inputParametersInstance.beam1A(),
+	  _electronBeam           (1,
+				   0,
 			    inputParametersInstance.productionMode(),
-                            inputParametersInstance.beam1LorentzGamma()),
-	  _beam2           (inputParametersInstance.beam2Z(),
-	                    inputParametersInstance.beam2A(),
+                            inputParametersInstance.electronBeamLorentzGamma()),
+	  _targetBeam           (inputParametersInstance.targetBeamZ(),
+	                    inputParametersInstance.targetBeamA(),
 			    inputParametersInstance.productionMode(),
-                            inputParametersInstance.beam2LorentzGamma()),
+                            inputParametersInstance.targetBeamLorentzGamma()),
 	  _breakupProbabilities(0),
 	  _breakupImpactParameterStep(1.007),
 	  _breakupCutOff(10e-10)
@@ -96,14 +96,14 @@ beamBeamSystem::~beamBeamSystem()
 void beamBeamSystem::init()
 {
    // Calculate beam gamma in CMS frame
-   double rap1 = acosh(_beamLorentzGamma1);
-   double rap2 = -acosh(_beamLorentzGamma2);
+   double rap1 = acosh(_electronBeamLorentzGamma);
+   double rap2 = -acosh(_targetBeamLorentzGamma);
    
    _cmsBoost = (rap1+rap2)/2.;
 
    _beamLorentzGamma = cosh((rap1-rap2)/2);
-   _beam1.setBeamLorentzGamma(_beamLorentzGamma);
-   _beam2.setBeamLorentzGamma(_beamLorentzGamma);
+   _electronBeam.setBeamLorentzGamma(_beamLorentzGamma);
+   _targetBeam.setBeamLorentzGamma(_beamLorentzGamma);
    
    generateBreakupProbabilities();
 }
@@ -111,61 +111,16 @@ void beamBeamSystem::init()
 double
 beamBeamSystem::probabilityOfBreakup(const double D) const
 {
-	
-	double bMin = (_beam1.nuclearRadius()+_beam2.nuclearRadius())/2.;
-	double pOfB = 0.; // PofB = 1 means that there will be a UPC event and PofB = 0 means no UPC
-
-	// Do pp here
-	if ((_beam1.Z() == 1) && (_beam1.A() == 1) && (_beam2.Z() == 1) && (_beam2.A() == 1)) {  
-		double ppslope=19.8;
-		double GammaProfile = exp(-D * D / (2. * hbarc * hbarc * ppslope));
-		pOfB = (1. - GammaProfile) * (1. - GammaProfile);
-		return pOfB;
-	}
-	else if( _beam1.A() == 0 || _beam2.A() == 0 )  // Do eX collisions here. Assume user hasn't used two electrons (A()= 0). 
-	  return 1.;
-	else if ( ( (_beam1.A() == 1) && (_beam2.A() != 1) ) || ((_beam1.A() != 1) && (_beam2.A() == 1)) ) {  
-	  // This is pA
-          if( _beam1.A() == 1 ){ 
-            bMin = _beam2.nuclearRadius() + 0.7;
-            pOfB = exp(-7.0*_beam2.rho0()*_beam2.thickness(D));
-          }else if( _beam2.A() == 1 ){ 
-            bMin = _beam1.nuclearRadius() + 0.7; 
-            pOfB = exp(-7.0*_beam1.rho0()*_beam1.thickness(D));
-          }else{
-            cout<<"Some logical problem here!"<<endl;
-          }
-          return pOfB;
-          
-	}
-
-	//use the lookup table and return...
-	pOfB = 1.;
-	if (D > 0.0) {             
-		//Now we must determine which step number in d corresponds to this D,
-		// and use appropiate Ptot(D_i)
-		int i = (int)(log(D / bMin) / log(_breakupImpactParameterStep));
-		if (i <= 0)
-			pOfB = _breakupProbabilities[0];
-		else{
-			if (i >= int(_breakupProbabilities.size()-1))
-				pOfB = _breakupProbabilities[_breakupProbabilities.size()-1];
-			else {
-				const double DLow = bMin * pow((_breakupImpactParameterStep), i);
-				const double DeltaD = (_breakupImpactParameterStep-1) * DLow;
-				const double DeltaP = _breakupProbabilities[i + 1] - _breakupProbabilities[i];
-				pOfB   = _breakupProbabilities[i] + DeltaP * (D - DLow) / DeltaD;
-			}
-		}
-	}
-
-	return pOfB;
+  cout << "D=" << D << " NOT SUPPORTED IN eX COLLISIONS" << endl;
+  return 1;
 }
+
 
 void
 beamBeamSystem::generateBreakupProbabilities()
 {
 
+  /*
     double bMin = (_beam1.nuclearRadius()+_beam2.nuclearRadius())/2.;
     
     // Do this only for nucleus-nucleus collisions.
@@ -236,7 +191,7 @@ beamBeamSystem::generateBreakupProbabilities()
             _breakupProbabilities.push_back(pOfB);
         } // End while(1)
     }
-    
+  */
 }
 
 //______________________________________________________________________________
@@ -248,8 +203,8 @@ beamBeamSystem::probabilityOfHadronBreakup(const double impactparameter)
 	double gamma = _beamLorentzGamma; 
 	//input for gamma_em
 	double b = impactparameter;
-	int a1 = _beam1.A();  
-	int a2 = _beam2.A();  
+	int a1 = 0;  
+	int a2 = _targetBeam.A();  
 
 	static int IFIRSTH = 0;
 	static double DELL=0., DELR=0., SIGNN=0., R1=0., A1=0., A2=0., R2=0., RHO1=0.;
@@ -277,8 +232,8 @@ beamBeamSystem::probabilityOfHadronBreakup(const double impactparameter)
 	  SIGNN=sigmainmb/10.;
 
 	//use parameter from Constants
-	R1 = ( _beam1.nuclearRadius());  
-        R2 = ( _beam2.nuclearRadius());
+	R1 = ( 0 );  
+        R2 = ( _targetBeam.nuclearRadius());
 	A1 = 0.535; //This is woodsaxonskindepth
         A2 = 0.535; 
 	//write(6,12)r1,a1,signn  Here is where we could probably set this up asymmetrically R2=_beam2.nuclearRadius() and RHO2=ap2=_beam2.A()
@@ -373,8 +328,8 @@ beamBeamSystem::probabilityOfPhotonBreakup(const double impactparameter, const i
 
 	_pPhotonBreakup =0.;   //Might default the probability with a different value?
 	double b = impactparameter;
-	int zp = _beam1.Z();  //What about _beam2? Generic approach?
-	int ap = _beam1.A();
+	int zp = 1;  //What about _beam2? Generic approach?
+	int ap = 0;
 	
 	//Was initialized at the start of the function originally, been moved inward.
 	double pxn=0.;

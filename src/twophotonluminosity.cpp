@@ -96,10 +96,10 @@ void twoPhotonLuminosity::twoPhotonDifferentialLuminosity()
   OldNorm   = Normalize;
   
   //Writing out our input parameters+(w,y)grid+diff._lum.
-  wylumfile << beam1().Z() <<endl;
-  wylumfile << beam1().A() <<endl;
-  wylumfile << beam2().Z() <<endl;
-  wylumfile << beam2().A() <<endl;
+  wylumfile << electronBeam().Z() <<endl;
+  wylumfile << electronBeam().A() <<endl;
+  wylumfile << targetBeam().Z() <<endl;
+  wylumfile << targetBeam().A() <<endl;
   wylumfile << _gamma <<endl;
   wylumfile << _wMax <<endl;
   wylumfile << _wMin <<endl;
@@ -159,8 +159,8 @@ double twoPhotonLuminosity::D2LDMDY(double M,double Y,double &Normalize)
 
   _W1    =  M/2.0*exp(Y);
   _W2    =  M/2.0*exp(-Y);
-  int Zin1=beam1().Z();
-  int Zin2=beam2().Z();
+  int Zin1=electronBeam().Z();
+  int Zin2=targetBeam().Z();
   D2LDMDYx = 2.0/M*Zin1*Zin1*Zin2*Zin2*(starlightConstants::alpha*starlightConstants::alpha)*integral(Normalize); 
   Normalize = D2LDMDYx*M/(2.0*Zin1*Zin1*Zin2*Zin2*
                           starlightConstants::alpha*starlightConstants::alpha);
@@ -178,8 +178,8 @@ double twoPhotonLuminosity::D2LDMDY(double M, double Y) const
   double w1    =  M/2.0*exp(Y);
   double w2    =  M/2.0*exp(-Y);
   
-  double r_nuc1 = beam1().nuclearRadius();
-  double r_nuc2 = beam2().nuclearRadius();
+  double r_nuc1 = electronBeam().nuclearRadius();
+  double r_nuc2 = targetBeam().nuclearRadius();
   
   double b1min = r_nuc1;
   double b2min = r_nuc2;
@@ -236,10 +236,10 @@ double twoPhotonLuminosity::D2LDMDY(double M, double Y) const
 	    
 	    sum_phi += weights[k] * probabilityOfBreakup(b_rel)*2;
 	}
-	sum_b2 += beam2().photonDensity(b2_cent,w2)*pi*sum_phi*b2_cent*(b2_high-b2_low);
+	sum_b2 += targetBeam().photonDensity(b2_cent,w2)*pi*sum_phi*b2_cent*(b2_high-b2_low);
       }
       
-      sum += beam1().photonDensity(b1_cent, w1)*sum_b2*b1_cent*(b1_high-b1_low);
+      sum += electronBeam().photonDensity(b1_cent, w1)*sum_b2*b1_cent*(b1_high-b1_low);
       
   }
   D2LDMDYx = 2.*pi*M/2.*sum;
@@ -281,9 +281,9 @@ double twoPhotonLuminosity::integral(double Normalize)
 
   EPS = .01*Normalize;   //This is EPS for integration, 1% of previous integral value.
   // Change this to the Woods-Saxon radius to be consistent with the older calculations (JN 230710) 
-  RM1  = beam1().nuclearRadius()/starlightConstants::hbarcmev;  
-  RM2  = beam2().nuclearRadius()/starlightConstants::hbarcmev;  
-  // RM  = beam1().woodSaxonRadius()/starlightConstants::hbarcmev;  
+  RM1  = electronBeam().nuclearRadius()/starlightConstants::hbarcmev;  
+  RM2  = targetBeam().nuclearRadius()/starlightConstants::hbarcmev;  
+  // RM  = electronBeam().woodSaxonRadius()/starlightConstants::hbarcmev;  
 
   NIter = 10000 + (int)1000000*(int)Normalize; //if integral value is very small, we don't do too many intertions to get precision down to 1%
   NIterMin = 600;

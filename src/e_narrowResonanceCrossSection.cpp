@@ -51,10 +51,10 @@ e_narrowResonanceCrossSection::e_narrowResonanceCrossSection(const inputParamete
 	_Ep         = inputParametersInstance.protonEnergy();	
 	//this is in target frame
 	_electronEnergy = inputParametersInstance.electronEnergy();
-	//_target_beamLorentz = inputParametersInstance.beam2LorentzGamma();
+	//_target_beamLorentz = inputParametersInstance.targetBeamLorentzGamma();
 	_target_beamLorentz = inputParametersInstance.beamLorentzGamma();
-	_boost = std::acosh(inputParametersInstance.beam1LorentzGamma())
-	  -std::acosh(inputParametersInstance.beam2LorentzGamma());
+	_boost = std::acosh(inputParametersInstance.electronBeamLorentzGamma())
+	  -std::acosh(inputParametersInstance.targetBeamLorentzGamma());
 	_boost = _boost/2;
 	// Photon energy limits in the two important frames
 	_targetMaxPhotonEnergy=inputParametersInstance.targetMaxPhotonEnergy();
@@ -99,8 +99,8 @@ e_narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnorm
 	//
         printf(" gamma+nucleon threshold (CMS): %e GeV \n", _cmsMinPhotonEnergy);
 
-        int A_1 = getbbs().beam1().A(); 
-        int A_2 = getbbs().beam2().A();
+        int A_1 = getbbs().electronBeam().A(); 
+        int A_2 = getbbs().targetBeam().A();
 
 	if( A_2 == 0 && A_1 >= 1 ){
 	  // pA, first beam is the nucleus and is in this case the target  
@@ -238,8 +238,8 @@ e_narrowResonanceCrossSection::makeGammaPQ2dependence()
 	
         //printf(" gamma+nucleon threshold (CMS): %e GeV \n", _cmsMinPhotonEnergy);
 
-        int A_1 = getbbs().beam1().A(); 
-        int A_2 = getbbs().beam2().A();
+        int A_1 = getbbs().electronBeam().A(); 
+        int A_2 = getbbs().targetBeam().A();
 
 	if( A_2 == 0 && A_1 >= 1 ){
 	  // pA, first beam is the nucleus and is in this case the target  

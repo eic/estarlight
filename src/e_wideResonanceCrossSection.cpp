@@ -102,8 +102,8 @@ e_wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
   
 	cout<<" Integrating over W from "<<_wideWmin<<" to "<<_wideWmax<<endl;
 
-        int A_1 = getbbs().beam1().A(); 
-        int A_2 = getbbs().beam2().A();
+        int A_1 = getbbs().electronBeam().A(); 
+        int A_2 = getbbs().targetBeam().A();
 
 	if( A_2 == 0 && A_1 >= 1 ){
           // eA, first beam is the nucleus and is in this case the target
@@ -235,8 +235,8 @@ e_wideResonanceCrossSection::makeGammaPQ2dependence( double bwnormsave)
 
         printf(" gamma+nucleon threshold: %e GeV \n", Eth);
 
-        int A_1 = getbbs().beam1().A(); 
-        int A_2 = getbbs().beam2().A();
+        int A_1 = getbbs().electronBeam().A(); 
+        int A_2 = getbbs().targetBeam().A();
   
 	
         // Do this first for the case when the first beam is the photon emitter 

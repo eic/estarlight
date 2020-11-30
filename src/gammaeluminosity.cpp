@@ -120,10 +120,10 @@ void photonElectronLuminosity::photonNucleusDifferentialLuminosity()
   // Look-up table storing photo-nuclear cross section
   // Write the values of W used in the calculation to slight.txt.  
   wylumfile.open(wyFileName.c_str());
-  wylumfile << getbbs().beam1().Z() <<endl;
-  wylumfile << getbbs().beam1().A() <<endl;
-  wylumfile << getbbs().beam2().Z() <<endl;
-  wylumfile << getbbs().beam2().A() <<endl;
+  wylumfile << getbbs().electronBeam().Z() <<endl;
+  wylumfile << getbbs().electronBeam().A() <<endl;
+  wylumfile << getbbs().targetBeam().Z() <<endl;
+  wylumfile << getbbs().targetBeam().A() <<endl;
   wylumfile << _beamLorentzGamma <<endl;
   wylumfile << _maxW <<endl;
   wylumfile << _minW <<endl;
@@ -151,8 +151,8 @@ void photonElectronLuminosity::photonNucleusDifferentialLuminosity()
     wylumfile << Y << endl;
   }
     
-  int A_1 = getbbs().beam1().A(); 
-  int A_2 = getbbs().beam2().A();
+  int A_1 = getbbs().electronBeam().A(); 
+  int A_2 = getbbs().targetBeam().A();
   if( A_2 == 0 && A_1 != 0 ){
     beam = 1;
   } else if( A_1 ==0 && A_2 != 0){

@@ -85,8 +85,8 @@ incoherentVMCrossSection::crossSectionCalculation(const double)  // _bwnormsave 
 	// cout<<" gamma+nucleon  Threshold: "<<Eth<<endl;
         printf(" gamma+nucleon threshold: %e GeV \n", Eth);
 
-        int A_1 = getbbs().beam1().A(); 
-        int A_2 = getbbs().beam2().A();
+        int A_1 = getbbs().electronBeam().A(); 
+        int A_2 = getbbs().targetBeam().A();
 
 	int_r=0.;
 
@@ -152,7 +152,7 @@ incoherentVMCrossSection::crossSectionCalculation(const double)  // _bwnormsave 
                 csVN = sigma_N(Wgp);            
                 csVA = sigma_A(csVN,beam); 
                 csgA1 = (csVA/csVN)*sigmagp(Wgp); 
-                if( getbbs().beam1().A() == 1 || getbbs().beam2().A()==1 ){
+                if( getbbs().electronBeam().A() == 1 || getbbs().targetBeam().A()==1 ){
                   csgA1 = sigmagp(Wgp);
                 }
 
@@ -162,7 +162,7 @@ incoherentVMCrossSection::crossSectionCalculation(const double)  // _bwnormsave 
                 csVN = sigma_N(Wgp);            
                 csVA = sigma_A(csVN,beam); 
                 csgA12 = (csVA/csVN)*sigmagp(Wgp); 
-                if( getbbs().beam1().A() == 1 || getbbs().beam2().A()==1 ){
+                if( getbbs().electronBeam().A() == 1 || getbbs().targetBeam().A()==1 ){
                   csgA12 = sigmagp(Wgp);
                 }
 
@@ -172,7 +172,7 @@ incoherentVMCrossSection::crossSectionCalculation(const double)  // _bwnormsave 
                 csVN = sigma_N(Wgp);            
                 csVA = sigma_A(csVN,beam); 
                 csgA2 = (csVA/csVN)*sigmagp(Wgp); 
-                if( getbbs().beam1().A() == 1 || getbbs().beam2().A()==1 ){
+                if( getbbs().electronBeam().A() == 1 || getbbs().targetBeam().A()==1 ){
                   csgA2 = sigmagp(Wgp);
                 }
 
@@ -236,7 +236,7 @@ incoherentVMCrossSection::crossSectionCalculation(const double)  // _bwnormsave 
                 csVN = sigma_N(Wgp);            
                 csVA = sigma_A(csVN,beam); 
                 csgA1 = (csVA/csVN)*sigmagp(Wgp); 
-                if( getbbs().beam1().A() == 1 || getbbs().beam2().A()==1 ){
+                if( getbbs().electronBeam().A() == 1 || getbbs().targetBeam().A()==1 ){
                   csgA1 = sigmagp(Wgp);
                 }
 
@@ -246,7 +246,7 @@ incoherentVMCrossSection::crossSectionCalculation(const double)  // _bwnormsave 
                 csVN = sigma_N(Wgp);            
                 csVA = sigma_A(csVN,beam); 
                 csgA12 = (csVA/csVN)*sigmagp(Wgp); 
-                if( getbbs().beam1().A() == 1 || getbbs().beam2().A()==1 ){
+                if( getbbs().electronBeam().A() == 1 || getbbs().targetBeam().A()==1 ){
                   csgA12 = sigmagp(Wgp);
                 }
 
@@ -256,7 +256,7 @@ incoherentVMCrossSection::crossSectionCalculation(const double)  // _bwnormsave 
                 csVN = sigma_N(Wgp);            
                 csVA = sigma_A(csVN,beam); 
                 csgA2 = (csVA/csVN)*sigmagp(Wgp); 
-                if( getbbs().beam1().A() == 1 || getbbs().beam2().A()==1 ){
+                if( getbbs().electronBeam().A() == 1 || getbbs().targetBeam().A()==1 ){
                   csgA2 = sigmagp(Wgp);
                 }
 

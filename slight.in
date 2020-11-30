@@ -2,15 +2,13 @@ s# This file is a template for e-p collisions at eRHIC
 #
 # To use, rename this file slight.in
 baseFileName = slight
-BEAM_1_Z = 1    #Z of projectile
-BEAM_1_A = 0   #A of projectile
-BEAM_2_Z = 1   #Z of target
-BEAM_2_A = 1   #A of target
+TARGET_BEAM_Z = 1   #Z of target
+TARGET_BEAM_A = 1   #A of target
 #
 # Energies (accel)
 #
-BEAM_1_GAMMA = 35295 #18 GeV electrons from eRHIC
-BEAM_2_GAMMA = 293.2 #275 GeV protons from eRHIC
+ELECTRON_BEAM_GAMMA = 35295 #18 GeV electrons from eRHIC
+TARGET_BEAM_GAMMA = 293.2 #275 GeV protons from eRHIC
 #
 #
 W_MAX = -1   #Max value of w from HERA

@@ -85,8 +85,8 @@ narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnormsa
 	// cout<<" gamma+nucleon  Threshold: "<<Eth<<endl;
         printf(" gamma+nucleon threshold: %e GeV \n", Eth);
 
-        int A_1 = getbbs().beam1().A(); 
-        int A_2 = getbbs().beam2().A();
+        int A_1 = getbbs().electronBeam().A(); 
+        int A_2 = getbbs().targetBeam().A();
   
  	int_r=0.;
 

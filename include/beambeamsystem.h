@@ -47,13 +47,13 @@ class beamBeamSystem
 public:
 
 	beamBeamSystem(const inputParameters& input,
-		       const beam&            beam1,
-	               const beam&            beam2);
+		       const beam&            electronBeam,
+	               const beam&            targetBeam);
 	beamBeamSystem(const inputParameters& input);
 	~beamBeamSystem();
 
-	const beam& beam1() const { return _beam1; }  ///< returns beam particle 1
-	const beam& beam2() const { return _beam2; }  ///< returns beam particle 2
+	const beam& electronBeam() const { return _electronBeam; }  ///< returns beam particle 1
+	const beam& targetBeam() const { return _targetBeam; }  ///< returns beam particle 2
 
 	double probabilityOfBreakup(const double D) const;
 	
@@ -72,8 +72,8 @@ private:
 	double _pPhotonBreakup;
 
 	double _beamLorentzGamma;  ///< Lorentz gamma factor of beams in collider frame
-        const double _beamLorentzGamma1;  ///< Lorentz gamma factor of beam1 in collider frame
-        const double _beamLorentzGamma2;  ///< Lorentz gamma factor of beam2 in collider frame
+        const double _electronBeamLorentzGamma;  ///< Lorentz gamma factor of beam1 in collider frame
+        const double _targetBeamLorentzGamma;  ///< Lorentz gamma factor of beam2 in collider frame
 	const int    _beamBreakupMode;   ///< \brief breakup mode for beam particles
 	                           ///<
 	                           ///< 1 = hard sphere nuclei (b > 2R),
@@ -82,8 +82,8 @@ private:
 	                           ///< 4 = neither nucleon breaks up (with b > 2R),
 	                           ///< 5 = no hadronic break up (similar to option 1, but with the actual hadronic interaction)
 	               
-	beam   _beam1;             ///< beam particle 1
-	beam   _beam2;             ///< beam particle 2
+	beam   _electronBeam;             ///< beam particle 1
+	beam   _targetBeam;             ///< beam particle 2
 
 	double _cmsBoost;	   ///< Rapidity boost of the CMS wrt the lab system
 	

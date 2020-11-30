@@ -96,8 +96,8 @@ wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
   
 	cout<<" Integrating over W from "<<_wideWmin<<" to "<<_wideWmax<<endl;
 
-        int A_1 = getbbs().beam1().A(); 
-        int A_2 = getbbs().beam2().A();
+        int A_1 = getbbs().electronBeam().A(); 
+        int A_2 = getbbs().targetBeam().A();
 
 	int_r=0.;
  
@@ -153,9 +153,9 @@ wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 			dR  = dR*(dY/6.)*breitWigner(W,bwnorm)*dW;
       
 			//For identical beams, we double.  Either may emit photon/scatter
-			//For large differences in Z, we approx, that only beam1 emits photon
-			//and beam2 scatters, eg d-Au where beam1=au and beam2=d
-			//if(getbbs().beam1().A()==getbbs().beam2().A()){
+			//For large differences in Z, we approx, that only electronBeam emits photon
+			//and targetBeam scatters, eg d-Au where electronBeam=au and targetBeam=d
+			//if(getbbs().electronBeam().A()==getbbs().targetBeam().A()){
 			//	dR  = 2.*dR;
 			//}
 			int_r = int_r+dR;  
@@ -198,9 +198,9 @@ wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 			dR  = dR*(dY/6.)*breitWigner(W,bwnorm)*dW;
       
 			//For identical beams, we double.  Either may emit photon/scatter
-			//For large differences in Z, we approx, that only beam1 emits photon
-			//and beam2 scatters, eg d-Au where beam1=au and beam2=d
-			// if(getbbs().beam1().A()==getbbs().beam2().A()){
+			//For large differences in Z, we approx, that only electronBeam emits photon
+			//and targetBeam scatters, eg d-Au where electronBeam=au and targetBeam=d
+			// if(getbbs().electronBeam().A()==getbbs().targetBeam().A()){
 			//	dR  = 2.*dR;
 			// }
 			int_r = int_r+dR;  

@@ -101,10 +101,8 @@ void photonNucleusLuminosity::photonNucleusDifferentialLuminosity()
     
   // Write the values of W used in the calculation to slight.txt.  
   wylumfile.open(wyFileName.c_str());
-  wylumfile << getbbs().beam1().Z() <<endl;
-  wylumfile << getbbs().beam1().A() <<endl;
-  wylumfile << getbbs().beam2().Z() <<endl;
-  wylumfile << getbbs().beam2().A() <<endl;
+  wylumfile << getbbs().targetBeam().Z() <<endl;
+  wylumfile << getbbs().targetBeam().A() <<endl;
   wylumfile << _beamLorentzGamma <<endl;
   wylumfile << _maxW <<endl;
   wylumfile << _minW <<endl;
@@ -138,8 +136,8 @@ void photonNucleusLuminosity::photonNucleusDifferentialLuminosity()
     
   Eth=0.5*(((_wMin+starlightConstants::protonMass)*(_wMin +starlightConstants::protonMass)-starlightConstants::protonMass*starlightConstants::protonMass)/(_protonEnergy+sqrt(_protonEnergy*_protonEnergy-starlightConstants::protonMass*starlightConstants::protonMass))); 
 
-  int A_1 = getbbs().beam1().A(); 
-  int A_2 = getbbs().beam2().A();
+  int A_1 = 0;
+  int A_2 = getbbs().targetBeam().A();
 
   // Do this first for the case when the first beam is the photon emitter 
   // Treat pA separately with defined beams 
@@ -327,9 +325,9 @@ void photonNucleusLuminosity::pttablegen()
     
     for(int k=0;k<NGAUSS;k++){
       t     = sqrt(ax*xg[k]+bx);
-      csgA  = csgA + ag[k]*getbbs().beam2().formFactor(t)*getbbs().beam2().formFactor(t);
+      csgA  = csgA + ag[k]*getbbs().targetBeam().formFactor(t)*getbbs().targetBeam().formFactor(t);
       t     = sqrt(ax*(-xg[k])+bx);
-      csgA  = csgA + ag[k]*getbbs().beam2().formFactor(t)*getbbs().beam2().formFactor(t);
+      csgA  = csgA + ag[k]*getbbs().targetBeam().formFactor(t)*getbbs().targetBeam().formFactor(t);
     }
     
     csgA = 0.5*(tmax-tmin)*csgA;
@@ -358,9 +356,9 @@ void photonNucleusLuminosity::pttablegen()
     
     for(int k=0;k<NGAUSS;k++){
       t     = sqrt(ax*xg[k]+bx);
-      csgA  = csgA + ag[k]*getbbs().beam1().formFactor(t)*getbbs().beam1().formFactor(t);
+      csgA  = csgA + ag[k]*getbbs().electronBeam().formFactor(t)*getbbs().electronBeam().formFactor(t);
       t     = sqrt(ax*(-xg[k])+bx);
-      csgA  = csgA + ag[k]*getbbs().beam1().formFactor(t)*getbbs().beam1().formFactor(t);
+      csgA  = csgA + ag[k]*getbbs().electronBeam().formFactor(t)*getbbs().electronBeam().formFactor(t);
     }
 	   
     csgA = 0.5*(tmax-tmin)*csgA;
@@ -375,7 +373,7 @@ void photonNucleusLuminosity::pttablegen()
     ptparam1=vmsigmapt(mass,Egamma1,ptparam1, 2);
     ptparam2=vmsigmapt(mass,Egamma2,ptparam2, 1);
     
-    bmin = getbbs().beam1().nuclearRadius()+getbbs().beam2().nuclearRadius();
+    bmin = getbbs().electronBeam().nuclearRadius()+getbbs().targetBeam().nuclearRadius();
     //  if we allow for nuclear breakup, use a slightly smaller bmin
     if (ibreakup != 1) 
       bmin=0.95*bmin;
@@ -399,8 +397,8 @@ void photonNucleusLuminosity::pttablegen()
       for(int j=1;j<=NBIN;j++){
 	
 	b = bmin + (float(j)-0.5)*db;
-	A1 = Egamma1*getbbs().beam1().photonDensity(Egamma1,b)*sig_ga_1*ptparam1[i];
-	A2 = Egamma2*getbbs().beam2().photonDensity(Egamma2,b)*sig_ga_2*ptparam2[i];
+	A1 = Egamma1*getbbs().electronBeam().photonDensity(Egamma1,b)*sig_ga_1*ptparam1[i];
+	A2 = Egamma2*getbbs().targetBeam().photonDensity(Egamma2,b)*sig_ga_2*ptparam2[i];
 	sumg=0.0;
 
 	//  do this as a Gaussian integral, from 0 to pi
@@ -468,12 +466,12 @@ double *photonNucleusLuminosity::vmsigmapt(double W, double Egamma, double *SIGM
 
   //     >> Initialize
   if (beam == 1) {
-  pxmax = 10.*(starlightConstants::hbarc/getbbs().beam2().nuclearRadius());
-  pymax = 10.*(starlightConstants::hbarc/getbbs().beam2().nuclearRadius());
+  pxmax = 10.*(starlightConstants::hbarc/getbbs().targetBeam().nuclearRadius());
+  pymax = 10.*(starlightConstants::hbarc/getbbs().targetBeam().nuclearRadius());
   }
   else {
-  pxmax = 10.*(starlightConstants::hbarc/getbbs().beam1().nuclearRadius());
-  pymax = 10.*(starlightConstants::hbarc/getbbs().beam1().nuclearRadius());
+  pxmax = 10.*(starlightConstants::hbarc/getbbs().electronBeam().nuclearRadius());
+  pymax = 10.*(starlightConstants::hbarc/getbbs().electronBeam().nuclearRadius());
   }
 
   Nxbin = 500;
@@ -511,16 +509,16 @@ double *photonNucleusLuminosity::vmsigmapt(double W, double Egamma, double *SIGM
 		  //  photon form factor
 		  // add in phase space factor?
 		  if (beam ==2) {
-		  f1  = (getbbs().beam1().formFactor(q1*q1)*getbbs().beam1().formFactor(q1*q1)*pt1*pt1)/(q1*q1*q1*q1);
+		  f1  = (getbbs().electronBeam().formFactor(q1*q1)*getbbs().electronBeam().formFactor(q1*q1)*pt1*pt1)/(q1*q1*q1*q1);
 		  
 		  //  Pomeron form factor
-		  f2  = getbbs().beam2().formFactor(q2*q2)*getbbs().beam2().formFactor(q2*q2);
+		  f2  = getbbs().targetBeam().formFactor(q2*q2)*getbbs().targetBeam().formFactor(q2*q2);
 		  }
 		  else {
-		  f1  = (getbbs().beam2().formFactor(q1*q1)*getbbs().beam2().formFactor(q1*q1)*pt1*pt1)/(q1*q1*q1*q1);
+		  f1  = (getbbs().targetBeam().formFactor(q1*q1)*getbbs().targetBeam().formFactor(q1*q1)*pt1*pt1)/(q1*q1*q1*q1);
 		  
 		  //  Pomeron form factor
-		  f2  = getbbs().beam1().formFactor(q2*q2)*getbbs().beam1().formFactor(q2*q2);
+		  f2  = getbbs().electronBeam().formFactor(q2*q2)*getbbs().electronBeam().formFactor(q2*q2);
 		  }
 		  sumy= sumy + ag[j]*f1*f2;
 		  
@@ -532,16 +530,16 @@ double *photonNucleusLuminosity::vmsigmapt(double W, double Egamma, double *SIGM
 		  q2  = sqrt( ((Epom/_beamLorentzGamma)*(Epom/_beamLorentzGamma))   + pt2*pt2 );
 		  //  add in phase space factor?
 		  if (beam ==2) {
-		  f1  = (getbbs().beam1().formFactor(q1*q1)*getbbs().beam1().formFactor(q1*q1)*pt1*pt1)/(q1*q1*q1*q1);
+		    f1  = (getbbs().electronBeam().formFactor(q1*q1)*getbbs().electronBeam().formFactor(q1*q1)*pt1*pt1)/(q1*q1*q1*q1);
 		  
 		  //  Pomeron form factor
-		  f2  = getbbs().beam2().formFactor(q2*q2)*getbbs().beam2().formFactor(q2*q2);
+		  f2  = getbbs().targetBeam().formFactor(q2*q2)*getbbs().targetBeam().formFactor(q2*q2);
 		  }
 		  else {
-		  f1  = (getbbs().beam2().formFactor(q1*q1)*getbbs().beam2().formFactor(q1*q1)*pt1*pt1)/(q1*q1*q1*q1);
+		  f1  = (getbbs().targetBeam().formFactor(q1*q1)*getbbs().targetBeam().formFactor(q1*q1)*pt1*pt1)/(q1*q1*q1*q1);
 		  
 		  //  Pomeron form factor
-		  f2  = getbbs().beam1().formFactor(q2*q2)*getbbs().beam1().formFactor(q2*q2);
+		  f2  = getbbs().electronBeam().formFactor(q2*q2)*getbbs().electronBeam().formFactor(q2*q2);
 		  }
 
 		  sumy= sumy + ag[j]*f1*f2;

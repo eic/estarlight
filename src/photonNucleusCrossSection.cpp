@@ -58,7 +58,7 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _particleType      (inputParametersInstance.prodParticleType()  ),
 	  _beamBreakupMode   (inputParametersInstance.beamBreakupMode()   ),
           _productionMode    (inputParametersInstance.productionMode()    ),
-	  _sigmaNucleus      (_bbs.beam2().A()          ),
+	  _sigmaNucleus      (_bbs.targetBeam().A()          ),
 	  _fixedQ2range      (inputParametersInstance.fixedQ2Range()      ),
 	  _minQ2             (inputParametersInstance.minGammaQ2()        ),
 	  _maxQ2             (inputParametersInstance.maxGammaQ2()        ),
@@ -206,11 +206,11 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	}
 
 	//Changed by Lomnitz for e case. Limit is now E_e - 100m_e
-	//_maxPhotonEnergy = 12. * _beamLorentzGamma * hbarc/(_bbs.beam1().nuclearRadius()+_bbs.beam2().nuclearRadius());
+	//_maxPhotonEnergy = 12. * _beamLorentzGamma * hbarc/(_bbs.beam1().nuclearRadius()+_bbs.targetBeam().nuclearRadius());
 	//_maxPhotonEnergy = _electronEnergy - 10.*starlightConstants::mel;
 	/*cout<<" Lomnitz:: max energy in target frame "<< _electronEnergy - 1000.*starlightConstants::mel<<" vs electron energy "<<_electronEnergy<<endl
 	    <<"           max energy in cms frame    "<<_maxPhotonEnergy<<"  vs electron energy "<<_beamLorentzGamma*starlightConstants::mel<<endl;
-	    cout<<" testing original limit "<< 12. * _beamLorentzGamma * hbarc/(2.*_bbs.beam2().nuclearRadius())<<endl;*/
+	    cout<<" testing original limit "<< 12. * _beamLorentzGamma * hbarc/(2.*_bbs.targetBeam().nuclearRadius())<<endl;*/
 	
 	  
 }
@@ -276,13 +276,13 @@ photonNucleusCrossSection::getcsgA(const double targetEgamma,
 	//Used for A-A
 	tmin = (W * W / (4. * Egamma * _beamLorentzGamma)) * (W * W / (4. * Egamma * _beamLorentzGamma));
   
-	if ((_bbs.beam1().A() <= 1) && (_bbs.beam2().A() <= 1)){
+	if ((_bbs.electronBeam().A() <= 1) && (_bbs.targetBeam().A() <= 1)){
 	   // proton-proton, no scaling needed
 	  csgA = getcsgA_Q2_dep(Q2)*sigmagp(Wgp);
 	} else {
 	   // Check if one or both beams are nuclei 
-	   int A_1 = _bbs.beam1().A(); 
-	   int A_2 = _bbs.beam2().A(); 
+	   int A_1 = _bbs.electronBeam().A(); 
+	   int A_2 = _bbs.targetBeam().A(); 
 	   // coherent AA interactions
 	   // Calculate V.M.+proton cross section
            // cs = sqrt(16. * pi * _vmPhotonCoupling * _slopeParameter * hbarc * hbarc * sigmagp(Wgp) / alpha); 
@@ -311,14 +311,14 @@ photonNucleusCrossSection::getcsgA(const double targetEgamma,
 
 	       t    = ax * xg[k] + bx;
                if( A_1 <= 1 && A_2 != 1){ 
-		  csgA = csgA + ag[k] * _bbs.beam2().formFactor(t) * _bbs.beam2().formFactor(t);
+		  csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);
                }else if(A_2 <=1 && A_1 != 1){
-		  csgA = csgA + ag[k] * _bbs.beam1().formFactor(t) * _bbs.beam1().formFactor(t);
+		  csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                }else{     
                   if( beam==1 ){
- 		     csgA = csgA + ag[k] * _bbs.beam1().formFactor(t) * _bbs.beam1().formFactor(t);
+ 		     csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                   }else if(beam==2){
- 		     csgA = csgA + ag[k] * _bbs.beam2().formFactor(t) * _bbs.beam2().formFactor(t);	
+ 		     csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);	
   		  }else{
 		     cout<<"Something went wrong here, beam= "<<beam<<endl; 
                   }
@@ -326,14 +326,14 @@ photonNucleusCrossSection::getcsgA(const double targetEgamma,
 
 	       t    = ax * (-xg[k]) + bx;
                if( A_1 <= 1 && A_2 != 1){ 
-			  csgA = csgA + ag[k] * _bbs.beam2().formFactor(t) * _bbs.beam2().formFactor(t);
+			  csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);
                }else if(A_2 <=1 && A_1 != 1){
-			  csgA = csgA + ag[k] * _bbs.beam1().formFactor(t) * _bbs.beam1().formFactor(t);
+			  csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                }else{     
                   if( beam==1 ){
- 			    csgA = csgA + ag[k] * _bbs.beam1().formFactor(t) * _bbs.beam1().formFactor(t);
+ 			    csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                   }else if(beam==2){
- 			    csgA = csgA + ag[k] * _bbs.beam2().formFactor(t) * _bbs.beam2().formFactor(t);	
+ 			    csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);	
   		  }else{
 			    cout<<"Something went wrong here, beam= "<<beam<<endl; 
                   }
@@ -373,7 +373,7 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
 	//Used for A-A
 	tmin = (W * W / (4. * Egamma * _beamLorentzGamma)) * (W * W / (4. * Egamma * _beamLorentzGamma));
   
-	if ((_bbs.beam1().A() <= 1) && (_bbs.beam2().A() <= 1)){
+	if ((_bbs.electronBeam().A() <= 1) && (_bbs.targetBeam().A() <= 1)){
 	   // proton-proton, no scaling needed
 	   csgA = sigmagp(Wgp);
 	} else {
@@ -389,8 +389,8 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
 	   Av = (alpha * cvma * cvma) / (16. * pi * _vmPhotonCoupling * hbarc * hbarc);
 
            // Check if one or both beams are nuclei 
-           int A_1 = _bbs.beam1().A(); 
-           int A_2 = _bbs.beam2().A(); 
+           int A_1 = _bbs.electronBeam().A(); 
+           int A_2 = _bbs.targetBeam().A(); 
    
 	   tmax   = tmin + 0.25;
 	   ax     = 0.5 * (tmax - tmin);
@@ -400,14 +400,14 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
 
 	       t    = ax * xg[k] + bx;
                if( A_1 <= 1 && A_2 != 1){ 
-		  csgA = csgA + ag[k] * _bbs.beam2().formFactor(t) * _bbs.beam2().formFactor(t);
+		  csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);
                }else if(A_2 <=1 && A_1 != 1){
-		  csgA = csgA + ag[k] * _bbs.beam1().formFactor(t) * _bbs.beam1().formFactor(t);
+		  csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                }else{     
                   if( beam==1 ){
- 		     csgA = csgA + ag[k] * _bbs.beam1().formFactor(t) * _bbs.beam1().formFactor(t);
+ 		     csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                   }else if(beam==2){
- 		     csgA = csgA + ag[k] * _bbs.beam2().formFactor(t) * _bbs.beam2().formFactor(t);	
+ 		     csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);	
   		  }else{
 		     cout<<"Something went wrong here, beam= "<<beam<<endl; 
                   }
@@ -415,14 +415,14 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
 
 	       t    = ax * (-xg[k]) + bx;
                if( A_1 <= 1 && A_2 != 1){ 
-			  csgA = csgA + ag[k] * _bbs.beam2().formFactor(t) * _bbs.beam2().formFactor(t);
+			  csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);
                }else if(A_2 <=1 && A_1 != 1){
-			  csgA = csgA + ag[k] * _bbs.beam1().formFactor(t) * _bbs.beam1().formFactor(t);
+			  csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                }else{     
                   if( beam==1 ){
- 			    csgA = csgA + ag[k] * _bbs.beam1().formFactor(t) * _bbs.beam1().formFactor(t);
+ 			    csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                   }else if(beam==2){
- 			    csgA = csgA + ag[k] * _bbs.beam2().formFactor(t) * _bbs.beam2().formFactor(t);	
+ 			    csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);	
   		  }else{
 			    cout<<"Something went wrong here, beam= "<<beam<<endl; 
                   }
@@ -473,20 +473,20 @@ photonNucleusCrossSection::photonFlux(const double Egamma, const int beam)
 	int Ilt;
 	double RNuc=0.,RSum=0.;
 
-	RSum=_bbs.beam1().nuclearRadius()+_bbs.beam2().nuclearRadius();
+	RSum=_bbs.electronBeam().nuclearRadius()+_bbs.targetBeam().nuclearRadius();
         if( beam == 1){
-          rZ=double(_bbs.beam2().Z());
-          RNuc = _bbs.beam1().nuclearRadius();
+          rZ=double(_bbs.targetBeam().Z());
+          RNuc = _bbs.electronBeam().nuclearRadius();
         } else { 
-	  rZ=double(_bbs.beam1().Z());
-          RNuc = _bbs.beam2().nuclearRadius();
+	  rZ=double(_bbs.electronBeam().Z());
+          RNuc = _bbs.targetBeam().nuclearRadius();
         }
 
 	static int  Icheck = 0;
 	static int  Ibeam  = 0; 
   
 	//Check first to see if pp 
-	if( _bbs.beam1().A()==1 && _bbs.beam2().A()==1 ){
+	if( _bbs.electronBeam().A()==1 && _bbs.targetBeam().A()==1 ){
 		int nbsteps = 400;
 		double bmin = 0.5;
 		double bmax = 5.0 + (5.0*_beamLorentzGamma*hbarc/Egamma);
@@ -507,8 +507,8 @@ photonNucleusCrossSection::photonFlux(const double Egamma, const int beam)
 			GammaProfile = exp(-bnn1*bnn1/(2.*hbarc*hbarc*ppslope));  
 			double PofB1 = 1. - (1. - GammaProfile)*(1. - GammaProfile);   
 
-                        double loc_nofe0 = _bbs.beam1().photonDensity(bnn0,Egamma);
-			double loc_nofe1 = _bbs.beam2().photonDensity(bnn1,Egamma);
+                        double loc_nofe0 = _bbs.electronBeam().photonDensity(bnn0,Egamma);
+			double loc_nofe1 = _bbs.targetBeam().photonDensity(bnn1,Egamma);
 
 			local_sum += 0.5*loc_nofe0*(1. - PofB0)*2.*starlightConstants::pi*bnn0*db; 
 			local_sum += 0.5*loc_nofe1*(1. - PofB1)*2.*starlightConstants::pi*bnn1*db; 
@@ -522,7 +522,7 @@ photonNucleusCrossSection::photonFlux(const double Egamma, const int beam)
 	Icheck=Icheck+1;
 
 	// Do the numerical integration only once for symmetric systems. 
-        if( Icheck > 1 && _bbs.beam1().A() == _bbs.beam2().A() && _bbs.beam1().Z() == _bbs.beam2().Z() ) goto L1000f;
+        if( Icheck > 1 && _bbs.electronBeam().A() == _bbs.targetBeam().A() && _bbs.electronBeam().Z() == _bbs.targetBeam().Z() ) goto L1000f;
         // For asymmetric systems check if we have another beam 
 	if( Icheck > 1 && beam == Ibeam ) goto L1000f; 
         Ibeam = beam; 
@@ -569,7 +569,7 @@ photonNucleusCrossSection::photonFlux(const double Egamma, const int beam)
 		biter=bmin;
 		integratedflux=0.;
 
-		if( (_bbs.beam1().A() == 1 && _bbs.beam2().A() != 1) || (_bbs.beam2().A() == 1 && _bbs.beam1().A() != 1) ){
+		if( (_bbs.electronBeam().A() == 1 && _bbs.targetBeam().A() != 1) || (_bbs.targetBeam().A() == 1 && _bbs.electronBeam().A() != 1) ){
 		    // This is pA 
 
 		  if( _productionMode == PHOTONPOMERONINCOHERENT ){
@@ -594,13 +594,13 @@ photonNucleusCrossSection::photonFlux(const double Egamma, const int beam)
       
 			  double loc_nofe0 = 0.0;
 			  double loc_nofe1 = 0.0; 
-                          if( _bbs.beam1().A() == 1 ){
-			    loc_nofe0 = _bbs.beam2().photonDensity(bnn0,energy);
-			    loc_nofe1 = _bbs.beam2().photonDensity(bnn1,energy);
+                          if( _bbs.electronBeam().A() == 1 ){
+			    loc_nofe0 = _bbs.targetBeam().photonDensity(bnn0,energy);
+			    loc_nofe1 = _bbs.targetBeam().photonDensity(bnn1,energy);
                           }
-		          else if( _bbs.beam2().A() == 1 ){
-			    loc_nofe0 = _bbs.beam1().photonDensity(bnn0,energy);
-			    loc_nofe1 = _bbs.beam1().photonDensity(bnn1,energy);			    
+		          else if( _bbs.targetBeam().A() == 1 ){
+			    loc_nofe0 = _bbs.electronBeam().photonDensity(bnn0,energy);
+			    loc_nofe1 = _bbs.electronBeam().photonDensity(bnn1,energy);			    
                           }
 
                           // cout<<" i: "<<i<<" bnn0: "<<bnn0<<" PofB0: "<<PofB0<<" loc_nofe0: "<<loc_nofe0<<endl; 
@@ -612,11 +612,11 @@ photonNucleusCrossSection::photonFlux(const double Egamma, const int beam)
                     } else if ( _productionMode == PHOTONPOMERONNARROW ||  _productionMode == PHOTONPOMERONWIDE ){
                       // This is pA coherent, nucleus is the target 
                       double localbmin = 0.0;   
-                      if( _bbs.beam1().A() == 1 ){
-			localbmin = _bbs.beam2().nuclearRadius() + 0.7; 
+                      if( _bbs.electronBeam().A() == 1 ){
+			localbmin = _bbs.targetBeam().nuclearRadius() + 0.7; 
 		      }
-                      if( _bbs.beam2().A() == 1 ){ 
-			localbmin = _bbs.beam1().nuclearRadius() + 0.7; 
+                      if( _bbs.targetBeam().A() == 1 ){ 
+			localbmin = _bbs.electronBeam().nuclearRadius() + 0.7; 
                       }
                       integratedflux = nepoint(energy,localbmin); 
 		    }
@@ -1003,8 +1003,8 @@ photonNucleusCrossSection::sigma_A(const double sig_N, const int beam)
 	NGAUSS=16;
  
 	// Check if one or both beams are nuclei 
-        int A_1 = _bbs.beam1().A(); 
-        int A_2 = _bbs.beam2().A(); 
+        int A_1 = _bbs.electronBeam().A(); 
+        int A_2 = _bbs.targetBeam().A(); 
         if( A_1 == 1 && A_2 == 1)cout<<" This is pp, you should not be here..."<<endl;  
 
 	// CALCULATE P(int) FOR b=0.0 - bmax (fm)
@@ -1015,15 +1015,15 @@ photonNucleusCrossSection::sigma_A(const double sig_N, const int beam)
 		b = 0.5*bmax*xg[IB]+0.5*bmax;
 
                 if( A_1 == 1 && A_2 != 1){  
-                  arg=-sig_N*_bbs.beam2().rho0()*_bbs.beam2().thickness(b);
+                  arg=-sig_N*_bbs.targetBeam().rho0()*_bbs.targetBeam().thickness(b);
                 }else if(A_2 == 1 && A_1 != 1){
-                  arg=-sig_N*_bbs.beam1().rho0()*_bbs.beam1().thickness(b);
+                  arg=-sig_N*_bbs.electronBeam().rho0()*_bbs.electronBeam().thickness(b);
                 }else{
 		  // Check which beam is target 
                   if( beam == 1 ){ 
-                    arg=-sig_N*_bbs.beam1().rho0()*_bbs.beam1().thickness(b);
+                    arg=-sig_N*_bbs.electronBeam().rho0()*_bbs.electronBeam().thickness(b);
                   }else if( beam==2 ){
-                    arg=-sig_N*_bbs.beam2().rho0()*_bbs.beam2().thickness(b);
+                    arg=-sig_N*_bbs.targetBeam().rho0()*_bbs.targetBeam().thickness(b);
                   }else{
                     cout<<" Something went wrong here, beam= "<<beam<<endl; 
                   } 
@@ -1038,15 +1038,15 @@ photonNucleusCrossSection::sigma_A(const double sig_N, const int beam)
 		b = 0.5*bmax*(-xg[IB])+0.5*bmax;
 
                 if( A_1 == 1 && A_2 != 1){  
-                  arg=-sig_N*_bbs.beam2().rho0()*_bbs.beam2().thickness(b);
+                  arg=-sig_N*_bbs.targetBeam().rho0()*_bbs.targetBeam().thickness(b);
                 }else if(A_2 == 1 && A_1 != 1){
-                  arg=-sig_N*_bbs.beam1().rho0()*_bbs.beam1().thickness(b);
+                  arg=-sig_N*_bbs.electronBeam().rho0()*_bbs.electronBeam().thickness(b);
                 }else{ 
 		  // Check which beam is target 
                   if( beam == 1 ){ 
-                    arg=-sig_N*_bbs.beam1().rho0()*_bbs.beam1().thickness(b);
+                    arg=-sig_N*_bbs.electronBeam().rho0()*_bbs.electronBeam().thickness(b);
                   }else if(beam==2){
-                    arg=-sig_N*_bbs.beam2().rho0()*_bbs.beam2().thickness(b);
+                    arg=-sig_N*_bbs.targetBeam().rho0()*_bbs.targetBeam().thickness(b);
                   }else{
                     cout<<" Something went wrong here, beam= "<<beam<<endl; 
                   } 

@@ -178,14 +178,13 @@ public:
 	bool configureFromFile(const std::string &configFileName = "./config/slight.in");
 
         std::string  baseFileName          () const { return _baseFileName.value();           }
-	int beam1Z                () const { return _beam1Z.value();                 }  ///< returns atomic number of beam particle 1
-	unsigned int beam1A                () const { return _beam1A.value();                 }  ///< returns atomic mass number of beam particle 1
-	int beam2Z                () const { return _beam2Z.value();                 }  ///< returns atomic number of beam particle 2
-	unsigned int beam2A                () const { return _beam2A.value();                 }  ///< returns atomic mass number of beam particle 2
+
+	int targetBeamZ                () const { return _targetBeamZ.value();                 }  ///< returns atomic number of beam particle 2
+	unsigned int targetBeamA                () const { return _targetBeamA.value();                 }  ///< returns atomic mass number of beam particle 2
 	double       targetLorentzGamma    () const { return _targetLorentzGamma;             }  ///< returns Lorentz gamma factor of source in target frame
 	double       beamLorentzGamma      () const { return _beamLorentzGamma;       	      }  ///< returns Lorentz gamma factor of both beams in beam CMS frame
-	double       beam1LorentzGamma     () const { return _beam1LorentzGamma.value();      }  ///< returns Lorentz gamma factor of beam 1 in collider frame
-	double       beam2LorentzGamma     () const { return _beam2LorentzGamma.value();      }  ///< returns Lorentz gamma factor of beam 2 in collider frame
+	double       electronBeamLorentzGamma     () const { return _electronBeamLorentzGamma.value();      }  ///< returns Lorentz gamma factor of beam 1 in collider frame
+	double       targetBeamLorentzGamma     () const { return _targetBeamLorentzGamma.value();      }  ///< returns Lorentz gamma factor of beam 2 in collider frame
 	double       targetMaxPhotonEnergy       () const { return _targetMaxPhotonEnergy;    }  ///< returns maximum photon energy 
 	double       cmsMaxPhotonEnergy       () const { return _cmsMaxPhotonEnergy;          }  ///< returns maximum photon energy 
 	double       targetMinPhotonEnergy       () const { return _targetMinPhotonEnergy;    }  ///< returns maximum photon energy 
@@ -236,14 +235,11 @@ public:
 	double targetRadius                () const { return _targetR; }
 
         void setBaseFileName          (std::string v )  {  _baseFileName = v;     }
-	void setBeam1Z                (unsigned int v)  {  _beam1Z = v;           }  ///< sets atomic number of beam particle 1
-	void setBeam1A                (unsigned int v)  {  _beam1A = v;           }  ///< sets atomic mass number of beam particle 1
-	void setBeam2Z                (unsigned int v)  {  _beam2Z = v;           }  ///< sets atomic number of beam particle 2
-	void setBeam2A                (unsigned int v)  {  _beam2A = v;           }  ///< sets atomic mass number of beam particle 2
+	void setTargetBeamZ                (unsigned int v)  {  _targetBeamZ = v;           }  ///< sets atomic number of beam particle 2
+	void setTargetBeamA                (unsigned int v)  {  _targetBeamA = v;           }  ///< sets atomic mass number of beam particle 2
 	void setTargetLorentzGamma    (double v)  {  _targetLorentzGamma = v;     }  ///< sets Lorentz gamma factor of both beams in beam CMS frame
 	void setBeamLorentzGamma      (double v)  {  _beamLorentzGamma = v;       }  ///< sets Lorentz gamma factor of both beams in beam CMS frame
-	void setBeam1LorentzGamma     (double v)  {  _beam1LorentzGamma = v;      }  ///< sets Lorentz gamma factor of beam 1 in collider frame
-	void setBeam2LorentzGamma     (double v)  {  _beam2LorentzGamma = v;      }  ///< sets Lorentz gamma factor of beam 2 in collider frame
+	void setElectronBeamLorentzGamma     (double v)  {  _electronBeamLorentzGamma = v;  }  
 	//void setMaxPhotonEnergy       (double v)  {  _maxPhotonEnergy = v ;       }  ///< sets maximim photon energy
 	void setMaxW                  (double v)  {  _maxW = v;                   }  ///< sets maximum mass W of produced hadronic system [GeV/c^2]
 	void setMinW                  (double v)  {  _minW = v;                   }  ///< sets minimum mass W of produced hadronic system [GeV/c^2]
@@ -308,12 +304,10 @@ private:
 
 	// config file parameters
         parameter<std::string,NO_VALIDITY_CHECK>   _baseFileName;
-	parameter<int,VALIDITY_CHECK>     _beam1Z;                  ///< atomic number of beam particle 1
-	parameter<unsigned int,VALIDITY_CHECK>     _beam1A;                  ///< atomic mass number of beam particle 1
-	parameter<int,VALIDITY_CHECK>     _beam2Z;                  ///< atomic number of beam particle 2
-	parameter<unsigned int,VALIDITY_CHECK>     _beam2A;                  ///< atomic mass number of beam particle 2
-	parameter<double, VALIDITY_CHECK>          _beam1LorentzGamma;       ///< Lorentz gamma factor of beam 1 in collider frame
-	parameter<double, VALIDITY_CHECK>          _beam2LorentzGamma;       ///< Lorentz gamma factor of beam 2 in collider frame
+	parameter<int,VALIDITY_CHECK>              _targetBeamZ;                  ///< atomic number of beam particle 2
+	parameter<unsigned int,VALIDITY_CHECK>     _targetBeamA;                  ///< atomic mass number of beam particle 2
+	parameter<double, VALIDITY_CHECK>          _electronBeamLorentzGamma;       ///< Lorentz gamma factor of beam 1 in collider frame
+	parameter<double, VALIDITY_CHECK>          _targetBeamLorentzGamma;       ///< Lorentz gamma factor of beam 2 in collider frame
 	parameter<double, VALIDITY_CHECK>          _maxW;                    ///< maximum mass W of produced hadronic system [GeV/c^2]
 	parameter<double, VALIDITY_CHECK>          _minW;                    ///< minimum mass W of produced hadronic system; if set to -1 default value is taken [GeV/c^2]
 	parameter<unsigned int, VALIDITY_CHECK>    _nmbWBins;                ///< number of W bins in lookup table
