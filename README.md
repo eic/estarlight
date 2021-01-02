@@ -4,7 +4,7 @@ eSTARlight is a Monte Carlo that simulates coherent vector meson photo- and elec
 
 
 ## Papers and presentations
-* [Exclusive vector meson production at an electron-ion collider](https://arxiv.org/abs/1803.06420): M. Lomnitz & S. Klein, Physical Review C99, 015203 (1999); also available as arXiv:1803.06420.
+* [Exclusive vector meson production at an electron-ion collider](https://arxiv.org/abs/1803.06420): M. Lomnitz & S. Klein, Physical Review C99, 015203 (2019); also available as arXiv:1803.06420.
 * [Coherent vector meson production at an EIC](https://arxiv.org/abs/1805.08586): M. Lomnitz and S. Klein, Presented at the Workshop for Deep Inelastic Scattering, Kobe Japan, 2018.
 
 ## Authors
