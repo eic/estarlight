@@ -88,7 +88,7 @@ inputParameters::inputParameters()
 	  _pythiaParams          ("PYTHIA_PARAMS","", NOT_REQUIRED),
 	  _pythiaFullEventRecord ("PYTHIA_FULL_EVENTRECORD",false, NOT_REQUIRED),
 	  _hepmc3FullEventRecord ("HEPMC3_FULL_EVENTRECORD",false, NOT_REQUIRED),
-	  _backwardsProdution    ("BACKWARDS_PRODUCTION",false, NOT_REQUIRED),
+	  _backwardsProduction    ("BACKWARDS_PRODUCTION",false, NOT_REQUIRED),
 
 	  _xsecCalcMethod	 ("XSEC_METHOD",0, NOT_REQUIRED),
           _axionMass             ("AXION_MASS",50, NOT_REQUIRED),  // AXION HACK

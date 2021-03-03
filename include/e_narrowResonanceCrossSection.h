@@ -69,6 +69,7 @@ private:
 	double _gammaMinQ2;
 	double _gammaMaxQ2;
 	double _targetRadii;
+	bool _backwardsProduction;
 };
 
 

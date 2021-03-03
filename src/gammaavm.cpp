@@ -79,8 +79,11 @@ Gammaavectormeson::Gammaavectormeson(const inputParameters& inputParametersInsta
 	_cmsMaxPhotonEnergy=inputParametersInstance.cmsMaxPhotonEnergy();
 	_cmsMinPhotonEnergy=inputParametersInstance.cmsMinPhotonEnergy();
 	_beamLorentzGamma = inputParametersInstance.beamLorentzGamma();
+	_targetBeamLorentzGamma = inputParametersInstance.targetBeamLorentzGamma();
 	_targetRadius = inputParametersInstance.targetRadius();
-
+	//Turn on/off backwards production
+	_backwardsProduction = inputParametersInstance.backwardsProduction();
+	
         N0 = 0; N1 = 0; N2 = 0; 
 	if (_VMpidtest == starlightConstants::FOURPRONG){
 	  // create n-body phase-spage generator
@@ -613,30 +616,49 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	// Compute vector sum Pt = Pt1 + Pt2 to find pt for the vector meson
 	px = px1 + px2;
 	py = py1 + py2;
-	//	pt = sqrt( px*px + py*py );
+	//double pt = sqrt( px*px + py*py );
 	// Computing the pomeron energy using the fact that the target invariant mass is unchanged in collision
 	double target_pz = _beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) );
+	
 	double complementM2 = pow(_beamNucleus*starlightConstants::protonMass,2.) + t_px*t_px + t_py*t_py + (target_pz-t_pz)*(target_pz-t_pz);
 	t_E = _beamNucleus*_pEnergy - sqrt(complementM2);
 	// Finally V.M. energy, pz and rapidity from photon + pommeron.
 	E = Egam + t_E;
 	pz = gamma_pz - t_pz;
 	Y = 0.5*std::log( (E+fabs(pz))/(E-fabs(pz)) );
+	//	cout << "pz_final = " << pz << endl;
 
-
-	if (_ip->backProd()) {
+	
+	if (_backwardsProduction) {
 	  // use backward production
-	  double m_tar = _ip->protonMass() * _ip->targetBeamA();
-	  double E_tar_i_lab = m_tar * _ip->targetBeamLorentzGamma();
-	  double pz_tar_i_lab = -sqrt(E_tar_i_lab*E_tar_i_lab - m_tar*m_tar);
+	  double pz_tar_i_lab = -1.0*target_pz;
+	  double E_tar_i_lab = sqrt(pow(target_pz,2) + pow(starlightConstants::protonMass,2.));
 	  double pz_gam_i_lab = Egam;
+	  double E_gam_i_lab = Egam;
+	  
+	  double pz_tar_f_lab = (pz_tar_i_lab + pz_gam_i_lab) - pz;
+	  double E_tar_f_lab = sqrt( pow(pz_tar_f_lab,2) + pow(starlightConstants::protonMass,2.) );
+	  
+	  double beta = (pz_tar_i_lab + pz_gam_i_lab)/(E_gam_i_lab + E_tar_i_lab);
+	  double lorentzGamma = 1.0/sqrt( 1 - pow(beta,2.));
+	  
+	  //Boost to CM frame
+	  double cm_frame_target_pz = lorentzGamma*( pz_tar_f_lab + beta*E_tar_f_lab );
+	  double cm_frame_gamma_pz  = lorentzGamma*( pz + beta*pz );
+	  
+	  //Recalculate Energy
+	  double vm_mass = sqrt( E*E - ( px*px + py*py + pz*pz ) );
+	  double vm_E_cm = sqrt( vm_mass*vm_mass + px*px + py*py + cm_frame_target_pz*cm_frame_target_pz);
 
-	  double pz_tar_f_lab = (pz_tar_i_lab + pz_gam_i_lab) + pz;
-	  // in a backward production event this value will
-	  // become the vm pz
-	  pz = pz_tar_f_lab;
-	  // and the energy is updated
-	  E = sqrt(W*W + pt*pt + pz*pz);
+	  double cm_E = sqrt( pow(starlightConstants::protonMass,2.)  + pow(t_px,2.) + pow(t_py,2.) + pow(cm_frame_gamma_pz,2.));	  
+	  	  
+	  //Boost back to lab frame
+	  t_pz = lorentzGamma*(cm_frame_gamma_pz - beta*cm_E);
+	  t_E = lorentzGamma*(cm_E - beta*cm_fame_gamma_pz);
+
+	  pz = lorentzGamma*(cm_frame_target_pz - beta*vm_E_cm);
+	  E = lorentzGamma*(vm_E_cm - beta*cm_frame_target_pz);
+	  
 	  Y = 0.5*std::log( (E+fabs(pz))/(E-fabs(pz)) );
 	}
 	

@@ -228,7 +228,6 @@ photonNucleusCrossSection::crossSectionCalculation(const double)
 	cout << "Neither narrow/wide resonance cross-section calculation.--Derived" << endl;
 }
 
-
 //______________________________________________________________________________
 double
 photonNucleusCrossSection::getcsgA(const double targetEgamma,

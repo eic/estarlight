@@ -39,10 +39,8 @@
 #include "starlightconstants.h"
 #include "e_narrowResonanceCrossSection.h"
 
-
 using namespace std;
 using namespace starlightConstants;
-
 
 //______________________________________________________________________________
 e_narrowResonanceCrossSection::e_narrowResonanceCrossSection(const inputParameters& inputParametersInstance, const beamBeamSystem&  bbsystem)
@@ -67,6 +65,7 @@ e_narrowResonanceCrossSection::e_narrowResonanceCrossSection(const inputParamete
 	_gammaMinQ2 = inputParametersInstance.minGammaQ2();
 	_gammaMaxQ2 = inputParametersInstance.maxGammaQ2();
 	_targetRadii = inputParametersInstance.targetRadius();
+	_backwardsProduction = inputParametersInstance.backwardsProduction();	
 }
 
 
@@ -132,6 +131,20 @@ e_narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnorm
 	  double full_int[3] = {0}; // Full e+X --> e+X+V.M. cross section
 	  //
 	  for( int iEgaInt = 0 ; iEgaInt < 3; ++iEgaInt){    // Loop over the energies for the three points to integrate over Q2
+
+	    /*
+	    if ( _backwardsProduction)
+	      {
+		if (_ip->productionMode() != 2 || _ip->prodParticleId() != 223 || _ip->beam1A() == 1 || _ip->beam2A() != 1)
+		  {
+		    std::cout << "Backward production is implemented for ";
+		    std::cout << "PROD_MODE = 2, PROD_PID = 223, ";
+		    std::cout << "BEAM_1_A != 1, and BEAM_2_A == 1. ";
+		    std::cout << "Terminating program." << std::endl;
+		    throw 0; 
+		  }
+	      }
+	    */
 	    //These are the physical limits
 	    double Q2_min = std::pow(starlightConstants::mel*ega[iEgaInt],2.0)/(_electronEnergy*(_electronEnergy-ega[iEgaInt]));	    
 	    double Q2_max = 4.*_electronEnergy*(_electronEnergy-ega[iEgaInt]);

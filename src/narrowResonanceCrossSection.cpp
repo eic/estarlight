@@ -82,14 +82,14 @@ narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnormsa
 	Eth=0.5*(((W+protonMass)*(W+protonMass)-
 	          protonMass*protonMass)/(_Ep+sqrt(_Ep*_Ep-protonMass*protonMass)));
   
-	// cout<<" gamma+nucleon  Threshold: "<<Eth<<endl;
+	// cout<<" gamma+nuclexon  Threshold: "<<Eth<<endl;
         printf(" gamma+nucleon threshold: %e GeV \n", Eth);
 
         int A_1 = getbbs().electronBeam().A(); 
         int A_2 = getbbs().targetBeam().A();
   
  	int_r=0.;
-
+	
         // Do this first for the case when the first beam is the photon emitter 
         // Treat pA separately with defined beams 
         // The variable beam (=1,2) defines which nucleus is the target 
@@ -180,6 +180,7 @@ narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnormsa
 		int_r = int_r+dR;
 	  }
         }
+
 	cout<<endl;
 	if (0.01*int_r > 1.){
 	  cout<< " Total cross section: "<<0.01*int_r<<" barn."<<endl;

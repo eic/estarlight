@@ -56,6 +56,8 @@ public:
 	double         maxPhotonEnergy () const { return _maxPhotonEnergy;  }  ///< returns max photon energy in lab frame [GeV] (for vectormesons only)
 
 	void crossSectionCalculation(const double bwnormsave);
+	double backwardsPropagationOmegaCrossSection(const double targetEgamma);
+
 	// Use the wide or narrow constructor to calculate sigma
 	// wide/narrow will inherit this.
 	double getcsgA(const double Egamma,

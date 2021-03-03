@@ -96,6 +96,7 @@ class Gammaavectormeson : public eventChannel
   double _cmsMaxPhotonEnergy;
   double _cmsMinPhotonEnergy;
   double _beamLorentzGamma;
+  double _targetBeamLorentzGamma;
   double _targetRadius;
   int _TargetBeam; 
   int N0;
@@ -120,6 +121,7 @@ class Gammaavectormeson : public eventChannel
   // eSTARlight
   photonNucleusCrossSection* _dummy_pncs;
   double _angular_max[100][200];
+  bool _backwardsProduction;
 };
 
 class Gammaanarrowvm : public Gammaavectormeson
