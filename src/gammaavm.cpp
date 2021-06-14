@@ -658,7 +658,7 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	  //Boost photon and target back to lab frame
 	  //target:
 	  t_pz = lorentzGamma*(cm_frame_gamma_pz - beta*cm_E);
-	  t_E = lorentzGamma*(cm_E - beta*cm_fame_gamma_pz);
+	  t_E = lorentzGamma*(cm_E - beta*cm_frame_gamma_pz);
 	  //Photon:
 	  pz = lorentzGamma*(cm_frame_target_pz - beta*vm_E_cm);
 	  E = lorentzGamma*(vm_E_cm - beta*cm_frame_target_pz);
