@@ -43,6 +43,7 @@ class vector3
 {
    public:
       vector3();
+      vector3(const vector3&) = default;
       vector3(double *vec);
       vector3(double x, double y, double z);
       virtual ~vector3();
