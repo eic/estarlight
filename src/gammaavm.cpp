@@ -457,20 +457,17 @@ double Gammaavectormeson::getTheta(starlightConstants::particleTypeEnum ipid, do
 	  case starlightConstants::MUON:
 	  case starlightConstants::ELECTRON:
 	    //primarily for upsilon/j/psi.  VM->ee/mumu
-	    dndtheta = 1 + r_04_00+( 1-3.*r_04_00 )*cos(theta)*cos(theta);
+	    dndtheta = sin(theta)*(1 + r_04_00+( 1-3.*r_04_00 )*cos(theta)*cos(theta));
 	    break;
 	    
 	  case starlightConstants::PION:
 	  case starlightConstants::KAONCHARGE:
 	    //rhos etc
-	    dndtheta=  1 - r_04_00+( 3.*r_04_00-1 )*cos(theta)*cos(theta);
+	    dndtheta=  sin(theta)*(1 - r_04_00+( 3.*r_04_00-1 )*cos(theta)*cos(theta));
 	    break;
 	    
 	  default: cout<<"No proper theta dependence defined, check gammaavectormeson::gettheta"<<endl;
 	  }//end of switch
-	  
-	  if(xtest > dndtheta)
-	    break;
 	}
 	return theta;
 
