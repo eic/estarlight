@@ -54,9 +54,7 @@ class Gammaavectormeson : public eventChannel
  public:
   Gammaavectormeson(const inputParameters& ipnut, beamBeamSystem& bbsystem);
   virtual ~Gammaavectormeson();
-  starlightConstants::event produceEvent(int &ievent);
   
-  upcEvent produceEvent();
   eXEvent e_produceEvent();
 
   void pickwy(double &W, double &Y);
@@ -70,13 +68,11 @@ class Gammaavectormeson : public eventChannel
 	       double &e_phi,int &tcheck);
   double pTgamma(double E); 
   void vmpt(double W,double Y,double &E,double &px,double &py, double &pz,int &tcheck);
-  void twoBodyDecay(starlightConstants::particleTypeEnum &ipid,double W,double px0,double py0,double pz0,double &px1,double &py1,double&pz1,double &px2,double &py2,double &pz2,int &iFbadevent);
   void twoBodyDecay(starlightConstants::particleTypeEnum &ipid,double W,double px0,double py0,double pz0,double spin_element,
 		    double &px1,double &py1,double&pz1,double &px2,double &py2,double &pz2,int &iFbadevent);
   bool fourBodyDecay(starlightConstants::particleTypeEnum& ipid, const double E, const double W, const double* p, lorentzVector* decayMoms, int& iFbadevent);
   double getMass();
   double getWidth();
-  virtual double getTheta(starlightConstants::particleTypeEnum ipid);
   virtual double getTheta(starlightConstants::particleTypeEnum ipid, double r_04_00);
   double getSpinMatrixElement(double W, double Q2, double epsilon);
   double getSpin();

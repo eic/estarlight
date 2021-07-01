@@ -56,9 +56,7 @@ public:
 	unsigned long nmbAttempts() const {return _nmbAttempts;}  ///< returns number of attempted events
 	unsigned long nmbAccepted() const {return _nmbAccepted;}  ///< returns number of accepted events
 
-	virtual starlightConstants::event produceEvent(int &ievent) = 0;
 
-	virtual upcEvent produceEvent() = 0;
 	virtual eXEvent e_produceEvent() = 0;
  
 	static void transform(const double betax,
