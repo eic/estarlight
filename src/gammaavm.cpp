@@ -157,67 +157,6 @@ void Gammaavectormeson::pickwy(double &W, double &Y)
 }         
 
 
-//______________________________________________________________________________                                               
-void Gammaavectormeson::twoBodyDecay(starlightConstants::particleTypeEnum &ipid,
-                                     double  W,
-                                     double  px0, double  py0, double  pz0,
-                                     double& px1, double& py1, double& pz1,
-                                     double& px2, double& py2, double& pz2,
-                                     int&    iFbadevent)
-{
-	// This routine decays a particle into two particles of mass mdec,
-	// taking spin into account
-
-	double pmag;
-	double phi,theta,Ecm;
-	double betax,betay,betaz;
-	double mdec=0.0;
-	double E1=0.0,E2=0.0;
-
-	//    set the mass of the daughter particles
-	mdec=getDaughterMass(ipid);
-
-	//  calculate the magnitude of the momenta
-	if(W < 2*mdec){
-		cout<<" ERROR: W="<<W<<endl;
-		iFbadevent = 1;
-		return;
-	}
-	pmag = sqrt(W*W/4. - mdec*mdec);
-  
-	//  pick an orientation, based on the spin
-	//  phi has a flat distribution in 2*pi
-	phi = _randy.Rndom()*2.*starlightConstants::pi;
-                                                                                                                
-	//  find theta, the angle between one of the outgoing particles and
-	//  the beamline, in the frame of the two photons
-
-	theta=getTheta(ipid);
- 
-	//  compute unboosted momenta
-	px1 = sin(theta)*cos(phi)*pmag;
-	py1 = sin(theta)*sin(phi)*pmag;
-	pz1 = cos(theta)*pmag;
-	px2 = -px1;
-	py2 = -py1;
-	pz2 = -pz1;
-
-	Ecm = sqrt(W*W+px0*px0+py0*py0+pz0*pz0);
-	E1 = sqrt(mdec*mdec+px1*px1+py1*py1+pz1*pz1);
-	E2 = sqrt(mdec*mdec+px2*px2+py2*py2+pz2*pz2);
-
-	betax = -(px0/Ecm);
-	betay = -(py0/Ecm);
-	betaz = -(pz0/Ecm);
-
-	transform (betax,betay,betaz,E1,px1,py1,pz1,iFbadevent);
-	transform (betax,betay,betaz,E2,px2,py2,pz2,iFbadevent);
-
-	if(iFbadevent == 1)
-	   return;
-
-}
-
 
 //______________________________________________________________________________                                               
 void Gammaavectormeson::twoBodyDecay(starlightConstants::particleTypeEnum &ipid,
@@ -394,46 +333,6 @@ double Gammaavectormeson::getDaughterMass(starlightConstants::particleTypeEnum &
 }
 
 
-//______________________________________________________________________________
-double Gammaavectormeson::getTheta(starlightConstants::particleTypeEnum ipid)
-{
-	//This depends on the decay angular distribution
-	//Valid for rho, phi, omega.
-	double theta=0.;
-	double xtest=0.;
-	double dndtheta=0.;
-
- L200td:
-    
-	theta = starlightConstants::pi*_randy.Rndom();
-	xtest = _randy.Rndom();
-	//  Follow distribution for helicity +/-1
-	//  Eq. 19 of J. Breitweg et al., Eur. Phys. J. C2, 247 (1998)
-	//  SRK 11/14/2000
-  
-	switch(ipid){
-	  
-	case starlightConstants::MUON:
-	case starlightConstants::ELECTRON:
-		//primarily for upsilon/j/psi.  VM->ee/mumu
-		dndtheta = sin(theta)*(1.+((cos(theta))*(cos(theta))));
-		break;
-    
-	case starlightConstants::PION:
-	case starlightConstants::KAONCHARGE:
-		//rhos etc
-		dndtheta= sin(theta)*(1.-((cos(theta))*(cos(theta))));
-		break;
-    
-	default: cout<<"No proper theta dependence defined, check gammaavectormeson::gettheta"<<endl;
-	}//end of switch
-  
-	if(xtest > dndtheta)
-		goto L200td;
-  
-	return theta;
-  
-}
 
 //______________________________________________________________________________
 double Gammaavectormeson::getTheta(starlightConstants::particleTypeEnum ipid, double r_04_00)
@@ -862,12 +761,6 @@ void Gammaavectormeson::vmpt(double W,double Y,double &E,double &px,double &py, 
 }
 
 
-//______________________________________________________________________________
-starlightConstants::event Gammaavectormeson::produceEvent(int&)
-{
-	//Note used; return default event
-	return starlightConstants::event();
-}
 
 //______________________________________________________________________________
 double Gammaavectormeson::pseudoRapidity(double px, double py, double pz)

@@ -53,7 +53,6 @@ class Gammaavectormeson : public eventChannel
  public:
   Gammaavectormeson(const inputParameters& ipnut, beamBeamSystem& bbsystem);
   virtual ~Gammaavectormeson();
-  starlightConstants::event produceEvent(int &ievent);
   
   eXEvent e_produceEvent();
 
@@ -74,7 +73,6 @@ class Gammaavectormeson : public eventChannel
   bool fourBodyDecay(starlightConstants::particleTypeEnum& ipid, const double E, const double W, const double* p, lorentzVector* decayMoms, int& iFbadevent);
   double getMass();
   double getWidth();
-  virtual double getTheta(starlightConstants::particleTypeEnum ipid);
   virtual double getTheta(starlightConstants::particleTypeEnum ipid, double r_04_00);
   double getSpinMatrixElement(double W, double Q2, double epsilon);
   double getSpin();
