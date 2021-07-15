@@ -378,6 +378,10 @@ double Gammaavectormeson::getSpinMatrixElement(double W, double Q2, double epsil
 {
   double m2 = 0.6*(W*W);
   double R = starlightConstants::pi/2.*m2/Q2 - std::pow(m2,3./2.)/sqrt(Q2)/(Q2+m2) - m2/Q2*atan(sqrt(m2/Q2));
+  //////////needed for problem with double precision
+  double R1 = starlightConstants::pi/2.*m2/Q2;
+  if(R1>1.0E10)R=0.0;
+  ////////// 
   R = (Q2+m2)*(Q2+m2)*R*R/m2;
   return epsilon*R/(1+epsilon*R);
 }
