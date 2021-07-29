@@ -193,7 +193,8 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 	_targetLorentzGamma = cosh(rap1-rap2);
 
 	if( beam2A() == 1) //proton case 0.87 fm = 4.4 GeV^{-1}
-	  _targetR = 4.4;
+	  // _targetR = 4.4;
+	  _targetR = 0.5; //loose this cut for proton
 	else
 	  _targetR = 6.1 * pow(beam2A(), 1./3.);
 	  //_targetR = 4.4/2.;

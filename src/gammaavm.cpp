@@ -1099,9 +1099,11 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 	  gamma_pz = temp_pz*cosh(beam_y) - targetEgamma*sinh(beam_y); 
 	  cmsEgamma = targetEgamma*cosh(beam_y) - temp_pz*sinh(beam_y);
 	  // Simple checkl, should not be needed but used for safety
-	  if( cmsEgamma < _cmsMinPhotonEnergy || 2.*targetEgamma/(Q2+W*W) < _targetRadius){ //This cut is roughly RA = 0.8 fm the radius of proton and 1 eV^{-1} = 1.97 x 10 ^{-7} m
+    double targetEgamma_min = (W*W+2*W*starlightConstants::protonMass)/2./starlightConstants::protonMass;
+	  if( targetEgamma<targetEgamma_min || cmsEgamma < _cmsMinPhotonEnergy|| 2.*targetEgamma/(Q2+W*W) < _targetRadius){ //This cut is roughly RA = 0.8 fm the radius of proton and 1 eV^{-1} = 1.97 x 10 ^{-7} m
 	      continue;
 	  }
+
 	  xtest = _randy.Rndom();
 	  // Test against photonuclear cross section gamma+X --> VM+X
 	  if( _f_WYarray[IGamma][IQ2] < xtest ){
