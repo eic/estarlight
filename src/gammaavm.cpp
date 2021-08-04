@@ -1074,8 +1074,8 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 	  // Load from look-up table. Use linear interpolation to evaluate at Q2
 	  double y_1 = photon_flux[IQ2+2];
 	  double y_2 = photon_flux[IQ2+3];
-	  double x_1 = std::exp(ln_min+IQ2*ratio/100);
-	  double x_2 = std::exp(ln_min+(1+IQ2)*ratio/100);
+	  double x_1 = std::exp(ln_min+IQ2*ratio/_VMnumQ2);
+	  double x_2 = std::exp(ln_min+(1+IQ2)*ratio/_VMnumQ2);
 	  double m = (y_2 - y_1)/(x_2 - x_1);
 	  double c = y_1-m*x_1;
 	  double y = m*Q2+c;

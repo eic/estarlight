@@ -185,7 +185,7 @@ void photonElectronLuminosity::photonNucleusDifferentialLuminosity()
     EQ2lumfile << Q2min << endl;
     EQ2lumfile << Q2max << endl;
     for( unsigned int iQ2 =0 ;iQ2<_nmbGammaQ2Bins; ++iQ2){
-      double Q2 = std::exp( std::log(Q2min)+iQ2*std::log(Q2max/Q2min)/100 );
+      double Q2 = std::exp( std::log(Q2min)+iQ2*std::log(Q2max/Q2min)/_nmbGammaQ2Bins );
       EQ2lumfile<< g(Egamma,Q2) <<endl;
       csgA=getcsgA(Egamma,Q2,beam);
       wylumfile << csgA << endl;
