@@ -69,7 +69,17 @@ int hepMC3Writer::writeEvent(const eXEvent &event, int eventnumber)
 
   HepMC3::GenParticlePtr hepmc3_electron = std::make_shared<HepMC3::GenParticle>( hepmc3_electron_four_vector, 11, 0 ); // status currently set to 0... need to double check
 
-  hepmc3_vertex_to_write->add_particle_out( hepmc3_electron );
+  // add code to output ion  SRK August 8 2021 
+ lorentzVector ion_lorentzVec = (*event.getTarget())[0];
+  FourVector hepmc3_ion_four_vector = FourVector(ion_lorentzVec.GetPx(),
+						   ion_lorentzVec.GetPy(),
+						   ion_lorentzVec.GetPz(),
+						   ion_lorentzVec.GetE());
+  
+ //  PDG code for protons is 2212; not clear what to do for ions, but use proton ID for now  SRK August 8, 2021
+HepMC3::GenParticlePtr hepmc3_ion = std::make_shared<HepMC3::GenParticle>( hepmc3_ion_four_vector, 2212, 0 ); // status currently set to 0... need to double check  
+
+  hepmc3_vertex_to_write->add_particle_out( hepmc3_ion );
   
   /** add vertex to HepMC3 Event**/
   hepmc3_evt.add_vertex( hepmc3_vertex_to_write );
