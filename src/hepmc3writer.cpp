@@ -36,17 +36,17 @@ int hepMC3Writer::initBeamHepMC3(const inputParameters &param)
   double e_mass = 0.000511;
 
   //Calculate Four Vector
-  double beam1_E  = e_mass*param.beam1LorentzGamma();
-  double beam2_E  = p_mass*param.beam2LorentzGamma();
-  double beam1_pz = -1.0*(beam1_E - e_mass*e_mass);
-  double beam2_pz = beam2_E - p_mass*p_mass;
+  double electronBeam_E  = e_mass*param.electronBeamLorentzGamma();
+  double targetBeam_E  = p_mass*param.targetBeamLorentzGamma();
+  double electronBeam_pz = -1.0*(electronBeam_E - e_mass*e_mass);
+  double targetBeam_pz = targetBeam_E - p_mass*p_mass;
 
   //Define Four Vector to fill HepMC3
-  hepmc3_beam1_four_vector_ = FourVector(0,0,beam1_pz,beam1_E);
-  hepmc3_beam2_four_vector_ = FourVector(0,0,beam2_pz,beam2_E);
-  beam1_pdg_id_ = 11;
-  int nuclear_pid = param.beam2A()*10 + param.beam2Z()*10000 + 1000000000;// Form 100ZZZAAAl; l=0
-  beam2_pdg_id_ = ( param.beam2A() > 1 ) ? nuclear_pid : 2212; //Everything is a proton right now
+  hepmc3_electronBeam_four_vector_ = FourVector(0,0,electronBeam_pz,electronBeam_E);
+  hepmc3_targetBeam_four_vector_ = FourVector(0,0,targetBeam_pz,targetBeam_E);
+  electronBeam_pdg_id_ = 11;
+  int nuclear_pid = param.targetBeamA()*10 + param.targetBeamZ()*10000 + 1000000000;// Form 100ZZZAAAl; l=0
+  targetBeam_pdg_id_ = ( param.targetBeamA() > 1 ) ? nuclear_pid : 2212; //Everything is a proton right now
 
   return 0;
 }
@@ -56,17 +56,18 @@ int hepMC3Writer::writeEvent(const eXEvent &event, int eventnumber)
 
   /** Make HepMC3 Event and Vertex ... Currently only two Vertices per Event, the beam and gamma  **/ 
   HepMC3::GenEvent hepmc3_evt(HepMC3::Units::GEV , HepMC3::Units::MM);
+  hepmc3_evt.set_event_number( eventnumber );
   HepMC3::GenVertexPtr hepmc3_beam_vertex_to_write = std::make_shared<HepMC3::GenVertex>(FourVector(0,0,0,0));  
   HepMC3::GenVertexPtr hepmc3_gamma_vertex_to_write = std::make_shared<HepMC3::GenVertex>(FourVector(0,0,0,0));
 
-  HepMC3::GenParticlePtr hepmc3_beam1_particle = std::make_shared<HepMC3::GenParticle>( hepmc3_beam1_four_vector_, beam1_pdg_id_, 0 );
-  HepMC3::GenParticlePtr hepmc3_beam2_particle = std::make_shared<HepMC3::GenParticle>( hepmc3_beam2_four_vector_, beam2_pdg_id_, 0 );
+  HepMC3::GenParticlePtr hepmc3_electronBeam_particle = std::make_shared<HepMC3::GenParticle>( hepmc3_electronBeam_four_vector_, electronBeam_pdg_id_, 0 );
+  HepMC3::GenParticlePtr hepmc3_targetBeam_particle = std::make_shared<HepMC3::GenParticle>( hepmc3_targetBeam_four_vector_, targetBeam_pdg_id_, 0 );
 
   /** Add beam particles to beam vertex **/
-  hepmc3_beam_vertex_to_write->add_particle_in( hepmc3_beam1_particle );
-  hepmc3_beam_vertex_to_write->add_particle_in( hepmc3_beam2_particle );
-  // hepmc3_gamma_vertex_to_write->add_particle_in( hepmc3_beam1_particle );
-  // hepmc3_gamma_vertex_to_write->add_particle_in( hepmc3_beam2_particle );
+  hepmc3_beam_vertex_to_write->add_particle_in( hepmc3_electronBeam_particle );
+  hepmc3_beam_vertex_to_write->add_particle_in( hepmc3_targetBeam_particle );
+  // hepmc3_gamma_vertex_to_write->add_particle_in( hepmc3_electronBeam_particle );
+  // hepmc3_gamma_vertex_to_write->add_particle_in( hepmc3_targetBeam_particle );
 
   
   /** Get starlight particle vector **/

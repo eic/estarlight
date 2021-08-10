@@ -33,10 +33,10 @@ class hepMC3Writer
   int initBeamHepMC3(const inputParameters &param);
   
   WriterAscii * _hepmc3_output;
-  FourVector hepmc3_beam1_four_vector_;
-  FourVector hepmc3_beam2_four_vector_;
-  int beam1_pdg_id_;
-  int beam2_pdg_id_;
+  FourVector hepmc3_electronBeam_four_vector_;
+  FourVector hepmc3_targetBeam_four_vector_;
+  int electronBeam_pdg_id_;
+  int targetBeam_pdg_id_;
   
 };
 

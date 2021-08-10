@@ -56,9 +56,9 @@ beamBeamSystem::beamBeamSystem(const inputParameters& inputParametersInstance,
     _beamBreakupMode (inputParametersInstance.beamBreakupMode()),
     _electronBeam           (electronBeam),
     _targetBeam           (targetBeam),
-    _breakupProbabilities(0),
-    _breakupImpactParameterStep(1.007),
-    _breakupCutOff(10e-6)
+    _breakupProbabilities(0)
+//    _breakupImpactParameterStep(1.007),
+//    _breakupCutOff(10e-6)
 { 
   init();
 }
@@ -80,9 +80,9 @@ beamBeamSystem::beamBeamSystem(const inputParameters& inputParametersInstance)
 	                    inputParametersInstance.targetBeamA(),
 			    inputParametersInstance.productionMode(),
                             inputParametersInstance.targetBeamLorentzGamma()),
-	  _breakupProbabilities(0),
-	  _breakupImpactParameterStep(1.007),
-	  _breakupCutOff(10e-10)
+	  _breakupProbabilities(0)
+//	  _breakupImpactParameterStep(1.007),
+//	  _breakupCutOff(10e-10)
 {
   init();
 }

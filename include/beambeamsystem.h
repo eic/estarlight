@@ -88,8 +88,8 @@ private:
 	double _cmsBoost;	   ///< Rapidity boost of the CMS wrt the lab system
 	
 	std::vector<double> _breakupProbabilities; ///< Vector containing breakup probabilities for impact parameters
-	double _breakupImpactParameterStep; ///< Step size in the calculation of the breakup probs
-	double _breakupCutOff;  ///< Cut off for minimum impact parameter probability
+//	double _breakupImpactParameterStep; ///< Step size in the calculation of the breakup probs
+//	double _breakupCutOff;  ///< Cut off for minimum impact parameter probability
 };
 
 
