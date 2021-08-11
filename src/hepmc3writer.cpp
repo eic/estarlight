@@ -43,7 +43,7 @@ int hepMC3Writer::writeEvent(const eXEvent &event, int eventnumber)
 						   gamma_lorentzVec.GetPy(),
 						   gamma_lorentzVec.GetPz(),
 						   gamma_lorentzVec.GetE());
-  HepMC3::GenParticlePtr hepmc3_gamma = std::make_shared<HepMC3::GenParticle>( hepmc3_gamma_four_vector, 22, 0 ); // status currently set to 0... need to double check
+  HepMC3::GenParticlePtr hepmc3_gamma = std::make_shared<HepMC3::GenParticle>( hepmc3_gamma_four_vector, 22, 4 ); // status currently set to 0... need to double check
   hepmc3_vertex_to_write->add_particle_in( hepmc3_gamma );
   
   /** Takes e_starlight events and converts to hepmc3 format **/
@@ -58,7 +58,7 @@ int hepMC3Writer::writeEvent(const eXEvent &event, int eventnumber)
 						  (*particle_iter).GetPz(),
 						  (*particle_iter).GetE());
       
-      HepMC3::GenParticlePtr hepmc3_particle = std::make_shared<HepMC3::GenParticle>( hepmc3_four_vector, hepmc3_pid, 0 ); // status currently set to 0... need to double check
+      HepMC3::GenParticlePtr hepmc3_particle = std::make_shared<HepMC3::GenParticle>( hepmc3_four_vector, hepmc3_pid, 1 ); // status currently set to 0... need to double check
       hepmc3_vertex_to_write->add_particle_out( hepmc3_particle );
     }
 
@@ -68,17 +68,19 @@ int hepMC3Writer::writeEvent(const eXEvent &event, int eventnumber)
 						   electron_lorentzVec.GetPz(),
 						   electron_lorentzVec.GetE());
 
-  HepMC3::GenParticlePtr hepmc3_electron = std::make_shared<HepMC3::GenParticle>( hepmc3_electron_four_vector, 11, 0 ); // status currently set to 0... need to double check
+  HepMC3::GenParticlePtr hepmc3_electron = std::make_shared<HepMC3::GenParticle>( hepmc3_electron_four_vector, 11, 1 ); // status currently set to 0... need to double check
+  
+  hepmc3_vertex_to_write->add_particle_out( hepmc3_electron );
 
   // add code to output ion  SRK August 8 2021 
- lorentzVector ion_lorentzVec = (*event.getTarget())[0];
+  lorentzVector ion_lorentzVec = (*event.getTarget())[0];
   FourVector hepmc3_ion_four_vector = FourVector(ion_lorentzVec.GetPx(),
 						   ion_lorentzVec.GetPy(),
 						   ion_lorentzVec.GetPz(),
 						   ion_lorentzVec.GetE());
   
  //  PDG code for protons is 2212; not clear what to do for ions, but use proton ID for now  SRK August 8, 2021
-HepMC3::GenParticlePtr hepmc3_ion = std::make_shared<HepMC3::GenParticle>( hepmc3_ion_four_vector, 2212, 0 ); // status currently set to 0... need to double check  
+HepMC3::GenParticlePtr hepmc3_ion = std::make_shared<HepMC3::GenParticle>( hepmc3_ion_four_vector, 2212, 1 ); // status currently set to 0... need to double check  
 
   hepmc3_vertex_to_write->add_particle_out( hepmc3_ion );
   
