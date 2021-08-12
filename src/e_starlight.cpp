@@ -266,6 +266,7 @@ e_starlight::createEventChannel()
 	case RHOZEUS:
 	case FOURPRONG:
 	case OMEGA:  
+	case OMEGA_pi0gamma:
 	case PHI:
 	case JPSI:
 	case JPSI2S:

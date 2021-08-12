@@ -169,31 +169,42 @@ void Gammaavectormeson::twoBodyDecay(starlightConstants::particleTypeEnum &ipid,
 {
 	// This routine decays a particle into two particles of mass mdec,
 	// taking spin into account
-
 	double pmag;
 	double phi,theta,Ecm;
 	double betax,betay,betaz;
-	double mdec=0.0;
+	double mdec1=0.0,mdec2=0.0;
 	double E1=0.0,E2=0.0;
 
 	//    set the mass of the daughter particles
-	mdec=getDaughterMass(ipid);
+	mdec1=getDaughterMass(ipid);
 
-	//  calculate the magnitude of the momenta
-	if(W < 2*mdec){
-		cout<<" ERROR: W="<<W<<endl;
-		iFbadevent = 1;
-		return;
+	if(_VMpidtest == starlightConstants::OMEGA_pi0gamma){
+		mdec2=starlightConstants::pionNeutralMass;
+		if(W < mdec2){
+			cout<<" ERROR: W="<<W<<endl;
+			iFbadevent = 1;
+			return;
+		}
+		//  calculate the magnitude of the momenta
+		pmag = (W*W - mdec2*mdec2)/(2.0*W);
+	}else{
+		mdec2=mdec1;
+		if(W < 2*mdec1){
+			cout<<" ERROR: W="<<W<<endl;
+			iFbadevent = 1;
+			return;
+		}
+		//  calculate the magnitude of the momenta
+		pmag = sqrt(W*W/4. - mdec2*mdec2);
 	}
-	pmag = sqrt(W*W/4. - mdec*mdec);
-  
+	  
 	//  pick an orientation, based on the spin
 	//  phi has a flat distribution in 2*pi
 	phi = _randy.Rndom()*2.*starlightConstants::pi;
                                                                                                                 
 	//  find theta, the angle between one of the outgoing particles and
 	//  the beamline, in the frame of the two photons
-
+    //cout<<"spin element: "<<spin_element<<endl;
 	theta=getTheta(ipid, spin_element);
  
 	//  compute unboosted momenta
@@ -205,8 +216,11 @@ void Gammaavectormeson::twoBodyDecay(starlightConstants::particleTypeEnum &ipid,
 	pz2 = -pz1;
 
 	Ecm = sqrt(W*W+px0*px0+py0*py0+pz0*pz0);
-	E1 = sqrt(mdec*mdec+px1*px1+py1*py1+pz1*pz1);
-	E2 = sqrt(mdec*mdec+px2*px2+py2*py2+pz2*pz2);
+	E1 = sqrt(mdec1*mdec1+px1*px1+py1*py1+pz1*pz1);
+	E2 = sqrt(mdec2*mdec2+px2*px2+py2*py2+pz2*pz2);
+
+	//cout<<"Ecm: "<<Ecm<<endl;
+	//cout<<"W: "<<W<<endl;
 
 	betax = -(px0/Ecm);
 	betay = -(py0/Ecm);
@@ -267,6 +281,57 @@ bool Gammaavectormeson::fourBodyDecay
 	return true;
 }
 
+//______________________________________________________________________________                                               
+void Gammaavectormeson::pi0Decay(double& px_pi0, double& py_pi0, double& pz_pi0,
+                                 double& e_g1, double& px_g1, double& py_g1, double& pz_g1,
+                                 double& e_g2, double& px_g2, double& py_g2, double& pz_g2,
+                                 int&    iFbadevent)
+{
+	double pmag;
+	double phi,theta,Ecm;
+	double betax,betay,betaz;
+	double E1=0.0,E2=0.0;
+
+	// This routine decays a pi0 into two isotropically produced photons
+	double m_pi0=starlightConstants::pionNeutralMass;
+	
+	//  calculate the magnitude of the momenta
+	pmag = sqrt(m_pi0*m_pi0/4.);
+	  
+	//  pick an orientation, based on the spin
+	//  phi has a flat distribution in 2*pi
+	phi = _randy.Rndom()*2.*starlightConstants::pi;
+                                                                                                                
+	//  find theta, the angle between one of the outgoing photons and
+	//  the beamline, in the frame of the pi0
+	theta=getTheta(starlightConstants::PION, 1.0/3.0);
+ 
+	//  compute unboosted momenta
+	px_g1 = sin(theta)*cos(phi)*pmag;
+	py_g1 = sin(theta)*sin(phi)*pmag;
+	pz_g1 = cos(theta)*pmag;
+	px_g2 = -px_g1;
+	py_g2 = -py_g1;
+	pz_g2 = -pz_g1;
+
+	Ecm = sqrt(m_pi0*m_pi0+px_pi0*px_pi0+py_pi0*py_pi0+pz_pi0*pz_pi0);
+	E1 = sqrt(px_g1*px_g1+py_g1*py_g1+pz_g1*pz_g1);
+	E2 = sqrt(px_g2*px_g2+py_g2*py_g2+pz_g2*pz_g2);
+
+	betax = -(px_pi0/Ecm);
+	betay = -(py_pi0/Ecm);
+	betaz = -(pz_pi0/Ecm);
+
+	transform (betax,betay,betaz,E1,px_g1,py_g1,pz_g1,iFbadevent);
+	transform (betax,betay,betaz,E2,px_g2,py_g2,pz_g2,iFbadevent);
+
+	e_g1=E1;
+	e_g2=E2;
+
+	if(iFbadevent == 1)
+	   return;
+}
+
 
 //______________________________________________________________________________
 double Gammaavectormeson::getDaughterMass(starlightConstants::particleTypeEnum &ipid)
@@ -281,6 +346,10 @@ double Gammaavectormeson::getDaughterMass(starlightConstants::particleTypeEnum &
 	case starlightConstants::OMEGA:
 		mdec = starlightConstants::pionChargedMass;
 		ipid = starlightConstants::PION;
+		break;
+	case starlightConstants::OMEGA_pi0gamma:
+		mdec = 0.0;
+		ipid = starlightConstants::PHOTON;
 		break;
 	case starlightConstants::PHI:
 		mdec = starlightConstants::kaonChargedMass;
@@ -363,6 +432,10 @@ double Gammaavectormeson::getTheta(starlightConstants::particleTypeEnum ipid, do
 	  case starlightConstants::KAONCHARGE:
 	    //rhos etc
 	    dndtheta=  sin(theta)*(1 - r_04_00+( 3.*r_04_00-1 )*cos(theta)*cos(theta));
+	    break;
+
+	  case starlightConstants::PHOTON: //omega --> pi0 + gamma
+	    dndtheta=  sin(theta); //unpolarized omegas
 	    break;
 	    
 	  default: cout<<"No proper theta dependence defined, check gammaavectormeson::gettheta"<<endl;
@@ -1048,6 +1121,9 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  if ( ipid == 11 || ipid == 13 ){
 	    ipid1 = -q1*ipid;
 	    ipid2 = -q2*ipid;
+	  } else if (ipid == 22){ // omega --> pi0 + gamma
+	  	ipid1 = 22;
+	  	ipid2 = 111;
 	  } else {
 	    ipid1 = q1*ipid;
 	    ipid2 = q2*ipid;
@@ -1066,13 +1142,30 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  event.addGamma(gamma, targetEgamma, Q2);   
 	  // - Saving V.M. daughters
 	  double md = getDaughterMass(vmpid); 
-	  double Ed1 = sqrt(md*md+px1*px1+py1*py1+pz1*pz1); 
-	  starlightParticle particle1(px1, py1, pz1, Ed1, starlightConstants::UNKNOWN, ipid1, q1);
-	  event.addParticle(particle1);
-	  //
-	  double Ed2 = sqrt(md*md+px2*px2+py2*py2+pz2*pz2); 
-	  starlightParticle particle2(px2, py2, pz2, Ed2, starlightConstants::UNKNOWN, ipid2, q2);
-	  event.addParticle(particle2);
+	  bool isOmegaNeutralDecay = (vmpid == starlightConstants::PHOTON);
+	  if(isOmegaNeutralDecay){
+	  	//double mpi0 = starlightConstants::pionNeutralMass;
+	  	double e_gamma1,px_gamma1,py_gamma1,pz_gamma1,e_gamma2,px_gamma2,py_gamma2,pz_gamma2;
+	    double Ed1 = sqrt(px1*px1+py1*py1+pz1*pz1); 
+	  	starlightParticle particle1(px1, py1, pz1, Ed1, starlightConstants::UNKNOWN, ipid1, q1);
+	  	event.addParticle(particle1);
+	  	//
+	  	pi0Decay(px2,py2,pz2,e_gamma1,px_gamma1,py_gamma1,pz_gamma1,e_gamma2,px_gamma2,py_gamma2,pz_gamma2,iFbadevent);
+	  	starlightParticle particle2(px_gamma1, py_gamma1, pz_gamma1, e_gamma1, starlightConstants::UNKNOWN, ipid1, q2);
+	  	starlightParticle particle3(px_gamma2, py_gamma2, pz_gamma2, e_gamma2, starlightConstants::UNKNOWN, ipid1, q2);
+	  	event.addParticle(particle2);
+	  	event.addParticle(particle3);
+	  	//double invmass = sqrt(mpi0*mpi0 + 2.0*(Ed1*Ed2 - (px1*px2+py1*py2+pz1*pz2)));
+	  } else {
+	  	double Ed1 = sqrt(md*md+px1*px1+py1*py1+pz1*pz1); 
+	    starlightParticle particle1(px1, py1, pz1, Ed1, starlightConstants::UNKNOWN, ipid1, q1);
+	    event.addParticle(particle1);
+	    //
+	    double Ed2 = sqrt(md*md+px2*px2+py2*py2+pz2*pz2); 
+	    starlightParticle particle2(px2, py2, pz2, Ed2, starlightConstants::UNKNOWN, ipid2, q2);
+	    event.addParticle(particle2);
+	  }
+
 	  // - Scattered target and transfered momenta at target vertex
 	  double target_pz =  - _beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) ) + t_pz;
 	  //Sign of t_px in following equation changed to fix sign error and conserve p_z.  Change made by Spencer Klein based on a bug report from Ya-Ping Xie.  Nov. 14, 2019

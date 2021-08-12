@@ -71,6 +71,7 @@ class Gammaavectormeson : public eventChannel
   void twoBodyDecay(starlightConstants::particleTypeEnum &ipid,double W,double px0,double py0,double pz0,double spin_element,
 		    double &px1,double &py1,double&pz1,double &px2,double &py2,double &pz2,int &iFbadevent);
   bool fourBodyDecay(starlightConstants::particleTypeEnum& ipid, const double E, const double W, const double* p, lorentzVector* decayMoms, int& iFbadevent);
+  void pi0Decay(double& px_pi0, double& py_pi0, double& pz_pi0,double& e_g1, double& px_g1, double& py_g1, double& pz_g1,double& e_g2, double& px_g2, double& py_g2, double& pz_g2,int& iFbadevent);
   double getMass();
   double getWidth();
   virtual double getTheta(starlightConstants::particleTypeEnum ipid, double r_04_00);

@@ -1,5 +1,11 @@
 # Backwards Production
 
+## $\omega \rightarrow \pi^0+\gamma$ Decay
+Default decay for $\omega$ is $\omega \rightarrow 2\pi$ with branch ratio 0.0153
+$\omega \rightarrow \pi^0+\gamma$ decay (branching ratio 0.0828) can be enabled with `PROD_PID = 223022`
+This neutral decay of the $\omega$ currently assumes an unpolarized $\omega$, as it is not clear whether $s$-channel helicity conservation holds in backwards production. This assumption can be changed in `src/gammaavm.cpp`
+
+
 ## Added Code 
 Added check in `src/e_narrowResonanceCrossSection.cpp` for backwards production.
 

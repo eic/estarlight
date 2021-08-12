@@ -108,6 +108,7 @@ namespace starlightConstants
         static const double OmegaMass  = 0.78265;            // [GeV/c^2]
 	static const double OmegaWidth = 0.00849;            // [GeV/c^2]
 	static const double OmegaBrPiPi = 0.0153;            // Branching ratio pi+pi-
+	static const double OmegaBrPi0Gamma = 0.0828;        // Branching ratio pi0 gamma
         static const double PhiMass  = 1.019461;             // [GeV/c^2]
 	static const double PhiWidth = 0.004266;             // [GeV/c^2]
 	static const double PhiBrKK = 0.489;                 // Branching ratio K+K-
@@ -139,6 +140,7 @@ namespace starlightConstants
 		TAUON          = 15,
 		TAUONDECAY     = 10015,
 		PROTON         = 212,
+		PIONNEUTRAL    = 111,
 		PION           = 211,
 		KAONCHARGE     = 321,
 		KAONNEUTRAL    = 310,
@@ -154,6 +156,7 @@ namespace starlightConstants
 		RHOZEUS        = 913,
 		FOURPRONG      = 999,
 		OMEGA          = 223,
+		OMEGA_pi0gamma = 223022,
 		PHI            = 333,
 		JPSI           = 443,
 		JPSI_ee        = 443011,

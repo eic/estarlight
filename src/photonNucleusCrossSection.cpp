@@ -104,6 +104,7 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _width        = starlightConstants::rho0PrimeWidth;
 	  break;
 	case OMEGA:
+	case OMEGA_pi0gamma:
 	  _slopeParameter=10.0;
 	  _vmPhotonCoupling=23.13;
 	  _vmQ2Power_c1 = 2.09;
@@ -910,6 +911,7 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			sigmagp_r=1.E-4*(5.0*exp(0.22*log(Wgp))+26.0*exp(-1.23*log(Wgp)));
 			break;
 		case OMEGA:
+		case OMEGA_pi0gamma:
 			sigmagp_r=1.E-4*(0.55*exp(0.22*log(Wgp))+18.0*exp(-1.92*log(Wgp)));
 			break;                                                      
 		case PHI:
@@ -1113,6 +1115,14 @@ photonNucleusCrossSection::breitWigner(const double W,
 		}
 		ppi=sqrt( ((W/2.)*(W/2.)) - pionChargedMass * pionChargedMass);
 		ppi0=0.358;
+	}
+	if( _particleType==OMEGA_pi0gamma){  
+		if (W < pionNeutralMass){
+			nrbw_r=0.;
+			return nrbw_r;
+		}
+		ppi=abs((W*W - pionNeutralMass * pionNeutralMass)/(2.0*W));
+		ppi0=abs((_channelMass*_channelMass - pionNeutralMass * pionNeutralMass)/(2.0*W));
 	}
   
 	// handle phi-->K+K- properly
