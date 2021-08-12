@@ -97,3 +97,30 @@ The documentation should be generated and available in the previous location.
 
 To view the documentation:
 - Open the file ~/the_path/estarlight/doxygen/html/index.html
+
+## Using with HepMC3 output
+HepMC3 can be found at https://gitlab.cern.ch/hepmc/HepMC3. The README should be referred to for installation. For quick installation, the following can be used.
+```
+mkdir hepmc3
+cd hepmc3
+git clone https://gitlab.cern.ch/hepmc/HepMC3.git
+mkdir hepmc3-build
+cd hepmc3-build
+cmake -DHEPMC3_ENABLE_ROOTIO=OFF -DCMAKE_INSTALL_PREFIX=../hepmc3-install -DHEPMC3_ENABLE_PYTHON=OFF -DHEPMC3_BUILD_EXAMPLES=ON -DHEPMC3_ENABLE_TEST=ON ../HepMC3
+```
+Running tests at this point will result in errors so first compile the test directory:
+```
+cd test
+make
+cd ..
+make test
+```
+You should get the output: `100% tests passed, 0 tests failed out of 23`.
+Now install:
+```
+make install
+```
+To compile eSTARlight with HepMC3 output enabled, use:
+```
+cmake /pathto/estarlight -DENABLE_HEPMC3=ON -DHepMC3_DIR=/pathto/hepmc3/hepmc3-install
+```
