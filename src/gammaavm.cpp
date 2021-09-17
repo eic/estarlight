@@ -286,6 +286,57 @@ bool Gammaavectormeson::fourBodyDecay
 }
 
 
+//______________________________________________________________________________                                               
+void Gammaavectormeson::pi0Decay(double& px_pi0, double& py_pi0, double& pz_pi0,
+                                 double& e_g1, double& px_g1, double& py_g1, double& pz_g1,
+                                 double& e_g2, double& px_g2, double& py_g2, double& pz_g2,
+                                 int&    iFbadevent)
+{
+	double pmag;
+	double phi,theta,Ecm;
+	double betax,betay,betaz;
+	double E1=0.0,E2=0.0;
+
+	// This routine decays a pi0 into two isotropically produced photons
+	double m_pi0=starlightConstants::pionNeutralMass;
+	
+	//  calculate the magnitude of the momenta
+	pmag = sqrt(m_pi0*m_pi0/4.);
+	  
+	//  pick an orientation, based on the spin
+	//  phi has a flat distribution in 2*pi
+	phi = _randy.Rndom()*2.*starlightConstants::pi;
+                                                                                                                
+	//  find theta, the angle between one of the outgoing photons and
+	//  the beamline, in the frame of the pi0
+	theta=getTheta(starlightConstants::PION, 1.0/3.0);
+ 
+	//  compute unboosted momenta
+	px_g1 = sin(theta)*cos(phi)*pmag;
+	py_g1 = sin(theta)*sin(phi)*pmag;
+	pz_g1 = cos(theta)*pmag;
+	px_g2 = -px_g1;
+	py_g2 = -py_g1;
+	pz_g2 = -pz_g1;
+
+	Ecm = sqrt(m_pi0*m_pi0+px_pi0*px_pi0+py_pi0*py_pi0+pz_pi0*pz_pi0);
+	E1 = sqrt(px_g1*px_g1+py_g1*py_g1+pz_g1*pz_g1);
+	E2 = sqrt(px_g2*px_g2+py_g2*py_g2+pz_g2*pz_g2);
+
+	betax = -(px_pi0/Ecm);
+	betay = -(py_pi0/Ecm);
+	betaz = -(pz_pi0/Ecm);
+
+	transform (betax,betay,betaz,E1,px_g1,py_g1,pz_g1,iFbadevent);
+	transform (betax,betay,betaz,E2,px_g2,py_g2,pz_g2,iFbadevent);
+
+	e_g1=E1;
+	e_g2=E2;
+
+	if(iFbadevent == 1)
+	   return;
+}
+
 //______________________________________________________________________________
 double Gammaavectormeson::getDaughterMass(starlightConstants::particleTypeEnum &ipid)
 {
