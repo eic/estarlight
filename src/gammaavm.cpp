@@ -591,9 +591,9 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	py = py1 + py2;
 	//double pt = sqrt( px*px + py*py );
 	// Computing the pomeron energy using the fact that the target invariant mass is unchanged in collision
-	double target_pz = _beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) );
+	double target_pz = -1.0*_beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) );
 	
-	double complementM2 = pow(_beamNucleus*starlightConstants::protonMass,2.) + t_px*t_px + t_py*t_py + (target_pz-t_pz)*(target_pz-t_pz);
+	double complementM2 = pow(_beamNucleus*starlightConstants::protonMass,2.) + t_px*t_px + t_py*t_py + (target_pz+t_pz)*(target_pz+t_pz);
 	t_E = _beamNucleus*_pEnergy - sqrt(complementM2);
 	// Finally V.M. energy, pz and rapidity from photon + pommeron.
 	E = Egam + t_E;
@@ -602,42 +602,81 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	//	cout << "pz_final = " << pz << endl;
 
 
-	// Backwards Production
+	// Backwards Production... updated by Zachary Sweger on 9/21/2021
 	if (_backwardsProduction) {
-	  //Fill the intial state in the lab frame
-	  double pz_tar_i_lab = -1.0*target_pz;  //Flip the pz of the target
-	  double E_tar_i_lab = sqrt(pow(target_pz,2) + pow(starlightConstants::protonMass,2.)); //Calculate proton energy
-	  double pz_gam_i_lab = Egam; //Photon energy
-	  double E_gam_i_lab = Egam;  //Photon energy
+	  double is_proton_E  = _pEnergy;
+	  double is_proton_px = 0.0;
+	  double is_proton_py = 0.0;
+	  double is_proton_pz = target_pz;
+	  double is_gamma_E  = Egam;
+	  double is_gamma_px = px1;
+	  double is_gamma_py = py1;
+	  double is_gamma_pz = gamma_pz;
+	  double is_tot_E  = is_proton_E  + is_gamma_E;
+	  double is_tot_px = is_proton_px + is_gamma_px;
+	  double is_tot_py = is_proton_py + is_gamma_py;
+	  double is_tot_pz = is_proton_pz + is_gamma_pz;
 
-	  //Calculate the final state target energy and pz
-	  double pz_tar_f_lab = (pz_tar_i_lab + pz_gam_i_lab) - pz;
-	  double E_tar_f_lab = sqrt( pow(pz_tar_f_lab,2) + pow(starlightConstants::protonMass,2.) );
-
-	  //Calculate the boost (beta,gamma) to the center of mass frame
-	  double beta = (pz_tar_i_lab + pz_gam_i_lab)/(E_gam_i_lab + E_tar_i_lab);
-	  double lorentzGamma = 1.0/sqrt( 1 - pow(beta,2.));
+	  double fs_proton_E  = sqrt(complementM2);
+	  double fs_proton_px = t_px;
+	  double fs_proton_py = t_py;
+	  double fs_proton_pz = t_pz + target_pz;
 	  
-	  //Boost to the final state target to the CM frame
-	  double cm_frame_target_pz = lorentzGamma*( pz_tar_f_lab + beta*E_tar_f_lab );
-	  double cm_frame_gamma_pz  = lorentzGamma*( pz + beta*pz );
-	  
-	  //Recalculate target energy in the CM frame (assign to VM) 
-	  double vm_mass = sqrt( E*E - ( px*px + py*py + pz*pz ) );
-	  double vm_E_cm = sqrt( vm_mass*vm_mass + px*px + py*py + cm_frame_target_pz*cm_frame_target_pz);
+	  double fs_vm_E  = E;
+	  double fs_vm_px = px;
+	  double fs_vm_py = py;
+	  double fs_vm_pz = pz;
 
-	  //Calcuate photon energy in CM frame (assign to target)
-	  double cm_E = sqrt( pow(starlightConstants::protonMass,2.)  + pow(t_px,2.) + pow(t_py,2.) + pow(cm_frame_gamma_pz,2.));	  
-	  //Boost photon and target back to lab frame
-	  //target:
-	  t_pz = lorentzGamma*(cm_frame_gamma_pz - beta*cm_E);
-	  t_E = lorentzGamma*(cm_E - beta*cm_frame_gamma_pz);
-	  //Photon:
-	  pz = lorentzGamma*(cm_frame_target_pz - beta*vm_E_cm);
-	  E = lorentzGamma*(vm_E_cm - beta*cm_frame_target_pz);
+      int isbadevent = 0;
+	  double betax_cm = (is_tot_px/is_tot_E);
+      double betay_cm = (is_tot_py/is_tot_E);
+      double betaz_cm = (is_tot_pz/is_tot_E);
+      transform (betax_cm,betay_cm,betaz_cm,is_proton_E,is_proton_px,is_proton_py,is_proton_pz,isbadevent);
+      transform (betax_cm,betay_cm,betaz_cm,is_gamma_E, is_gamma_px, is_gamma_py, is_gamma_pz, isbadevent);
+      transform (betax_cm,betay_cm,betaz_cm,fs_proton_E,fs_proton_px,fs_proton_py,fs_proton_pz,isbadevent);
+      transform (betax_cm,betay_cm,betaz_cm,fs_vm_E,    fs_vm_px,    fs_vm_py,    fs_vm_pz,    isbadevent);
+
+      double u_fs_proton_px = -1.0*fs_proton_px;
+	  double u_fs_proton_py = -1.0*fs_proton_py;
+	  double u_fs_proton_pz = -1.0*fs_proton_pz;
+	  double u_fs_proton_E  = fs_proton_E;
+	  
+	  double u_fs_vm_px = -1.0*fs_vm_px;
+	  double u_fs_vm_py = -1.0*fs_vm_py;
+	  double u_fs_vm_pz = -1.0*fs_vm_pz;
+	  double u_fs_vm_E  = fs_vm_E;
+
+      betax_cm = -1.0*betax_cm;
+	  betay_cm = -1.0*betay_cm;
+	  betaz_cm = -1.0*betaz_cm;
+      transform (betax_cm,betay_cm,betaz_cm,is_proton_E,  is_proton_px,  is_proton_py,  is_proton_pz,  isbadevent);
+      transform (betax_cm,betay_cm,betaz_cm,is_gamma_E,   is_gamma_px,   is_gamma_py,   is_gamma_pz,   isbadevent);
+      transform (betax_cm,betay_cm,betaz_cm,u_fs_proton_E,u_fs_proton_px,u_fs_proton_py,u_fs_proton_pz,isbadevent);
+      transform (betax_cm,betay_cm,betaz_cm,u_fs_vm_E,    u_fs_vm_px,    u_fs_vm_py,    u_fs_vm_pz,    isbadevent);
+
+      px=u_fs_vm_px;
+      py=u_fs_vm_py;
+      pz=u_fs_vm_pz;
+      E =u_fs_vm_E;
+
+      t_px=u_fs_proton_px;
+      t_py=u_fs_proton_py;
+      t_pz=u_fs_proton_pz-is_proton_pz;
+      t_E =is_proton_E-u_fs_proton_E;
+      //cout<<"Energy Violation: "<<(E+u_fs_proton_E)-(is_tot_E)<<endl;
+      //cout<<"Pz Violation: "<<(pz+u_fs_proton_pz)-(is_tot_pz)<<endl;
+      //cout<<"Px Violation: "<<(px+u_fs_proton_px)-(is_tot_px)<<endl;
+      //cout<<"Py Violation: "<<(py+u_fs_proton_py)-(is_tot_py)<<endl;
+      //cout<<"proton mass: "<< sqrt(u_fs_proton_E*u_fs_proton_E-u_fs_proton_pz*u_fs_proton_pz-u_fs_proton_py*u_fs_proton_py-u_fs_proton_px*u_fs_proton_px)<<endl;
+      //cout << "VM MASS = " << sqrt(E*E-px*px - py*py-pz*pz) << endl;
 
 	  //Calculate the rapidity
 	  Y = 0.5*std::log( (E+fabs(pz))/(E-fabs(pz)) );
+	  if(Y!=Y){
+	  	//FIXME the following should be upated if not using omegas
+	 	E=sqrt(0.783*0.783+px*px+py*py+pz*pz); 
+		//cout<<"Energy Violation: "<<(E+u_fs_proton_E)-(is_tot_E)<<endl;
+	  }
 	}
 	
 }
@@ -1133,6 +1172,8 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  double e_px = e_E*sin(e_theta)*cos(e_phi);
 	  double e_py = e_E*sin(e_theta)*sin(e_phi);
 	  double e_pz = e_E*cos(e_theta);
+	  double e_mass = 5.11E-4;
+	  double e_E = sqrt(e_mass*e_mass + e_px*e_px + e_py*e_py + e_pz*e_pz);
 	  lorentzVector electron(e_px, e_py, e_pz, e_E);
 	  event.addSourceElectron(electron);
 	  // - Generated photon - target frame
