@@ -420,6 +420,7 @@ double Gammaavectormeson::getTheta(starlightConstants::particleTypeEnum ipid, do
 	  //  Physics Letters B 449, 328; The European Physical Journal C - Particles and Fields 13, 37; 
 	  //  The European Physical Journal C - Particles and Fields 6, 603
   
+
 	  switch(ipid){
 	    
 	  case starlightConstants::MUON:
@@ -433,13 +434,14 @@ double Gammaavectormeson::getTheta(starlightConstants::particleTypeEnum ipid, do
 	    //rhos etc
 	    dndtheta=  sin(theta)*(1 - r_04_00+( 3.*r_04_00-1 )*cos(theta)*cos(theta));
 	    break;
-
-	  case starlightConstants::PHOTON: //omega --> pi0 + gamma
-	    dndtheta=  sin(theta); //unpolarized omegas
-	    break;
 	    
 	  default: cout<<"No proper theta dependence defined, check gammaavectormeson::gettheta"<<endl;
 	  }//end of switch
+
+	  // Assume unpolarized vector-mesons for now
+	  if(_backwardsProduction){
+	  	dndtheta = sin(theta);
+	  }
 	}
 	return theta;
 
@@ -674,7 +676,8 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	  Y = 0.5*std::log( (E+fabs(pz))/(E-fabs(pz)) );
 	  if(Y!=Y){
 	  	//FIXME the following should be upated if not using omegas
-	 	E=sqrt(0.783*0.783+px*px+py*py+pz*pz); 
+	  	if(_VMpidtest==starlightConstants::OMEGA_pi0gamma || _VMpidtest==starlightConstants::OMEGA) E=sqrt(starlightConstants::OmegaMass*starlightConstants::OmegaMass+px*px+py*py+pz*pz); 
+		else if(_VMpidtest==starlightConstants::RHO) E=sqrt(starlightConstants::rho0Mass*starlightConstants::rho0Mass+px*px+py*py+pz*pz);
 		//cout<<"Energy Violation: "<<(E+u_fs_proton_E)-(is_tot_E)<<endl;
 	  }
 	}
