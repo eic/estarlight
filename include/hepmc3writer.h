@@ -5,8 +5,10 @@
 #include "inputParameters.h"
 #include "eXevent.h"
 #include  "HepMC3/WriterAscii.h"
+#include "HepMC3/FourVector.h"
 
 using HepMC3::WriterAscii;
+using HepMC3::FourVector;
 
 class hepMC3Writer
 {
@@ -27,8 +29,14 @@ class hepMC3Writer
   
  private:
 
-  WriterAscii * _hepmc3_output;
+  /** Init HepMC3 Beam Four Vectors **/
+  int initBeamHepMC3(const inputParameters &param);
 
+  WriterAscii * _hepmc3_output;
+  FourVector hepmc3_electronBeam_four_vector_;
+  FourVector hepmc3_targetBeam_four_vector_;
+  int electronBeam_pdg_id_;
+  int targetBeam_pdg_id_;
 };
 
 #endif // HEPMC3WRITER_H
