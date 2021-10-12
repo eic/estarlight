@@ -218,9 +218,12 @@ public:
 	bool         fixedQ2Range          () const { return _fixedQ2Range;                   }  ///< return state of Q2 range
 	unsigned int nmbGammaQ2Bins        () const { return _nmbGammaQ2Bins.value();         }  ///< return number of gamma q2 bins
 	std::string  pythiaParams          () const { return _pythiaParams.value();           }  ///< returns parameters to be passed to pythia
-	bool         pythiaFullEventRecord () const { return _pythiaFullEventRecord.value();  }  ///< returns if the full pythia event record should be printed
-	bool         hepmc3FullEventRecord () const { return _hepmc3FullEventRecord.value();  }  ///< returns if the full hepmc3 event record should be printed
-	bool         backwardsProduction   () const { return _backwardsProduction.value();    }  ///< returns if the full hepmc3 event record should be printed
+	bool         defaultFullEventRecord() const { bool a; _outputFormat.value()==0 ? a=true : a=false; return a;}  ///< returns if the full default event record should be printed
+	bool         pythiaFullEventRecord () const { bool a; _outputFormat.value()==1 ? a=true : a=false; return a;}  ///< returns if the full pythia event record should be printed
+	bool         hepmc3FullEventRecord () const { bool a; _outputFormat.value()==2 ? a=true : a=false; return a;}  ///< returns if the full hepmc3 event record should be printed
+	bool         lundFullEventRecord   () const { bool a; _outputFormat.value()==3 ? a=true : a=false; return a;}  ///< returns if the full lund event record should be printed
+	int          outputFormat          () const { return _outputFormat.value();           }  ///< returns value according to desired output format. 0 for only default, 1 for Pythia, 2 for HepMC, 3 for lund
+	bool         backwardsProduction   () const { return _backwardsProduction.value();    }  ///< returns if backwards production
 	int	     xsecCalcMethod        () const { return _xsecCalcMethod.value();         }  ///< returns the method used for the x-sec calculation
         double       axionMass             () const { return _axionMass.value();              }  ///< returns axion mass //AXION HACK
 	int          bslopeDefinition      () const { return _bslopeDefinition.value();       }  ///< returns the definition of b-slope
@@ -269,9 +272,8 @@ public:
 	void setMinGammaQ2            (double v)  {  _minGammaQ2 = v;             }  ///< sets minimum gamma virtuality in case of photo nuclear processes [GeV]
 	void setMaxGammaQ2            (double v)  {  _maxGammaQ2 = v;         }  ///< sets maximum gamma virtuality in case of photo nuclear processes [GeV]
 	void setPythiaParams          (std::string v)  {  _pythiaParams = v;      }  ///< sets parameters to be passed to pythia
-	void setPythiaFullEventRecord (bool v)  {  _pythiaFullEventRecord = v;    }  ///< sets if the full pythia event record should be prvoided
-	void setHepMC3FullEventRecord (bool v)  {  _hepmc3FullEventRecord = v;    }  ///< sets if the full hepmc3 event record should be prvoided
-	void setBackwardsProduction   (bool v)  {  _backwardsProduction = v;       }  ///< sets backwards production
+	void setOutputFormat          (int  v)   {   _outputFormat = v;           }  ///< sets output file format
+	void setBackwardsProduction   (bool v)  {  _backwardsProduction = v;      }  ///< sets backwards production
 	void setXsecCalcMethod        (int v)  {  _xsecCalcMethod = v;            }  ///< sets the method used for the x-sec calculation
 	void setAxionMass        (double v)  {  _axionMass = v;                   }  ///< sets axion mass    //AXION HACK
 	void setbslopeDefinition      (int v)  {  _bslopeDefinition = v;          }  ///< sets the definition of b slope
@@ -354,8 +356,10 @@ private:
 	parameter<double, VALIDITY_CHECK>          _maxGammaQ2;              ///< maximum gamma Q2 in case of photo nuclear processes	
 	parameter<unsigned int, VALIDITY_CHECK>     _nmbGammaQ2Bins;          ///< number of gamma q2 bins
 	parameter<std::string,NO_VALIDITY_CHECK>   _pythiaParams;            ///< semi-colon separated parameters to pass to pythia, e.g. "mstj(1)=0;paru(13)=0.1" 
-	parameter<bool, NO_VALIDITY_CHECK>         _pythiaFullEventRecord;   ///< if the full pythia event record should be in the output
-	parameter<bool, NO_VALIDITY_CHECK>         _hepmc3FullEventRecord;   ///< if the full hepmc3 event record should be in the output
+	//parameter<bool, NO_VALIDITY_CHECK>         _pythiaFullEventRecord;   ///< if the full pythia event record should be in the output
+	//parameter<bool, NO_VALIDITY_CHECK>         _hepmc3FullEventRecord;   ///< if the full hepmc3 event record should be in the output
+	//parameter<bool, NO_VALIDITY_CHECK>         _lundFullEventRecord;     ///< if the full lund event record should be in the output
+	parameter<int, NO_VALIDITY_CHECK>         _outputFormat;              ///< identifier of output format
 	parameter<bool, NO_VALIDITY_CHECK>         _backwardsProduction;     ///
 	parameter<unsigned int, VALIDITY_CHECK>    _xsecCalcMethod;	     ///< Select x-sec calc method. (0 is standard starlight method, 1 must be used for assym. collisions (e.g. p-A), but is slow)	
         parameter<double, VALIDITY_CHECK>          _axionMass;               ///Axion mass//AXION HACK

@@ -117,7 +117,8 @@ e_starlightStandalone::run()
 	}
 
 	// open output file
-	eventFileWriter fileWriter;
+    eventFileWriter fileWriter;
+	eventFileWriter fileWriterLUND;
 	fileWriter.writeFullPythiaInfo(_inputParameters->pythiaFullEventRecord());
 	fileWriter.writeFullHepMC3Info(_inputParameters->hepmc3FullEventRecord());
         _baseFileName = _inputParameters->baseFileName();
@@ -126,6 +127,12 @@ e_starlightStandalone::run()
 	//
 	fileWriter.writeInit(*_inputParameters);
 	//
+	if(_inputParameters->lundFullEventRecord()){
+		fileWriterLUND.open("slight_LUND.txt");
+		//
+		fileWriterLUND.writeInitLUND(*_inputParameters);
+		//
+	}
 	printInfo << "generating events:" << endl;
 	unsigned int nmbEvents = 0;
 	std::chrono::steady_clock::time_point begin= std::chrono::steady_clock::now();
@@ -138,12 +145,18 @@ e_starlightStandalone::run()
 			boostEvent(event);
 			reflectEvent(event);
 			fileWriter.writeEvent(event, iEvent);
+			if(_inputParameters->lundFullEventRecord()){
+				fileWriterLUND.writeEventLUND(event, iEvent);
+			}
 		}
 	}
 	std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();                                   
 	float running_total = 1E-3*std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 	cout<<"Total time "<<running_total<<" s ("<<1E3*running_total/nmbEvents<<" ms/ev)"<<endl;
 	fileWriter.close();
+	if(_inputParameters->lundFullEventRecord()){
+		fileWriterLUND.close();
+	}
 
 	if( _starlight->nmbAttempts() == 0 )return true; 
 

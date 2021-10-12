@@ -55,15 +55,24 @@ class eventFileWriter : public fileWriter
 
       /** Write out simulation set up */
       int writeInit(inputParameters &param );
+
+      /** Write out LUND simulation set up */
+      int writeInitLUND(inputParameters &param );
       
       /** Write an eX event to file */
       int writeEvent(eXEvent &event, int eventnumber);
+
+      /** Write an eX event to file in LUND format */
+      int writeEventLUND(eXEvent &event, int eventnumber);
 
       /** Set if we want to write full pythia information */
       void writeFullPythiaInfo(bool v) { _writeFullPythia = v; }
 
       /** Set if we want to write full pythia information */
       void writeFullHepMC3Info(bool v) { _writeFullHepMC3 = v; }
+
+      /** Set if we want to write full lund information */
+      //void writeFullLUNDInfo(bool v) { _writeFullLUND = v; }
 
       /** close the file */
       int close();
@@ -72,6 +81,12 @@ private:
   
   bool _writeFullPythia;
   bool _writeFullHepMC3;
+
+  //Define Four Vectors
+  std::vector<double> _electronBeam_four_vector_;
+  std::vector<double> _targetBeam_four_vector_;
+  int _electronBeam_pdg_id_;
+  int _targetBeam_pdg_id_;
 
 #ifdef HEPMC3_ON
   hepMC3Writer * _hepmc3writer;

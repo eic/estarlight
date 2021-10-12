@@ -86,8 +86,7 @@ inputParameters::inputParameters()
 	  _maxGammaQ2            ("MAX_GAMMA_Q2",0,NOT_REQUIRED),
 	  _nmbGammaQ2Bins       ("INT_GAMMA_Q2_BINS",400,NOT_REQUIRED),
 	  _pythiaParams          ("PYTHIA_PARAMS","", NOT_REQUIRED),
-	  _pythiaFullEventRecord ("PYTHIA_FULL_EVENTRECORD",false, NOT_REQUIRED),
-	  _hepmc3FullEventRecord ("HEPMC3_FULL_EVENTRECORD",false, NOT_REQUIRED),
+      _outputFormat           ("OUTPUT_FORMAT",0, NOT_REQUIRED),
 	  _backwardsProduction    ("BACKWARDS_PRODUCTION",false, NOT_REQUIRED),
 
 	  _xsecCalcMethod	 ("XSEC_METHOD",0, NOT_REQUIRED),
@@ -142,8 +141,7 @@ inputParameters::inputParameters()
 	_ip.addParameter(_maxGammaQ2);
 	_ip.addParameter(_nmbGammaQ2Bins);
 	_ip.addParameter(_pythiaParams);
-	_ip.addParameter(_pythiaFullEventRecord);
-	_ip.addParameter(_hepmc3FullEventRecord);
+	_ip.addParameter(_outputFormat);
 	_ip.addParameter(_backwardsProduction);
 	_ip.addParameter(_xsecCalcMethod);
         _ip.addParameter(_axionMass);     // AXION HACK
