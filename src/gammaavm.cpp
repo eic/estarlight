@@ -435,7 +435,7 @@ double Gammaavectormeson::getTheta(starlightConstants::particleTypeEnum ipid, do
 	    dndtheta=  sin(theta)*(1 - r_04_00+( 3.*r_04_00-1 )*cos(theta)*cos(theta));
 	    break;
 	    
-	  default: cout<<"No proper theta dependence defined, check gammaavectormeson::gettheta"<<endl;
+	  default: if(!_backwardsProduction) cout<<"No proper theta dependence defined, check gammaavectormeson::gettheta"<<endl;
 	  }//end of switch
 
 	  // Assume unpolarized vector-mesons for now
