@@ -74,7 +74,7 @@ int hepMC3Writer::writeEvent(const eXEvent &event, int eventnumber)
 						   gamma_lorentzVec.GetPy(),
 						   gamma_lorentzVec.GetPz(),
 						   gamma_lorentzVec.GetE());
-  HepMC3::GenParticlePtr hepmc3_gamma = std::make_shared<HepMC3::GenParticle>( hepmc3_gamma_four_vector, 22, 4 ); // status currently set to 0... need to double check
+  HepMC3::GenParticlePtr hepmc3_gamma = std::make_shared<HepMC3::GenParticle>( hepmc3_gamma_four_vector, 22, 13 );
   hepmc3_gamma_vertex_to_write->add_particle_out( hepmc3_gamma );
   hepmc3_ion_vertex_to_write->add_particle_in( hepmc3_gamma );
   
