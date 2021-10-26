@@ -79,6 +79,8 @@ Gammaavectormeson::Gammaavectormeson(const inputParameters& inputParametersInsta
 	_cmsMaxPhotonEnergy=inputParametersInstance.cmsMaxPhotonEnergy();
 	_cmsMinPhotonEnergy=inputParametersInstance.cmsMinPhotonEnergy();
 	_beamLorentzGamma = inputParametersInstance.beamLorentzGamma();
+        _beam2LorentzGamma = inputParametersInstance.beam2LorentzGamma();
+	_rap_CM=inputParametersInstance.rap_CM();
 	_targetRadius = inputParametersInstance.targetRadius();
 
         N0 = 0; N1 = 0; N2 = 0; 
@@ -1140,7 +1142,7 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 	  //double cos_theta_e = 1. - Q2/(2.*_eEnergy*E_prime);
 	  //theta_e = acos(cos_theta_e);
 	  theta_e = sqrt(Q2/(_eEnergy*E_prime));//updated from above code because small angles were taken to exactly 0 before
-	  double beam_y = acosh(_beamLorentzGamma);	
+	  double beam_y = acosh(_beam2LorentzGamma)+_rap_CM;	
 	  gamma_pt = E_prime*sin(theta_e);
 	  
 	  double pz_squared = targetEgamma*targetEgamma - Q2 - gamma_pt*gamma_pt;
@@ -1270,6 +1272,8 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  double gamma_x = gamma_pt*cos(e_phi+starlightConstants::pi);
 	  double gamma_y = gamma_pt*sin(e_phi+starlightConstants::pi);
 	  lorentzVector gamma(gamma_x,gamma_y,gamma_pz,cmsEgamma);
+	  vector3 boostVector(0, 0, tanh(_rap_CM));
+	  (gamma).Boost(boostVector);
 	  event.addGamma(gamma, targetEgamma, Q2);   
 	  // - Saving V.M. daughters
 	  double md = getDaughterMass(vmpid); 

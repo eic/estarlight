@@ -189,8 +189,19 @@ inputParameters::configureFromFile(const std::string &_configFileName)
  	// Calculate beam gamma in CMS frame
  	double rap1 = acosh(beam1LorentzGamma());
 	double rap2 = -acosh(beam2LorentzGamma());
-	_beamLorentzGamma = cosh((rap1-rap2)/2);
+
+	double _electronEnergy_lab = (beam1LorentzGamma())*(starlightConstants::mel);
+	double _protonEnergy_lab = beam2LorentzGamma() * protonMass;
+	double _protonPz_lab = -1.0*sqrt(_protonEnergy_lab*_protonEnergy_lab - protonMass*protonMass);
+	double _electronPz_lab = 1.0*sqrt(_electronEnergy_lab*_electronEnergy_lab - starlightConstants::mel*(starlightConstants::mel));
+	double _totalEnergy_lab = 1.0*_electronEnergy_lab + _protonEnergy_lab;
+	double _totalPz_lab = _protonPz_lab + _electronPz_lab;
+	_rap_CM = (1.0/2.0)*log((_totalEnergy_lab + _totalPz_lab)/(_totalEnergy_lab - _totalPz_lab));
+
+//	_beamLorentzGamma = cosh((rap1-rap2)/2);
+	_beamLorentzGamma = cosh(_rap_CM-rap2);
 	_targetLorentzGamma = cosh(rap1-rap2);
+
 
 	if( beam2A() == 1) //proton case 0.87 fm = 4.4 GeV^{-1}
 	  _targetR = 4.4;
@@ -199,10 +210,11 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 	  //_targetR = 4.4/2.;
 
 	_fixedQ2Range = false;
-	std::cout << "Rapidity beam 1: " << rap1 << ", rapidity beam 2: " << rap2 << ", rapidity CMS system: " << (rap1+rap2)/2 << ", beam gamma in CMS: " << _beamLorentzGamma<< std::endl;
+	std::cout << "Rapidity beam 1: " << rap1 << ", rapidity beam 2: " << rap2 << ", rapidity CMS system: " << _rap_CM << ", beam gamma in CMS: " << _beamLorentzGamma<< std::endl;
 	std::cout << "Rapidity beam 1 in beam 2 frame: " << rap1-rap2 << ", beam 1 gamma in beam 2 frame: " << _targetLorentzGamma<< std::endl;
 	_ptBinWidthInterference = maxPtInterference() / nmbPtBinsInterference();
 	_protonEnergy           = _beamLorentzGamma * protonMass;
+	cout<<"Proton Energy in CM frame: "<<_protonEnergy<<endl;
 	// Electron energy in the target frame of reference
 	_electronEnergy         = _targetLorentzGamma * starlightConstants::mel;
 	if((beam1Z()==1) && (beam1A()==2)){

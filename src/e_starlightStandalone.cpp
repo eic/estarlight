@@ -172,9 +172,10 @@ void e_starlightStandalone::boostEvent(eXEvent &event)
 {
   
    // Calculate CMS boost 
-   double rap1 = acosh(_inputParameters->beam1LorentzGamma());
+//   double rap1 = acosh(_inputParameters->beam1LorentzGamma());
    double rap2 = -acosh(_inputParameters->beam2LorentzGamma()); 
-   double boost = (rap1+rap2)/2.;
+//   double boost = (rap1+rap2)/2.;
+   double boost = _inputParameters->rap_CM();
    event.boost(boost, rap2); //  Boost back to laboratory reference frame. Electron initially in target frame and V.M. in CMS
                              //  Assuming electron is beam1
 

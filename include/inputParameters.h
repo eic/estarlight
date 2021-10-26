@@ -184,6 +184,7 @@ public:
 	unsigned int beam2A                () const { return _beam2A.value();                 }  ///< returns atomic mass number of beam particle 2
 	double       targetLorentzGamma    () const { return _targetLorentzGamma;             }  ///< returns Lorentz gamma factor of source in target frame
 	double       beamLorentzGamma      () const { return _beamLorentzGamma;       	      }  ///< returns Lorentz gamma factor of both beams in beam CMS frame
+	double       rap_CM                () const { return _rap_CM;       	              }  ///< returns center-of-mass rapidity
 	double       beam1LorentzGamma     () const { return _beam1LorentzGamma.value();      }  ///< returns Lorentz gamma factor of beam 1 in collider frame
 	double       beam2LorentzGamma     () const { return _beam2LorentzGamma.value();      }  ///< returns Lorentz gamma factor of beam 2 in collider frame
 	double       targetMaxPhotonEnergy       () const { return _targetMaxPhotonEnergy;    }  ///< returns maximum photon energy 
@@ -242,6 +243,7 @@ public:
 	void setBeam2A                (unsigned int v)  {  _beam2A = v;           }  ///< sets atomic mass number of beam particle 2
 	void setTargetLorentzGamma    (double v)  {  _targetLorentzGamma = v;     }  ///< sets Lorentz gamma factor of both beams in beam CMS frame
 	void setBeamLorentzGamma      (double v)  {  _beamLorentzGamma = v;       }  ///< sets Lorentz gamma factor of both beams in beam CMS frame
+	void setRapCM                 (double v)  {  _rap_CM           = v;       }  ///< sets center-of-mass rapidity
 	void setBeam1LorentzGamma     (double v)  {  _beam1LorentzGamma = v;      }  ///< sets Lorentz gamma factor of beam 1 in collider frame
 	void setBeam2LorentzGamma     (double v)  {  _beam2LorentzGamma = v;      }  ///< sets Lorentz gamma factor of beam 2 in collider frame
 	//void setMaxPhotonEnergy       (double v)  {  _maxPhotonEnergy = v ;       }  ///< sets maximim photon energy
@@ -373,6 +375,7 @@ private:
 
 	double                         _targetLorentzGamma;       ///< Lorentz gamma factor of the source in target frame, not an input parameter
 	double                         _beamLorentzGamma;         ///< Lorentz gamma factor of the beams in CMS frame, not an input parameter
+	double                         _rap_CM;
 	double                         _targetR;
 	double                         _cmsMaxPhotonEnergy;
 	double                         _cmsMinPhotonEnergy;

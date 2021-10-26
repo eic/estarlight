@@ -95,6 +95,8 @@ class Gammaavectormeson : public eventChannel
   double _cmsMaxPhotonEnergy;
   double _cmsMinPhotonEnergy;
   double _beamLorentzGamma;
+  double _beam2LorentzGamma;
+  double _rap_CM;
   double _targetRadius;
   int _TargetBeam; 
   int N0;
