@@ -1047,8 +1047,9 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 	  }
 	  // -- Generate electron and photon in Target frame
 	  E_prime = _eEnergy - targetEgamma;
-	  double cos_theta_e = 1. - Q2/(2.*_eEnergy*E_prime);
-	  theta_e = acos(cos_theta_e);
+	  //double cos_theta_e = 1. - Q2/(2.*_eEnergy*E_prime);
+	  //theta_e = acos(cos_theta_e);
+	  theta_e = sqrt(Q2/(_eEnergy*E_prime));//updated from above code because small angles were taken to exactly 0 before
 	  double beam_y = acosh(_beamLorentzGamma);	
 	  gamma_pt = E_prime*sin(theta_e);
 	  
@@ -1171,12 +1172,11 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	    ipid2 = q2*ipid;
 	  }
 
-	  // - Outgoing electron - target frame - update later
-	  double e_px = e_E*sin(e_theta)*cos(e_phi);
-	  double e_py = e_E*sin(e_theta)*sin(e_phi);
-	  double e_pz = e_E*cos(e_theta);
-	  double e_mass = 5.11E-4;
-	  double e_E = sqrt(e_mass*e_mass + e_px*e_px + e_py*e_py + e_pz*e_pz);
+	  // - Outgoing electron - target frame
+	  double e_ptot = sqrt(e_E*e_E - starlightConstants::mel*starlightConstants::mel);
+	  double e_px = e_ptot*sin(e_theta)*cos(e_phi);
+	  double e_py = e_ptot*sin(e_theta)*sin(e_phi);
+	  double e_pz = e_ptot*cos(e_theta);
 	  lorentzVector electron(e_px, e_py, e_pz, e_E);
 	  event.addSourceElectron(electron);
 	  // - Generated photon - target frame
@@ -1213,7 +1213,7 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  // - Scattered target and transfered momenta at target vertex
 	  double target_pz =  - _beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) ) + t_pz;
 	  //Sign of t_px in following equation changed to fix sign error and conserve p_z.  Change made by Spencer Klein based on a bug report from Ya-Ping Xie.  Nov. 14, 2019
-	  lorentzVector target(t_px, -t_py, target_pz, _beamNucleus*_pEnergy - t_E);
+	  lorentzVector target(t_px, t_py, target_pz, _beamNucleus*_pEnergy - t_E);
 	  double t_var = t_E*t_E - t_px*t_px - t_py*t_py - t_pz*t_pz;
 	  event.addScatteredTarget(target, t_var);
 	}
