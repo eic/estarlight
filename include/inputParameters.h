@@ -185,6 +185,7 @@ public:
 	double       beamLorentzGamma      () const { return _beamLorentzGamma;       	      }  ///< returns Lorentz gamma factor of both beams in beam CMS frame
 	double       electronBeamLorentzGamma     () const { return _electronBeamLorentzGamma.value();      }  ///< returns Lorentz gamma factor of beam 1 in collider frame
 	double       targetBeamLorentzGamma     () const { return _targetBeamLorentzGamma.value();      }  ///< returns Lorentz gamma factor of beam 2 in collider frame
+	double       rap_CM                () const { return _rap_CM;       	              }  ///< returns center-of-mass rapidity
 	double       targetMaxPhotonEnergy       () const { return _targetMaxPhotonEnergy;    }  ///< returns maximum photon energy 
 	double       cmsMaxPhotonEnergy       () const { return _cmsMaxPhotonEnergy;          }  ///< returns maximum photon energy 
 	double       targetMinPhotonEnergy       () const { return _targetMinPhotonEnergy;    }  ///< returns maximum photon energy 
@@ -244,6 +245,7 @@ public:
 	void setTargetLorentzGamma    (double v)  {  _targetLorentzGamma = v;     }  ///< sets Lorentz gamma factor of both beams in beam CMS frame
 	void setBeamLorentzGamma      (double v)  {  _beamLorentzGamma = v;       }  ///< sets Lorentz gamma factor of both beams in beam CMS frame
 	void setElectronBeamLorentzGamma     (double v)  {  _electronBeamLorentzGamma = v;  }  
+	void setRapCM                 (double v)  {  _rap_CM           = v;       }  ///< sets center-of-mass rapidity
 	//void setMaxPhotonEnergy       (double v)  {  _maxPhotonEnergy = v ;       }  ///< sets maximim photon energy
 	void setMaxW                  (double v)  {  _maxW = v;                   }  ///< sets maximum mass W of produced hadronic system [GeV/c^2]
 	void setMinW                  (double v)  {  _minW = v;                   }  ///< sets minimum mass W of produced hadronic system [GeV/c^2]
@@ -374,6 +376,7 @@ private:
 
 	double                         _targetLorentzGamma;       ///< Lorentz gamma factor of the source in target frame, not an input parameter
 	double                         _beamLorentzGamma;         ///< Lorentz gamma factor of the beams in CMS frame, not an input parameter
+	double                         _rap_CM;
 	double                         _targetR;
 	double                         _cmsMaxPhotonEnergy;
 	double                         _cmsMinPhotonEnergy;

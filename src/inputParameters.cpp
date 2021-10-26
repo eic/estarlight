@@ -186,7 +186,16 @@ inputParameters::configureFromFile(const std::string &_configFileName)
  	// Calculate beam gamma in CMS frame
  	double rap1 = acosh(electronBeamLorentzGamma());
 	double rap2 = -acosh(targetBeamLorentzGamma());
-	_beamLorentzGamma = cosh((rap1-rap2)/2);
+
+	double _electronEnergy_lab = (electronBeamLorentzGamma())*(starlightConstants::mel);
+	double _ionEnergy_lab = targetBeamLorentzGamma()*(targetBeamA())*protonMass;
+	double _ionPz_lab = -1.0*sqrt(_ionEnergy_lab*_ionEnergy_lab - (targetBeamA()*targetBeamA())*protonMass*protonMass);
+	double _electronPz_lab = 1.0*sqrt(_electronEnergy_lab*_electronEnergy_lab - starlightConstants::mel*(starlightConstants::mel));
+	double _totalEnergy_lab = 1.0*_electronEnergy_lab + _ionEnergy_lab;
+	double _totalPz_lab = _ionPz_lab + _electronPz_lab;
+	_rap_CM = (1.0/2.0)*log((_totalEnergy_lab + _totalPz_lab)/(_totalEnergy_lab - _totalPz_lab));
+
+	_beamLorentzGamma = cosh(_rap_CM-rap2);
 	_targetLorentzGamma = cosh(rap1-rap2);
 
 	if( targetBeamA() == 1) //proton case 0.87 fm = 4.4 GeV^{-1}
@@ -196,7 +205,7 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 	  //_targetR = 4.4/2.;
 
 	_fixedQ2Range = false;
-	std::cout << "Rapidity electron beam: " << rap1 << ", rapidity target beam: " << rap2 << ", rapidity CMS system: " << (rap1+rap2)/2 << ", beam gamma in CMS: " << _beamLorentzGamma<< std::endl;
+	std::cout << "Rapidity electron beam: " << rap1 << ", rapidity target beam: " << rap2 << ", rapidity CMS system: " << _rap_CM << ", beam gamma in CMS: " << _beamLorentzGamma<< std::endl;
 	std::cout << "Rapidity beam 1 in beam 2 frame: " << rap1-rap2 << ", beam 1 gamma in beam 2 frame: " << _targetLorentzGamma<< std::endl;
 	_ptBinWidthInterference = maxPtInterference() / nmbPtBinsInterference();
 	_protonEnergy           = _beamLorentzGamma * protonMass;
