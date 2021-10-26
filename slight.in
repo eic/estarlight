@@ -23,8 +23,7 @@ N_EVENTS = 10
 PROD_PID = 113
 RND_SEED = 5574531 #Random number seed
 BREAKUP_MODE = 5     #Controls the nuclear breakup; a 5 here makes no requirement on the breakup of the ions
-PYTHIA_FULL_EVENTRECORD = 0 # Write full pythia information to output (vertex, parents, daughter etc).
-HEPMC3_FULL_EVENTRECORD = 0 # Write hepmc3 information to output (vertex, parents, daughter etc).
+OUTPUT_FORMAT = 0 #0=default, 1=pythia, 2=hepmc3, 3=lund
 MIN_GAMMA_Q2 = 0.
 MAX_GAMMA_Q2 = 0.01
 #
