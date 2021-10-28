@@ -486,22 +486,39 @@ double Gammaavectormeson::getSpin()
 //______________________________________________________________________________
 void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz, double gamma_pt, //input conditions
 				double &Y,double &E,double &px,double &py,double &pz,  //return vm
-				double &t_px, double &t_py, double &t_pz, double &t_E, //return target
+				double &t_px, double &t_py, double &t_pz, double &t_E, //return pomeron
 				double &e_phi,int &tcheck) //return electron (angle already known by Q2)
 {
 	//     This subroutine calculates momentum and energy of vector meson for electroproduction (eSTARlight)
 	//     given W and photon 4-vector,   without interference.  No intereference in asymetric eX collisions
  
-	double Pom_pz,tmin,pt2,phi1,phi2;
-	double px1,py1,px2,py2;
+	double Epom,Pom_pz,tmin,pt2,phi1,phi2;
+	double px1,py1;
 	double xt,xtest,ytest;
 	double t2;
+
+	double target_px, target_py, target_pz, target_E;
+
+    target_E = _beamNucleus*_pEnergy;
+    target_px = 0.0;
+    target_py = 0.0;
+    target_pz = -_beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) );
+    phi1 = 2.*starlightConstants::pi*_randy.Rndom();
+    px1 = gamma_pt*cos(phi1);
+	py1 = gamma_pt*sin(phi1);
+	int isbadevent = 0;
+	double betax_cm = ((px1+target_px)/(Egam+target_E));
+    double betay_cm = ((py1+target_py)/(Egam+target_E));
+    double betaz_cm = ((gamma_pz+target_pz)/(Egam+target_E));
+    transform (betax_cm,betay_cm,betaz_cm,target_E,target_px,target_py,target_pz,isbadevent);
+    transform (betax_cm,betay_cm,betaz_cm,Egam, px1, py1, gamma_pz, isbadevent);
       
-	phi1 = 2.*starlightConstants::pi*_randy.Rndom();
 	e_phi = starlightConstants::pi+phi1;
 	// Pomeron pz is != than its energy in eSTARlight, in order to conserve energy/momentum of scattered
 	// target
-        Pom_pz = 0.5*(W*W-Q2)/(Egam + gamma_pz);
+    //Pom_pz = 0.5*(W*W-Q2)/(Egam + gamma_pz);
+    Epom = 0.5*(W*W-Q2)/(Egam + target_E);
+
 	while( e_phi > 2.*starlightConstants::pi ) e_phi-= 2.*starlightConstants::pi;
 	//
 	if ( ( _bbs.targetBeam().A()==1 ) 
@@ -548,11 +565,11 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	    }
 	} else {
 	    // >> Check tmin
-	    tmin = ((Pom_pz/_VMgamma_em)*(Pom_pz/_VMgamma_em));
+	    tmin = ((Epom/_VMgamma_em)*(Epom/_VMgamma_em));
 
 	    if(tmin > 0.5){
 		cout<<" WARNING: tmin= "<<tmin<<endl;
-                cout<< " Y = "<<Y<<" W = "<<W<<" Pom_pz = "<<Pom_pz<<" gamma = "<<_VMgamma_em<<endl; 
+                cout<< " Y = "<<Y<<" W = "<<W<<" Epom = "<<Epom<<" gamma = "<<_VMgamma_em<<endl; 
 		cout<<" Will pick a new W,Y "<<endl;
 		tcheck = 1;
 		return;
@@ -580,36 +597,43 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	}
 	phi2 = 2.*starlightConstants::pi*_randy.Rndom();
 
-	px1 = gamma_pt*cos(phi1);
-	py1 = gamma_pt*sin(phi1);
-	px2 = pt2*cos(phi2);
-	py2 = pt2*sin(phi2);
 	//
-	t_px = -pt2*cos(phi2);
-	t_py = -pt2*sin(phi2);
+	t_px = pt2*cos(phi2);
+	t_py = pt2*sin(phi2);
 	// Used to return the pomeron pz to generator
+	// Compute scattered target kinematics p_(initial ion) = p_(pomeron) + p_(final ion)
+	double newion_E = target_E-Epom;
+	double newion_px = target_px - t_px;
+	double newion_py = target_py - t_py;
+	double newion_pz = -sqrt( newion_E*newion_E - newion_px*newion_px - newion_py*newion_py - pow(_beamNucleus*starlightConstants::protonMass,2.) );
+	Pom_pz = target_pz - newion_pz;
 	t_pz = Pom_pz;
 	// Compute vector sum Pt = Pt1 + Pt2 to find pt for the vector meson
-	px = px1 + px2;
-	py = py1 + py2;
-	//double pt = sqrt( px*px + py*py );
-	// Computing the pomeron energy using the fact that the target invariant mass is unchanged in collision
-	double target_pz = -1.0*_beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) );
-	
-	double complementM2 = pow(_beamNucleus*starlightConstants::protonMass,2.) + t_px*t_px + t_py*t_py + (target_pz+t_pz)*(target_pz+t_pz);
-	t_E = _beamNucleus*_pEnergy - sqrt(complementM2);
+	px = px1 + t_px;
+	py = py1 + t_py;
+
+	t_E = Epom;
 	// Finally V.M. energy, pz and rapidity from photon + pommeron.
 	E = Egam + t_E;
-	pz = gamma_pz - t_pz;
+	pz = gamma_pz + t_pz;
+	//transform back to e-ion CM frame
+	transform (-betax_cm,-betay_cm,-betaz_cm,target_E,target_px,target_py,target_pz,isbadevent);
+	transform (-betax_cm,-betay_cm,-betaz_cm,newion_E,newion_px,newion_py,newion_pz,isbadevent);
+    transform (-betax_cm,-betay_cm,-betaz_cm,Egam,    px1,      py1,      gamma_pz, isbadevent);
+    transform (-betax_cm,-betay_cm,-betaz_cm,E,       px,       py,       pz,       isbadevent);
+    t_px = target_px-newion_px;
+    t_py = target_py-newion_py;
+    t_pz = target_pz-newion_pz;
+    t_E  = target_E-newion_E;
 	Y = 0.5*std::log( (E+fabs(pz))/(E-fabs(pz)) );
 	//	cout << "pz_final = " << pz << endl;
 
 
 	// Backwards Production... updated by Zachary Sweger on 9/21/2021
 	if (_backwardsProduction) {
-	  double is_proton_E  = _pEnergy;
-	  double is_proton_px = 0.0;
-	  double is_proton_py = 0.0;
+	  double is_proton_E  = target_E;
+	  double is_proton_px = target_px;
+	  double is_proton_py = target_py;
 	  double is_proton_pz = target_pz;
 	  double is_gamma_E  = Egam;
 	  double is_gamma_px = px1;
@@ -620,10 +644,10 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	  double is_tot_py = is_proton_py + is_gamma_py;
 	  double is_tot_pz = is_proton_pz + is_gamma_pz;
 
-	  double fs_proton_E  = sqrt(complementM2);
-	  double fs_proton_px = t_px;
-	  double fs_proton_py = t_py;
-	  double fs_proton_pz = t_pz + target_pz;
+	  double fs_proton_E  = newion_E;
+	  double fs_proton_px = newion_px;
+	  double fs_proton_py = newion_py;
+	  double fs_proton_pz = newion_pz;
 	  
 	  double fs_vm_E  = E;
 	  double fs_vm_px = px;
@@ -662,9 +686,9 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
       pz=u_fs_vm_pz;
       E =u_fs_vm_E;
 
-      t_px=u_fs_proton_px;
-      t_py=u_fs_proton_py;
-      t_pz=u_fs_proton_pz-is_proton_pz;
+      t_px=-u_fs_proton_px;
+      t_py=-u_fs_proton_py;
+      t_pz=is_proton_pz-u_fs_proton_pz;
       t_E =is_proton_E-u_fs_proton_E;
       //cout<<"Energy Violation: "<<(E+u_fs_proton_E)-(is_tot_E)<<endl;
       //cout<<"Pz Violation: "<<(pz+u_fs_proton_pz)-(is_tot_pz)<<endl;
@@ -1105,7 +1129,7 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  //
 	  momenta(comenergy,cmsEgamma, Q2, gamma_pz, gamma_pt, //input
 		  rapidity, E, momx, momy, momz, //VM
-		  t_px, t_py, t_pz, t_E, //target
+		  t_px, t_py, t_pz, t_E, //pomeron
 		  e_phi,tcheck); //electron
 	  //
 	  // inelasticity: used for angular distributions
@@ -1214,9 +1238,9 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  }
 
 	  // - Scattered target and transfered momenta at target vertex
-	  double target_pz =  - _beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) ) + t_pz;
+	  double target_pz =  - _beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) ) - t_pz;
 	  //Sign of t_px in following equation changed to fix sign error and conserve p_z.  Change made by Spencer Klein based on a bug report from Ya-Ping Xie.  Nov. 14, 2019
-	  lorentzVector target(t_px, t_py, target_pz, _beamNucleus*_pEnergy - t_E);
+	  lorentzVector target(-t_px, -t_py, target_pz, _beamNucleus*_pEnergy - t_E);
 	  double t_var = t_E*t_E - t_px*t_px - t_py*t_py - t_pz*t_pz;
 	  event.addScatteredTarget(target, t_var);
 	}
