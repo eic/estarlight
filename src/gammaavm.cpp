@@ -519,6 +519,7 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
     //Pom_pz = 0.5*(W*W-Q2)/(Egam + gamma_pz);
     Epom = 0.5*(W*W-Q2)/(Egam + target_E);
 
+    L522vm:
 	while( e_phi > 2.*starlightConstants::pi ) e_phi-= 2.*starlightConstants::pi;
 	//
 	if ( ( _bbs.targetBeam().A()==1 ) 
@@ -605,7 +606,9 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	double newion_E = target_E-Epom;
 	double newion_px = target_px - t_px;
 	double newion_py = target_py - t_py;
-	double newion_pz = -sqrt( newion_E*newion_E - newion_px*newion_px - newion_py*newion_py - pow(_beamNucleus*starlightConstants::protonMass,2.) );
+	double newion_pz_squared = newion_E*newion_E - newion_px*newion_px - newion_py*newion_py - pow(_beamNucleus*starlightConstants::protonMass,2.);
+	if(newion_pz_squared<0)goto L522vm;
+	double newion_pz = -sqrt( newion_pz_squared );
 	Pom_pz = target_pz - newion_pz;
 	t_pz = Pom_pz;
 	// Compute vector sum Pt = Pt1 + Pt2 to find pt for the vector meson
