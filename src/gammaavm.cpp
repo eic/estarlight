@@ -1075,9 +1075,11 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 	  }
 	  // -- Generate electron and photon in Target frame
 	  E_prime = _eEnergy - targetEgamma;
-	  //double cos_theta_e = 1. - Q2/(2.*_eEnergy*E_prime);
-	  //theta_e = acos(cos_theta_e);
-	  theta_e = sqrt(Q2/(_eEnergy*E_prime));//updated from above code because small angles were taken to exactly 0 before
+	  if(Q2>1E-6){
+	  	double cos_theta_e = 1. - Q2/(2.*_eEnergy*E_prime);
+	    theta_e = acos(cos_theta_e);
+	  }
+	  else {theta_e = sqrt(Q2/(_eEnergy*E_prime));}//updated using small angle approximation to avoid rounding to 0
 	  double beam_y = acosh(_targetBeamLorentzGamma)+_rap_CM;	
 	  gamma_pt = E_prime*sin(theta_e);
 	  
