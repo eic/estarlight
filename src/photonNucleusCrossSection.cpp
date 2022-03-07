@@ -902,6 +902,13 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 	// Unit for cross section: fm**2
   
 	double sigmagp_r=0.;
+
+	// Near the threshold CM energy (between WgpMin and WgpMax), 
+	// we add a linear scaling factor to bring the Xsec down to 0 
+	// at the threshold CM value define by WgpMin = m_p + m_vm
+	double WgpMax = 0.;
+	double WgpMin = 0.;
+	double thresholdScaling = 1.0;
   
 	switch(_particleType)
 		{ 
@@ -911,7 +918,10 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			sigmagp_r=1.E-4*(5.0*exp(0.22*log(Wgp))+26.0*exp(-1.23*log(Wgp)));
 			break;
 		case OMEGA:
-			sigmagp_r=1.E-4*(0.55*exp(0.22*log(Wgp))+18.0*exp(-1.92*log(Wgp)));
+			WgpMax = 1.8;
+			WgpMin = 1.74; //this is the cutoff threshold for omega production: W > m_p+m_omega = 1.74
+			if(Wgp<WgpMax) thresholdScaling=(Wgp-WgpMin)/(WgpMax-WgpMin);
+			sigmagp_r=thresholdScaling*1.E-4*(0.55*exp(0.22*log(Wgp))+18.0*exp(-1.92*log(Wgp)));
 			break;                                                      
 		case PHI:
 			sigmagp_r=1.E-4*0.34*exp(0.22*log(Wgp));
