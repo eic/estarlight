@@ -58,16 +58,11 @@ BEAM_1_A = 0
   * The event catalogue will be emptied into the file slight.out
 * Interpret the result. We have provided a macro to convert the output into a ROOT TTree:
   ```
-  root -b -q -l ~/the_path/estarlight/utils/ConvertStarlightAsciiToTree.C
+  root -b -q -l ~/the_path/estarlight/utils/eTTreeMaker.C
   ```
 
-   * TTree is output to starlight.root
-* Analyze your data:
-   * We have included template [analysis](../blob/master/analysis)) (~/the_path/estarlight/analysis/) code that reads   slight.root and fill histograms. For more details please look at the [README](../blob/master/README.pdf).
-```
-cd ~/the_path/eSTARlight/analysis
-sh e_run.sh ~/the_path/starlight.root
-```
+   * TTree is output to ntuple_slight.root
+ 
 
 ## Documentation
 A more detailed version of the [README](../blob/master/README.pdf) is included as part of the software package, located in:
