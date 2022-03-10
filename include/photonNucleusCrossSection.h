@@ -115,6 +115,7 @@ private:
 	double                               _electronEnergy;
 	starlightConstants::particleTypeEnum _particleType;
 	int                                  _beamBreakupMode;     ///< breakup mode for beam particles
+	bool _backwardsProduction;
         int                                  _productionMode; 
 	int                                  _sigmaNucleus; 
 

@@ -170,7 +170,7 @@ e_narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnorm
 	      // Integrating cross section
 	      full_int[iEgaInt] += (q2_2-q2_1)*( g(ega[iEgaInt],q2_1)*getcsgA(ega[iEgaInt],q2_1,beam)
 						 + g(ega[iEgaInt],q2_2)*getcsgA(ega[iEgaInt],q2_2,beam)
-						 + 4.*g(ega[iEgaInt],q2_12)*getcsgA(ega[iEgaInt],q2_12,beam) );	      
+						 + 4.*g(ega[iEgaInt],q2_12)*getcsgA(ega[iEgaInt],q2_12,beam) );
 	    }
 
 	    // Finish the Q2 integration for the three end-points (Siumpsons rule)
@@ -196,7 +196,15 @@ e_narrowResonanceCrossSection::crossSectionCalculation(const double)  // _bwnorm
 	if(_useFixedRange == true){
 	  cout<<" Using fixed Q2 range "<<_gammaMinQ2 << " < Q2 < "<<_gammaMaxQ2<<endl;
 	}
+
+	if(_backwardsProduction){cout<<"********************** WARNING ***********************"<<endl; 
+							 cout<<"The total cross section for backward production"<<endl;
+	                         cout<<"should only be trusted for the omega. The exact omega"<<endl;
+	                         cout<<"behavior is implemented for the rho. Other mesons use"<<endl;
+	                         cout<<"the forward cross section dependence"<<endl;}
 	printCrossSection(" Total cross section: ",int_r);
+	if(_backwardsProduction)cout<<"******************************************************"<<endl;
+
 	//printCrossSection(" gamma+X --> VM+X ", int_r/int_r2);      // commented out for the mean time, not necesary in current implementation
 	//
 	//cout<<endl;
@@ -300,7 +308,7 @@ e_narrowResonanceCrossSection::makeGammaPQ2dependence()
 		full_int[iEgaInt] += (q2_2-q2_1)*( g(ega[iEgaInt],q2_1)*getcsgA(ega[iEgaInt],q2_1,beam)
 						   + g(ega[iEgaInt],q2_2)*getcsgA(ega[iEgaInt],q2_2,beam)
 						   + 4.*g(ega[iEgaInt],q2_12)*getcsgA(ega[iEgaInt],q2_12,beam) );
-	      }
+		}
 	      // Finish the Q2 integration for the three end-points (Siumpsons rule)
 	      dndE[iEgaInt] = dndE[iEgaInt]/6.; 
 	      full_int[iEgaInt] = full_int[iEgaInt]/6.;

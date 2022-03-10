@@ -57,7 +57,8 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _electronEnergy    (inputParametersInstance.electronEnergy()    ),
 	  _particleType      (inputParametersInstance.prodParticleType()  ),
 	  _beamBreakupMode   (inputParametersInstance.beamBreakupMode()   ),
-          _productionMode    (inputParametersInstance.productionMode()    ),
+	  _backwardsProduction(inputParametersInstance.backwardsProduction()),
+      _productionMode    (inputParametersInstance.productionMode()    ),
 	  _sigmaNucleus      (_bbs.targetBeam().A()          ),
 	  _fixedQ2range      (inputParametersInstance.fixedQ2Range()      ),
 	  _minQ2             (inputParametersInstance.minGammaQ2()        ),
@@ -80,6 +81,11 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _defaultC    = 1.0;
 	  _channelMass = starlightConstants::rho0Mass; 
 	  _width       = starlightConstants::rho0Width; 
+	  if(_backwardsProduction){
+	  	_slopeParameter = 32.0;  // [(GeV/c)^{-2}]
+	  	_ANORM          = 1.;
+	  	_defaultC       = 0.;
+	  }
 	  break;
 	case RHOZEUS:
 	  _slopeParameter =11.0;
@@ -114,6 +120,11 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _defaultC=1.0;
 	  _channelMass  = starlightConstants::OmegaMass;
 	  _width        = starlightConstants::OmegaWidth;
+	  if(_backwardsProduction){
+	  	_slopeParameter = 32.0;  // [(GeV/c)^{-2}]
+	  	_ANORM          = 1.;
+	  	_defaultC       = 0.;
+	  }
 	  break;
 	case PHI:
 	  _slopeParameter=7.0;
@@ -915,7 +926,13 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 		case RHO:
 		case RHOZEUS:
 		case FOURPRONG:
-			sigmagp_r=1.E-4*(5.0*exp(0.22*log(Wgp))+26.0*exp(-1.23*log(Wgp)));
+			WgpMax = 1.8;
+			WgpMin = 1.60; //this is the cutoff threshold for rho production. But rho has large width so it's lower
+			if(Wgp<WgpMax) thresholdScaling=(Wgp-WgpMin)/(WgpMax-WgpMin);
+			sigmagp_r=thresholdScaling*1.E-4*(5.0*exp(0.22*log(Wgp))+26.0*exp(-1.23*log(Wgp)));
+			//This is based on the omega cross section:
+			//https://arxiv.org/pdf/2107.06748.pdf
+			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.14*pow(Wgp,-2.7);
 			break;
 		case OMEGA:
 		case OMEGA_pi0gamma:
@@ -923,6 +940,7 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			WgpMin = 1.74; //this is the cutoff threshold for omega production: W > m_p+m_omega = 1.74
 			if(Wgp<WgpMax) thresholdScaling=(Wgp-WgpMin)/(WgpMax-WgpMin);
 			sigmagp_r=thresholdScaling*1.E-4*(0.55*exp(0.22*log(Wgp))+18.0*exp(-1.92*log(Wgp)));
+			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.14*pow(Wgp,-2.7);//https://arxiv.org/pdf/2107.06748.pdf
 			break;                                                      
 		case PHI:
 			sigmagp_r=1.E-4*0.34*exp(0.22*log(Wgp));
