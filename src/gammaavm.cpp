@@ -683,7 +683,7 @@ void Gammaavectormeson::momenta(double W,double Egam,double Q2, double gamma_pz,
 	e_phi = starlightConstants::pi+phi1;
 	// Pomeron pz is != than its energy in eSTARlight, in order to conserve energy/momentum of scattered
      //Pom_pz = 0.5*(W*W-Q2)/(Egam + gamma_pz);
-	Epom = 0.5*(W*W-Q2)/(Egam + target_E);
+	Epom = 0.5*(W*W+Q2)/(Egam + target_E);
 
     L688vm:
 	while( e_phi > 2.*starlightConstants::pi ) e_phi-= 2.*starlightConstants::pi;
@@ -1176,7 +1176,7 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 	  double beam_y = acosh(_beam2LorentzGamma)+_rap_CM;	
 	  gamma_pt = E_prime*sin(theta_e);
 	  
-	  double pz_squared = targetEgamma*targetEgamma - Q2 - gamma_pt*gamma_pt;
+	  double pz_squared = targetEgamma*targetEgamma + Q2 - gamma_pt*gamma_pt;
 	  if( pz_squared < 0 )
 	    continue;
 	  double temp_pz = sqrt(pz_squared);
