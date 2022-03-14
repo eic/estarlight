@@ -84,7 +84,6 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  if(_backwardsProduction){
 	  	_slopeParameter = 32.0;  // [(GeV/c)^{-2}]
 	  	_ANORM          = 1.;
-	  	_defaultC       = 0.;
 	  }
 	  break;
 	case RHOZEUS:
@@ -123,7 +122,6 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  if(_backwardsProduction){
 	  	_slopeParameter = 32.0;  // [(GeV/c)^{-2}]
 	  	_ANORM          = 1.;
-	  	_defaultC       = 0.;
 	  }
 	  break;
 	case PHI:
