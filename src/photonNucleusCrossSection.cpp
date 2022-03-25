@@ -82,7 +82,7 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _channelMass = starlightConstants::rho0Mass; 
 	  _width       = starlightConstants::rho0Width; 
 	  if(_backwardsProduction){
-	  	_slopeParameter = 32.0;  // [(GeV/c)^{-2}]
+	  	_slopeParameter = 21.8;  // [(GeV/c)^{-2}]
 	  	_ANORM          = 1.;
 	  }
 	  break;
@@ -120,7 +120,7 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _channelMass  = starlightConstants::OmegaMass;
 	  _width        = starlightConstants::OmegaWidth;
 	  if(_backwardsProduction){
-	  	_slopeParameter = 32.0;  // [(GeV/c)^{-2}]
+	  	_slopeParameter = 21.8;  // [(GeV/c)^{-2}]
 	  	_ANORM          = 1.;
 	  }
 	  break;
@@ -931,6 +931,7 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			//This is based on the omega cross section:
 			//https://arxiv.org/pdf/2107.06748.pdf
 			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.14*pow(Wgp,-2.7);
+			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.206*pow(((Wgp*Wgp-protonMass*protonMass)/(2.0*protonMass)),-2.7);
 			break;
 		case OMEGA:
 		case OMEGA_pi0gamma:
@@ -938,7 +939,8 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			WgpMin = 1.74; //this is the cutoff threshold for omega production: W > m_p+m_omega = 1.74
 			if(Wgp<WgpMax) thresholdScaling=(Wgp-WgpMin)/(WgpMax-WgpMin);
 			sigmagp_r=thresholdScaling*1.E-4*(0.55*exp(0.22*log(Wgp))+18.0*exp(-1.92*log(Wgp)));
-			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.14*pow(Wgp,-2.7);//https://arxiv.org/pdf/2107.06748.pdf
+			//if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.14*pow(Wgp,-2.7);//https://arxiv.org/pdf/2107.06748.pdf
+			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.206*pow(((Wgp*Wgp-protonMass*protonMass)/(2.0*protonMass)),-2.7);
 			break;                                                      
 		case PHI:
 			sigmagp_r=1.E-4*0.34*exp(0.22*log(Wgp));
