@@ -4,7 +4,7 @@ eSTARlight is a Monte Carlo that simulates coherent vector meson photo- and elec
 
 
 ## Papers and presentations
-* [Exclusive vector meson production at an electron-ion collider](https://arxiv.org/abs/1803.06420): M. Lomnitz & S. Klein, Submitted to Phys. Rev. C and currently under review arXiv:1803.06420
+* [Exclusive vector meson production at an electron-ion collider](https://arxiv.org/abs/1803.06420): M. Lomnitz & S. Klein, Physical Review C99, 015203 (2019); also available as arXiv:1803.06420.
 * [Coherent vector meson production at an EIC](https://arxiv.org/abs/1805.08586): M. Lomnitz and S. Klein, Presented at the Workshop for Deep Inelastic Scattering, Kobe Japan, 2018.
 
 ## Authors
@@ -62,7 +62,6 @@ BEAM_1_A = 0
   ```
 
    * TTree is output to ntuple_slight.root
- 
 
 ## Documentation
 A more detailed version of the [README](../blob/master/README.pdf) is included as part of the software package, located in:
@@ -119,8 +118,3 @@ To compile eSTARlight with HepMC3 output enabled, use:
 ```
 cmake /pathto/estarlight -DENABLE_HEPMC3=ON -DHepMC3_DIR=/pathto/hepmc3/hepmc3-install
 ```
-In slight.in, set 
-```
-OUTPUT_FORMAT=2
-```
-to get the HepMC event record: slight.hepmc
