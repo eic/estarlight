@@ -23,7 +23,7 @@ The following instructions illustrate the procedure to install and run eSTARligh
 
 * Download the code package from Github and move to the desired location, i.e.
 ```
-~/the_path/eestarlight
+~/the_path/estarlight
 ```
 * Change to the installation directory of your choice
 ```
@@ -32,23 +32,32 @@ cd ~/my/installation/dir
 ```
 * Set up the installation using cmake:
 ```
-cmake ~/the_path/eestarlight
+cmake ~/the_path/estarlight
 ```
 * Compile the code using (g)make:
 ```
 (g)make
 ```
-  * The compilation will produce two executables to run either STARlight or eSTARlight
+  * The compilation will produce an executable to run: estarlight
 
 * Set up the desired running conditions in the input file:
 ```
-cp ~/the_path/eSTARlight/slight.in .
+cp ~/the_path/estarlight/slight.in .
 vim slight.in
 ```
-  * Note: As of yet, the positron/electron beam must be set to beam1, it is selected by setting:
+  * Note: The electron beam energy is set by:
 ```
-BEAM_1_Z = +/- 1 (as of yet both positrons and electrons are modelled identically)
-BEAM_1_A = 0
+ELECTRON_BEAM_GAMMA = (Electron Energy)/(0.000511 GeV)
+```
+  * For example:
+```
+ELECTRON_BEAM_GAMMA = 9785 # 5GeV electrons from eRHIC
+ELECTRON_BEAM_GAMMA = 19569 #10GeV electrons from eRHIC
+ELECTRON_BEAM_GAMMA = 35225 #18GeV electrons from eRHIC
+```
+  * For exclusive backward (u-channel) production, use:
+```
+BACKWARDS_PRODUCTION = 1
 ```
 * Run the simulation:
 ```
