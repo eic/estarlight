@@ -107,6 +107,7 @@ namespace starlightConstants
 	static const double rho0PrimeBrPiPi = 1.0;           // Branching ratio pi+pi- (set to 100%)
         static const double OmegaMass  = 0.78265;            // [GeV/c^2]
 	static const double OmegaWidth = 0.00849;            // [GeV/c^2]
+	static const double OmegaBrPiPiPi = .8920;	     // Branching ratio pi+p-p0
 	static const double OmegaBrPiPi = 0.0153;            // Branching ratio pi+pi-
 	static const double OmegaBrPi0Gamma = 0.0828;        // Branching ratio pi0 gamma
         static const double PhiMass  = 1.019461;             // [GeV/c^2]
@@ -157,6 +158,7 @@ namespace starlightConstants
 		FOURPRONG      = 999,
 		OMEGA          = 223,
 		OMEGA_pi0gamma = 223022,
+		OMEGA_pipipi   = 223211,
 		PHI            = 333,
 		JPSI           = 443,
 		JPSI_ee        = 443011,

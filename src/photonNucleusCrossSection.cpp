@@ -109,6 +109,20 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _width        = starlightConstants::rho0PrimeWidth;
 	  break;
 	case OMEGA:
+	case OMEGA_pipipi:
+	  _slopeParameter=10.0;
+	  _vmPhotonCoupling=23.13;
+	  _vmQ2Power_c1 = 2.09;
+	  _vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
+	  _ANORM=-2.75;
+	  _BNORM=0.0;
+	  _defaultC=1.0;
+	  _channelMass  = starlightConstants::OmegaMass;
+	  _width        = starlightConstants::OmegaWidth;
+	  if(_backwardsProduction){
+	  	_slopeParameter = 21.8;  // [(GeV/c)^{-2}]
+	  	_ANORM          = 1.;
+	  }
 	case OMEGA_pi0gamma:
 	  _slopeParameter=10.0;
 	  _vmPhotonCoupling=23.13;
@@ -934,6 +948,14 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.206*pow(((Wgp*Wgp-protonMass*protonMass)/(2.0*protonMass)),-2.7);
 			break;
 		case OMEGA:
+		case OMEGA_pipipi:
+			WgpMax = 1.8;
+			WgpMin = 1.74; //this is the cutoff threshold for omega production: W > m_p+m_omega = 1.74
+			if(Wgp<WgpMax) thresholdScaling=(Wgp-WgpMin)/(WgpMax-WgpMin);
+			sigmagp_r=thresholdScaling*1.E-4*(0.55*exp(0.22*log(Wgp))+18.0*exp(-1.92*log(Wgp)));
+			//if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.14*pow(Wgp,-2.7);//https://arxiv.org/pdf/2107.06748.pdf
+			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.206*pow(((Wgp*Wgp-protonMass*protonMass)/(2.0*protonMass)),-2.7);
+			break;   
 		case OMEGA_pi0gamma:
 			WgpMax = 1.8;
 			WgpMin = 1.74; //this is the cutoff threshold for omega production: W > m_p+m_omega = 1.74
@@ -1144,6 +1166,16 @@ photonNucleusCrossSection::breitWigner(const double W,
 		ppi=sqrt( ((W/2.)*(W/2.)) - pionChargedMass * pionChargedMass);
 		ppi0=0.358;
 	}
+
+	if( _particleType==OMEGA_pipipi){  
+		if (W < 1.01*(2.0*pionChargedMass+pionNeutralMass)){
+			nrbw_r=0.;
+			return nrbw_r;
+		}
+		ppi=abs((W*W - pionNeutralMass * pionNeutralMass - 2*pionChargedMass*pionChargedMass)/(2.0*W));
+		ppi0=abs((_channelMass*_channelMass - pionNeutralMass * pionNeutralMass - 2*pionChargedMass*pionChargedMass)/(2.0*W));;
+	}
+
 	if( _particleType==OMEGA_pi0gamma){  
 		if (W < pionNeutralMass){
 			nrbw_r=0.;

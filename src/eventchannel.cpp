@@ -84,6 +84,7 @@ eventChannel::transform(const double  betax,
   const double beta = sqrt(betax * betax + betay * betay + betaz * betaz);
   if (beta >= 1)
 	  iFbadevent = 1;
+
   const double gamma = 1. / sqrt(1. - beta * beta);
   const double gob   = (gamma - 1) / (beta * beta);
 

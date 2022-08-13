@@ -68,8 +68,9 @@ class Gammaavectormeson : public eventChannel
   double pTgamma(double E); 
   void vmpt(double W,double Y,double &E,double &px,double &py, double &pz,int &tcheck);
   void twoBodyDecay(starlightConstants::particleTypeEnum &ipid,double W,double px0,double py0,double pz0,double &px1,double &py1,double&pz1,double &px2,double &py2,double &pz2,int &iFbadevent);
-  void twoBodyDecay(starlightConstants::particleTypeEnum &ipid,double W,double px0,double py0,double pz0,double spin_element,
-		    double &px1,double &py1,double&pz1,double &px2,double &py2,double &pz2,int &iFbadevent);
+  void twoBodyDecay(starlightConstants::particleTypeEnum &ipid,double W,double px0,double py0,double pz0,double spin_element,double &px1,double &py1,double&pz1,double &px2,double &py2,double &pz2,int &iFbadevent);
+  void dalitzPlot(double M, double m1, double m2, double m3, double &s12, double &s23);
+  void threePionDecay(starlightConstants::particleTypeEnum &ipid,double  px0, double  py0, double  pz0, double& px1, double& py1, double& pz1,double& px2, double& py2, double& pz2, double& px3, double& py3, double& pz3,int&    iFbadevent,double spin_element);
   bool fourBodyDecay(starlightConstants::particleTypeEnum& ipid, const double E, const double W, const double* p, lorentzVector* decayMoms, int& iFbadevent);
   void pi0Decay(double& px_pi0, double& py_pi0, double& pz_pi0,double& e_g1, double& px_g1, double& py_g1, double& pz_g1,double& e_g2, double& px_g2, double& py_g2, double& pz_g2,int& iFbadevent);
   double getMass();

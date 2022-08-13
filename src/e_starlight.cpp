@@ -267,6 +267,7 @@ e_starlight::createEventChannel()
 	case FOURPRONG:
 	case OMEGA:  
 	case OMEGA_pi0gamma:
+	case OMEGA_pipipi:
 	case PHI:
 	case JPSI:
 	case JPSI2S:

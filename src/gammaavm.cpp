@@ -236,11 +236,230 @@ void Gammaavectormeson::twoBodyDecay(starlightConstants::particleTypeEnum &ipid,
 }
 
 
+
+// Code for returning a point in the Dalitz plot corresponding to a 3 body decay
+// Draws uniformly from the plot
+void Gammaavectormeson::dalitzPlot
+(double M, double m1, double m2, double m3, double &s12, double &s23)
+{
+
+//M is mass of parent particle
+//m_i is mass of decay products
+double S = pow(M,2);
+bool dalitzFound = false;
+
+while (!dalitzFound){
+
+	//generates random numbers between 0 and .5, correspnding to (x,y) on Dalitz plot
+	double x =  _randy.Rndom()/2;
+	double y =  _randy.Rndom()/2;
+
+	
+	if (x==0) continue;
+
+	double lamb_1 = pow(x,2)+pow(S,2)+pow(m3,4)-2*(x*S+x*pow(m3,2)+pow(m3,2)*S);
+	double lamb_2 = pow(x,2)+pow(m1,4)+pow(m2,4)-2*(x*pow(m1,2)+x*pow(m2,2)+pow(m2,2)*pow(m1,2));
+
+	double y_max = pow(m1,2)+pow(m3,2)+(1/(2*x)*((S-x-pow(m1,2))*(x-pow(m3,2)+pow(m2,2))+sqrt(lamb_1*lamb_2)));
+	double y_min = pow(m1,2)+pow(m3,2)+(1/(2*x)*((S-x-pow(m1,2))*(x-pow(m3,2)+pow(m2,2))-sqrt(lamb_1*lamb_2)));
+
+		//The +/-.01 terms are to prevent this from chooisng points that lie on the boundary plot surface, 
+		//which can lead to unphysical results 
+	if (x>pow(m1+m1,2)+.01 && x<pow(M-m3,2)-.01){
+		if (y>y_min+.01 && y<y_max-.01)
+		{
+			s12 = x; 
+			s23 = y;
+
+			dalitzFound = true;
+		}
+
+		else continue;
+	}
+
+else continue;
+
+}
+
+
+return;
+}
+
+
+
+
+//Simulates omega -> Pi+Pi-P0 decay
+void Gammaavectormeson::threePionDecay
+(                                    starlightConstants::particleTypeEnum &ipid,
+				     double  px0, double  py0, double  pz0,
+                                     double& px1, double& py1, double& pz1,
+                                     double& px2, double& py2, double& pz2,
+                                     double& px3, double& py3, double& pz3,
+                                     int&    iFbadevent,
+                                     double spin_element)
+{
+
+
+ipid = starlightConstants::PION;
+
+//Mass of omega particle 
+double M_omega = starlightConstants::OmegaMass;
+
+//Masses of Pi_0,Pi_plus/Pi_minus
+double m_pi0 = starlightConstants::pionNeutralMass;
+double m_pip = starlightConstants::pionChargedMass;
+double m_pim = m_pip;
+
+//Dalitz plot variables 
+double s12 = 0;
+double s23 = 0;
+
+
+dalitzPlot(M_omega,m_pip,m_pim,m_pi0,s12,s23);
+
+
+double E0 = M_omega;
+
+
+double E1 = (E0*E0+m_pip*m_pip-s23)/(2*E0);
+double E2 = ((s12+s23)-(m_pip*m_pip+m_pi0*m_pi0))/(2*E0);
+double E3 = (E0*E0+m_pi0*m_pi0-s12)/(2*E0);
+
+
+//Computes a random althimuthal angle for the decay in the x-axis
+double az = _randy.Rndom()*2.*starlightConstants::pi;
+
+
+double p1mag = sqrt(E1*E1-m_pip*m_pip);
+double p2mag = sqrt(E2*E2-m_pim*m_pim);
+double p3mag = sqrt(E3*E3-m_pi0*m_pi0);
+
+
+
+//Calculates the angle between particle 1 and 2 in the frame in which particle 3 has angle 0
+double a12 = acos(-(s12-pow((E1+E2),2)+p1mag*p1mag+p2mag*p2mag)/(2*p1mag*p2mag));
+
+
+//Calculates the angle between particle 2 and 3 in the frame in which particle 3 has angle 0
+double a23 = acos(-(s23-pow((E3+E2),2)+p3mag*p3mag+p2mag*p2mag)/(2*p2mag*p3mag));
+
+
+
+// if (isnan(a12)) 
+// { 	cout<<"BAD ANGLE"<<endl;
+// 	cout<<-(s12-pow((E1+E2),2)+p1mag*p1mag+p2mag*p2mag)/(2*p1mag*p2mag)<<endl;
+// 	if(-(s12-pow((E1+E2),2)+p1mag*p1mag+p2mag*p2mag)/(2*p1mag*p2mag)>1){a12 = 0;}
+// 	else if (-(s12-pow((E1+E2),2)+p1mag*p1mag+p2mag*p2mag)/(2*p1mag*p2mag)<-1){a12 = starlightConstants::pi;}
+// 	else{a12 = -starlightConstants::pi/2;}
+
+
+// }
+
+
+// if (isnan(a23)) 
+// { 	cout<<"BAD ANGLE"<<endl;
+// 	cout<<-(s23-pow((E3+E2),2)+p3mag*p3mag+p2mag*p2mag)/(2*p2mag*p3mag)<<endl;
+// 	if(-(s23-pow((E3+E2),2)+p3mag*p3mag+p2mag*p2mag)/(2*p2mag*p3mag)>1){a23 = 0;}
+// 	else if (-(s23-pow((E3+E2),2)+p3mag*p3mag+p2mag*p2mag)/(2*p2mag*p3mag)<-1){a23 = starlightConstants::pi;}
+// 	else{a23 = starlightConstants::pi/2;}
+
+// }
+
+
+
+//Calculates the angle of particle 1 and 2 in this frame
+double unrotated_phi2 = -(starlightConstants::pi-a23);
+double unrotated_phi1 = a12+unrotated_phi2;
+
+
+//Calulates the angle particle 3 makes with the z-axis
+double theta = getTheta(starlightConstants::PION, spin_element);
+
+
+//Make theta such that the projected particle lies on the negative x axis
+if(theta>=0 && theta<=starlightConstants::pi){theta = -(starlightConstants::pi-theta);}
+if (theta>starlightConstants::pi && theta<=2*starlightConstants::pi){theta = -(theta-starlightConstants::pi);}
+
+
+px3 =  -p3mag*sin(az)*sin(theta);
+py3 =   p3mag*sin(theta)*cos(az);
+pz3 =  -p3mag*cos(theta);
+
+
+//We have to relate the azimuthal angle we rotated Pi0 by to the angle needed to rotate the charged pions in order to ensure momentum conseveration in the x direction
+
+//This quanitiy is the sine of the angle above 
+double x_mom_angle = -px3/(p1mag*(-cos(unrotated_phi1)*sin(theta)+sin(unrotated_phi1)*cos(theta))+p2mag*(-cos(unrotated_phi2)*sin(theta)+sin(unrotated_phi2)*cos(theta)));
+
+//Cosine of the angle needed to rotate the charged pions in order to ensure momentum conseveration
+//in the y direction
+//This will of course be the same as above, modulo possible phase shifts that led to some of y momenta being off by a neagtive sign 
+double y_mom_factor = -py3/((p1mag*(-cos(unrotated_phi1)*sin(theta)+sin(unrotated_phi1)*cos(theta))+p2mag*(-cos(unrotated_phi2)*sin(theta)+sin(unrotated_phi2)*cos(theta))));
+
+
+
+//Computed unboosted momenta
+px1 = p1mag*x_mom_angle*(-cos(unrotated_phi1)*sin(theta)+sin(unrotated_phi1)*cos(theta));
+py1 = p1mag*(-cos(unrotated_phi1)*sin(theta)+sin(unrotated_phi1)*cos(theta))*y_mom_factor;
+pz1 = p1mag*(cos(theta)*cos(unrotated_phi1)+(sin(theta)*sin(unrotated_phi1)));
+//py1 = sqrt(pow(p1mag,2)-pow(px1,2)-pow(pz1,2));
+
+
+px2 =  p2mag*x_mom_angle*(-cos(unrotated_phi2)*sin(theta)+sin(unrotated_phi2)*cos(theta));
+py2 =  p2mag*(-cos(unrotated_phi2)*sin(theta)+sin(unrotated_phi2)*cos(theta))*y_mom_factor;
+pz2 =  p2mag*(cos(theta)*cos(unrotated_phi2)+(sin(theta)*sin(unrotated_phi2)));
+
+
+
+//  cout<<"Conservation of total momentum check"<<endl;
+//  cout<<"Net mom_x = "<<(px1+px2+px3)<<endl;
+//  cout<<"Net mom_y = "<<(py1+py2+py3)<<endl;
+//  cout<<"Net mom_z = "<<(pz1+pz2+pz3)<<endl;
+
+//  cout<<"Conservation of total energy check"<<endl;
+//  cout<<"Net energy = " <<(M_omega-(E1+E2+E3))<<endl;
+// cout<<"###############"<<endl;
+
+
+
+double  Ecm = sqrt(M_omega*M_omega+px0*px0+py0*py0+pz0*pz0);
+double	betax = -(px0/Ecm);
+double	betay = -(py0/Ecm);
+double	betaz = -(pz0/Ecm);
+
+
+
+
+//Transforms boosted momenta and energy
+transform (betax,betay,betaz,E1,px1,py1,pz1,iFbadevent);
+transform (betax,betay,betaz,E2,px2,py2,pz2,iFbadevent);
+transform (betax,betay,betaz,E3,px3,py3,pz3,iFbadevent);
+
+// cout<<"Energy conseveration after transformation"<<endl;
+// cout<<"Pi+:"<<E1-sqrt(pow(starlightConstants::pionChargedMass,2)+px1*px1+py1*py1+pz1*pz1)<<endl; 
+// cout<<"Pi-:"<<E2-sqrt(pow(starlightConstants::pionChargedMass,2)+px2*px2+py2*py2+pz2*pz2)<<endl; 
+// cout<<"Pi0:"<<E3-sqrt(pow(starlightConstants::pionNeutralMass,2)+px3*px3+py3*py3+pz3*pz3)<<endl; 
+
+//  cout<<"####"<<endl;
+
+
+//Decays the pi0 into two photons
+// double e_g1, px_g1, py_g1, pz_g1, e_g2, px_g2, py_g2, pz_g2;
+// pi0Decay(px3,py3,pz3,e_g1,px_g1,py_g1,pz_g1,e_g2,px_g2,py_g2,pz_g2,iFbadevent);
+
+	if(iFbadevent == 1)
+	   return;
+	
+}
+
+
+
+
 //______________________________________________________________________________                                               
 // decays a particle into four particles with isotropic angular distribution
 bool Gammaavectormeson::fourBodyDecay
 (starlightConstants::particleTypeEnum& ipid,
- const double                  ,           // E (unused)
+ const double                  E,           // E (unused)
  const double                  W,          // mass of produced particle
  const double*                 p,          // momentum of produced particle; expected to have size 3
  lorentzVector*                decayVecs,  // array of Lorentz vectors of daughter particles; expected to have size 4
@@ -297,8 +516,9 @@ void Gammaavectormeson::pi0Decay(double& px_pi0, double& py_pi0, double& pz_pi0,
 	double m_pi0=starlightConstants::pionNeutralMass;
 	
 	//  calculate the magnitude of the momenta
-	pmag = sqrt(m_pi0*m_pi0/4.);
+	//pmag = sqrt(m_pi0*m_pi0/4.);
 	  
+	pmag = m_pi0/2;  
 	//  pick an orientation, based on the spin
 	//  phi has a flat distribution in 2*pi
 	phi = _randy.Rndom()*2.*starlightConstants::pi;
@@ -322,6 +542,7 @@ void Gammaavectormeson::pi0Decay(double& px_pi0, double& py_pi0, double& pz_pi0,
 	betax = -(px_pi0/Ecm);
 	betay = -(py_pi0/Ecm);
 	betaz = -(pz_pi0/Ecm);
+
 
 	transform (betax,betay,betaz,E1,px_g1,py_g1,pz_g1,iFbadevent);
 	transform (betax,betay,betaz,E2,px_g2,py_g2,pz_g2,iFbadevent);
@@ -420,7 +641,7 @@ double Gammaavectormeson::getTheta(starlightConstants::particleTypeEnum ipid, do
 	  //  Follow distribution for helicity +/-1 with finite Q2
 	  //  Physics Letters B 449, 328; The European Physical Journal C - Particles and Fields 13, 37; 
 	  //  The European Physical Journal C - Particles and Fields 6, 603
-  
+  	
 
 	  switch(ipid){
 	    
@@ -431,12 +652,20 @@ double Gammaavectormeson::getTheta(starlightConstants::particleTypeEnum ipid, do
 	    break;
 	    
 	  case starlightConstants::PION:
+	  	dndtheta=  sin(theta)*(1 - r_04_00+( 3.*r_04_00-1 )*cos(theta)*cos(theta));
+	  	break;
+
 	  case starlightConstants::KAONCHARGE:
 	    //rhos etc
 	    dndtheta=  sin(theta)*(1 - r_04_00+( 3.*r_04_00-1 )*cos(theta)*cos(theta));
 	    break;
 	    
-	  default: if(!_backwardsProduction) cout<<"No proper theta dependence defined, check gammaavectormeson::gettheta"<<endl;
+	  default: if(!_backwardsProduction) 
+	  {
+	  	cout<<"No proper theta dependence defined, check gammaavectormeson::gettheta"<<endl;
+			exit( 3 ); //User needs to handle this case
+			} 
+
 	  }//end of switch
 
 	  // Assume unpolarized vector-mesons for now
@@ -444,6 +673,7 @@ double Gammaavectormeson::getTheta(starlightConstants::particleTypeEnum ipid, do
 	  	dndtheta = sin(theta);
 	  }
 	}
+
 	return theta;
 
 }
@@ -1026,6 +1256,7 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 	bool pick_state = false;
 	dEgamma = std::log(_targetMaxPhotonEnergy/_targetMinPhotonEnergy);
 	while( pick_state == false ){
+
 	  xw = _randy.Rndom();
 	  W = _VMWmin + xw*(_VMWmax-_VMWmin);
 	  double w_test = _randy.Rndom();
@@ -1110,7 +1341,7 @@ eXEvent Gammaavectormeson::e_produceEvent()
 {
 	// The new event type
 	eXEvent event;
-	
+
 	int iFbadevent=0;
 	int tcheck=0;
 	starlightConstants::particleTypeEnum ipid = starlightConstants::UNKNOWN;
@@ -1124,14 +1355,21 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	double targetEgamma = 0, cmsEgamma = 0 ;
 	double gamma_pz = 0 , gamma_pt = 0, e_theta = 0;
 	double px2=0.,px1=0.,py2=0.,py1=0.,pz2=0.,pz1=0.;
+	double px3=0.,py3=0.,pz3=0.;
+	double pt1chk = 0., pt2chk = 0., pt3chk = 0.;
+	double eta1 = 0., eta2 = 0., eta3 = 0.;
 	double e_E=0., e_phi=0;
 	double t_px =0, t_py=0., t_pz=0, t_E;
 	bool accepted = false;
+	bool threeBody = false;
 	do{
+
 	  pickwEgamq2(comenergy,cmsEgamma, targetEgamma, 
 		   Q2, gamma_pz, gamma_pt, //photon infor in CMS frame
 		   e_E, e_theta);	 //electron info in target frame  
 	  //
+
+	
 	  momenta(comenergy,cmsEgamma, Q2, gamma_pz, gamma_pt, //input
 		  rapidity, E, momx, momy, momz, //VM
 		  t_px, t_py, t_pz, t_E, //pomeron
@@ -1144,15 +1382,35 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  _nmbAttempts++;
 	  
 	  vmpid = ipid; 
-	  // Two body dedcay in eSTARlight includes the angular corrections due to finite virtuality
+
+	  if (_VMpidtest == starlightConstants::OMEGA_pipipi){
+	  	threePionDecay(ipid,momx,momy,momz,px1,py1,pz1,px2,py2,pz2,px3,py3,pz3,iFbadevent,spin_element);
+
+	  	double pt1chk = sqrt(px1*px1+py1*py1);
+	  	double pt2chk = sqrt(px2*px2+py2*py2);
+	  	double pt3chk = sqrt(px3*px3+py3*py3+pz3*pz3);
+	  	double eta1 = pseudoRapidity(px1, py1, pz1);
+	  	double eta2 = pseudoRapidity(px2, py2, pz2);
+	  	double eta3 = pseudoRapidity(px3, py3, pz3);
+
+	  	threeBody = true;
+
+	  }
+
+	  else{
+	  	// Two body dedcay in eSTARlight includes the angular corrections due to finite virtuality
+	  
 	  twoBodyDecay(ipid,comenergy,momx,momy,momz,spin_element,
 		       px1,py1,pz1,px2,py2,pz2,iFbadevent);
 	  double pt1chk = sqrt(px1*px1+py1*py1);
 	  double pt2chk = sqrt(px2*px2+py2*py2);
 	  double eta1 = pseudoRapidity(px1, py1, pz1);
 	  double eta2 = pseudoRapidity(px2, py2, pz2);
-                        
+}
 
+
+                        
+if (!threeBody){
 	  if(_ptCutEnabled && !_etaCutEnabled){
 	    if(pt1chk > _ptCutMin && pt1chk < _ptCutMax &&  pt2chk > _ptCutMin && pt2chk < _ptCutMax){
 	      accepted = true;
@@ -1175,7 +1433,39 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  }
 	  else if(!_ptCutEnabled && !_etaCutEnabled)
 	    _nmbAccepted++;
+}
+
+else{
+
+if(_ptCutEnabled && !_etaCutEnabled){
+	    if(pt1chk > _ptCutMin && pt1chk < _ptCutMax &&  pt2chk > _ptCutMin && pt2chk < _ptCutMax && pt3chk > _ptCutMin && pt3chk < _ptCutMax){
+	      accepted = true;
+	      _nmbAccepted++;
+	    }
+	  }
+	  else if(!_ptCutEnabled && _etaCutEnabled){
+	    if(eta1 > _etaCutMin && eta1 < _etaCutMax && eta2 > _etaCutMin && eta2 < _etaCutMax && eta3 > _etaCutMin && eta3 < _etaCutMax){
+	      accepted = true;
+	      _nmbAccepted++;
+	    }
+	  }
+	  else if(_ptCutEnabled && _etaCutEnabled){
+	    if(pt1chk > _ptCutMin && pt1chk < _ptCutMax &&  pt2chk > _ptCutMin && pt2chk < _ptCutMax && pt3chk > _ptCutMin && pt3chk < _ptCutMax){
+	      if(eta1 > _etaCutMin && eta1 < _etaCutMax && eta2 > _etaCutMin && eta2 < _etaCutMax && eta3 > _etaCutMin && eta3 < _etaCutMax){
+		accepted = true;
+		_nmbAccepted++;
+	      }
+	    }
+	  }
+	  else if(!_ptCutEnabled && !_etaCutEnabled)
+	    _nmbAccepted++;
+
+}
+
+
 	}while((_ptCutEnabled || _etaCutEnabled) && !accepted);
+	
+
 	if (iFbadevent==0&&tcheck==0) {
 	  int q1=0,q2=0;
 	  int ipid1,ipid2=0;
@@ -1191,6 +1481,7 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	    q2=1;
 	  }
 	  
+	  
 	  if ( ipid == 11 || ipid == 13 ){
 	    ipid1 = -q1*ipid;
 	    ipid2 = -q2*ipid;
@@ -1201,6 +1492,7 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	    ipid1 = q1*ipid;
 	    ipid2 = q2*ipid;
 	  }
+
 
 	  // - Outgoing electron - target frame
 	  double e_ptot = sqrt(e_E*e_E - starlightConstants::mel*starlightConstants::mel);
@@ -1217,7 +1509,10 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  (gamma).Boost(boostVector);
 	  event.addGamma(gamma, targetEgamma, Q2);   
 	  // - Saving V.M. daughters
-	  double md = getDaughterMass(vmpid); 
+	  double md = 0; 
+
+	  if (!threeBody){
+	  double md = getDaughterMass(vmpid);
 	  bool isOmegaNeutralDecay = (vmpid == starlightConstants::PHOTON);
 	  if(isOmegaNeutralDecay){
 	  	//double mpi0 = starlightConstants::pionNeutralMass;
@@ -1226,13 +1521,18 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  	starlightParticle particle1(px1, py1, pz1, Ed1, starlightConstants::UNKNOWN, ipid1, q1);
 	  	event.addParticle(particle1);
 	  	//
+
 	  	pi0Decay(px2,py2,pz2,e_gamma1,px_gamma1,py_gamma1,pz_gamma1,e_gamma2,px_gamma2,py_gamma2,pz_gamma2,iFbadevent);
 	  	starlightParticle particle2(px_gamma1, py_gamma1, pz_gamma1, e_gamma1, starlightConstants::UNKNOWN, ipid1, q2);
 	  	starlightParticle particle3(px_gamma2, py_gamma2, pz_gamma2, e_gamma2, starlightConstants::UNKNOWN, ipid1, q2);
 	  	event.addParticle(particle2);
 	  	event.addParticle(particle3);
 	  	//double invmass = sqrt(mpi0*mpi0 + 2.0*(Ed1*Ed2 - (px1*px2+py1*py2+pz1*pz2)));
-	  } else {
+	  } 
+
+
+	 
+	  else {
 	  	double Ed1 = sqrt(md*md+px1*px1+py1*py1+pz1*pz1); 
 	    starlightParticle particle1(px1, py1, pz1, Ed1, starlightConstants::UNKNOWN, ipid1, q1);
 	    event.addParticle(particle1);
@@ -1241,6 +1541,67 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	    starlightParticle particle2(px2, py2, pz2, Ed2, starlightConstants::UNKNOWN, ipid2, q2);
 	    event.addParticle(particle2);
 	  }
+	}
+
+	if (threeBody){
+
+	    double e_gamma1,px_gamma1,py_gamma1,pz_gamma1,e_gamma2,px_gamma2,py_gamma2,pz_gamma2;
+	    double Ed1 = sqrt(pow(starlightConstants::pionChargedMass,2)+px1*px1+py1*py1+pz1*pz1); 
+	    double Ed2 = sqrt(pow(starlightConstants::pionChargedMass,2)+px2*px2+py2*py2+pz2*pz2);
+	    double Ed3 = sqrt(pow(starlightConstants::pionNeutralMass,2)+px3*px3+py3*py3+pz3*pz3);
+
+	    double E0 = sqrt(pow(starlightConstants::OmegaMass,2)+momx*momx+momy*momy+momz*momz);
+
+
+	  	starlightParticle particle1(px1, py1, pz1, Ed1, starlightConstants::UNKNOWN, 211, q1);
+	  	event.addParticle(particle1);
+
+	  	starlightParticle particle2(px2, py2, pz2, Ed2, starlightConstants::UNKNOWN, 211, q2);
+	  	event.addParticle(particle2);
+
+
+
+	  	//
+
+	  	pi0Decay(px3,py3,pz3,e_gamma1,px_gamma1,py_gamma1,pz_gamma1,e_gamma2,px_gamma2,py_gamma2,pz_gamma2,iFbadevent);
+	  	starlightParticle particle3(px_gamma1, py_gamma1, pz_gamma1, e_gamma1, starlightConstants::UNKNOWN, ipid1, 22);
+	  	starlightParticle particle4(px_gamma2, py_gamma2, pz_gamma2, e_gamma2, starlightConstants::UNKNOWN, ipid1, 22);
+
+
+	  	//cout<<"Looking at particles after boosted into beam frame"<<endl;
+	  	// cout<<"Conservation of Omega->3Pi momentum check"<<endl;
+	  	// cout<<"Net mom_x = "<<momx-(px1+px2+px3)<<endl;
+	  	// cout<<"Net mom_y = "<<momy-(py1+py2+py3)<<endl;
+	  	// cout<<"Net mom_z = "<<momz-(pz1+pz2+pz3)<<endl;
+
+
+	  	// cout<<"Conservation of total energy check"<<endl;
+	  	//cout<<"Net energy = " <<sqrt(pow(starlightConstants::OmegaMass,2)+momx*momx+momy*momy+momz*momz)-(Ed1+Ed2+sqrt(pow(starlightConstants::pionNeutralMass,2)+px3*px3+py3*py3+pz3*pz3))<<endl;
+
+	  	// cout<<"########################"<<endl;
+
+
+	 //  	cout<<"Now looking at particles after boosted into beam frame"<<endl;
+		// cout<<"Conservation of total momentum check"<<endl;
+		// cout<<"Net mom_x = "<<momx-(px1+px2+px_gamma1+px_gamma2)<<endl;
+		// cout<<"Net mom_y = "<<momy-(py1+py2+py_gamma1+py_gamma2)<<endl;
+		// cout<<"Net mom_z = "<<momz-(pz1+pz2+pz_gamma1+pz_gamma2)<<endl;
+
+
+		// cout<<"Conservation of total energy check"<<endl;
+		// cout<<"Energy conseveration from Omega->3Pi decay: " <<E0-(Ed1+Ed2+Ed3)<<endl;
+
+		// cout<<"Energy conseveration from Pi0 decay:"<<Ed3-(e_gamma1+e_gamma2)<<endl;
+		
+		// cout<<"Total net energy = " <<E0-(Ed1+Ed2+e_gamma1+e_gamma2)<<endl;
+		// cout<<"########################"<<endl;
+
+
+
+	  	event.addParticle(particle3);
+	  	event.addParticle(particle4);
+
+	}
 
 	  // - Scattered target and transfered momenta at target vertex
 	  double target_pz =  - _beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) ) - t_pz;

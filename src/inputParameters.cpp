@@ -397,6 +397,16 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 		defaultMaxW         = mass + 5 * width;
 		_inputBranchingRatio = starlightConstants::OmegaBrPiPi; 
 		break;
+	case 223211:  //omega(782) -> pi+ + pi- + p0
+		_particleType = OMEGA_pipipi;
+		_decayType    = NARROWVMDEFAULT;  
+		mass          = starlightConstants::OmegaMass;
+		width         = starlightConstants::OmegaWidth;
+		defaultMinW   = mass - 5 * width;
+		defaultMaxW   = mass + 5 * width;
+		_inputBranchingRatio = starlightConstants::OmegaBrPiPiPi; 
+		break;
+
 	case 223022:  // omega(782) -> pi0 + gamma
 		_particleType = OMEGA_pi0gamma;
 		_decayType    = NARROWVMDEFAULT;  
