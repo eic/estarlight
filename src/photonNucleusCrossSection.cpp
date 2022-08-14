@@ -210,6 +210,20 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _channelMass  = starlightConstants::Upsilon3SMass;
 	  _width        = starlightConstants::Upsilon3SWidth;
 	  break;
+	case PHOTON:
+	  _slopeParameter=5.45;
+	  _vmPhotonCoupling=0.0;
+	  _vmQ2Power_c1 = 1.54;
+	  _vmQ2Power_c2 = 0.0; // [GeV^{-2}]
+	  _ANORM=0.0;
+	  _BNORM=0.0;
+	  _defaultC=0.0;
+	  _channelMass  = 0.0;
+	  _width        = 0.0;
+	  if(_backwardsProduction){
+	  	_slopeParameter = 5.45;  // [(GeV/c)^{-2}]
+	  }
+	  break;
 	default:
 		cout <<"No sigma constants parameterized for pid: "<<_particleType
 		     <<" GammaAcrosssection"<<endl;
@@ -246,7 +260,6 @@ photonNucleusCrossSection::getcsgA(const double targetEgamma,
 {
 	//This function returns the cross-section for photon-nucleus interaction 
 	//producing vectormesons
-  
 	double Av,Wgp,cs,cvma;
 	double t,tmin,tmax;
 	double csgA,ax,bx;
@@ -272,7 +285,11 @@ photonNucleusCrossSection::getcsgA(const double targetEgamma,
 	double temp_pz = sqrt(pz_squared);
 	// Now boost to CM frame
 	double Egamma = targetEgamma*cosh(beam_y) - temp_pz*sinh(beam_y);
-	if( Egamma < _cmsMinPhotonEnergy || Egamma > _maxPhotonEnergy){
+	//cout<<"Egamma    =    "<<Egamma<<endl;
+	//cout<<"_cmsMinPhotonEnergy    =    "<<_cmsMinPhotonEnergy<<endl;
+	//cout<<"_MaxPhotonEnergy    =    "<<_maxPhotonEnergy<<endl;
+	//if( Egamma < _cmsMinPhotonEnergy || Egamma > _maxPhotonEnergy){
+	if( Egamma < _cmsMinPhotonEnergy || Egamma > 200000.0){
 	  return 0;
 	}
 	//cout<<" ::: Lomnitz test in photonNucleus ::: pz^2 = "<<pz_squared << " CMS Egamma = "<<Egamma<<endl;
@@ -355,7 +372,7 @@ photonNucleusCrossSection::getcsgA(const double targetEgamma,
 }
 
 
-//______________________________________________________________________________
+/*//______________________________________________________________________________
 double
 photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
                                    const double W, 
@@ -441,7 +458,7 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
 	   csgA = Av * csgA;
 	}
 	return csgA;	
-}
+}*/
 
 
 //______________________________________________________________________________
@@ -450,7 +467,11 @@ photonNucleusCrossSection::getcsgA_Q2_dep(const double Q2)
 {
   double const mv2 = getChannelMass()*getChannelMass();
   double const n = vmQ2Power(Q2);
-  return std::pow(mv2/(mv2+Q2),n);
+  double thiscsgA_Q2_dep = 0.0;
+  if(_productionMode!=E_DVCS) thiscsgA_Q2_dep = std::pow(mv2/(mv2+Q2),n);
+  else if(Q2<2) thiscsgA_Q2_dep = exp(1.0-Q2);     //VCS
+  else thiscsgA_Q2_dep  = 1.07*std::pow(1.0/Q2,n); //DVCS
+  return thiscsgA_Q2_dep;
 }
 
 
@@ -987,6 +1008,12 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			sigmagp_r*=sigmagp_r;
 			sigmagp_r*=1.E-10*2.1*exp(0.74*log(Wgp)); 
 			break;
+		case PHOTON:
+			//sigmagp_r=pow(Wgp,0.74);
+			//sigmagp_r=pow(Wgp,0.77);
+			sigmagp_r=exp(-3.0*log(Wgp));
+			if(_backwardsProduction)sigmagp_r=pow(Wgp,3.0);
+			break;                                                      
 		default: cout<< "!!!  ERROR: Unidentified Vector Meson: "<< _particleType <<endl;
 		}                                                                  
 	return sigmagp_r;
@@ -1153,6 +1180,10 @@ photonNucleusCrossSection::breitWigner(const double W,
 		ppi0=abs((_channelMass*_channelMass - pionNeutralMass * pionNeutralMass)/(2.0*W));
 	}
   
+ 	if( _particleType==PHOTON ){  
+		nrbw_r=0.;
+		return nrbw_r;
+	}
 	// handle phi-->K+K- properly
 	if (_particleType  ==  PHI){
 		if (W < 2.*kaonChargedMass){

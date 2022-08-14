@@ -183,7 +183,8 @@ namespace starlightConstants
 		WIDEVMDEFAULT   = 2,
 		PSIFAMILY       = 3,
 		LEPTONPAIR      = 4,
-		SINGLEMESON     = 5
+		SINGLEMESON     = 5,
+		NONE            = 6
 	};
 
 	enum interactionTypeEnum {
@@ -197,7 +198,8 @@ namespace starlightConstants
 		PHOTONUCLEARSINGLEPA = 7,
 		PHOTONUCLEARSINGLEPAPY = 8,
 		E_PHOTONPOMERONNARROW = 12,
-		E_PHOTONPOMERONWIDE = 13
+		E_PHOTONPOMERONWIDE = 13,
+		E_DVCS = 14
 	};
 
         enum systemTypeEnum{

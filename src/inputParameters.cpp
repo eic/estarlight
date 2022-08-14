@@ -258,6 +258,10 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 	case 13:
 		_interactionType = E_PHOTONPOMERONWIDE;
 		break;
+
+	case 14:
+		_interactionType = E_DVCS;
+		break;
 	  
 	default:
 		printWarn << "unknown production mode '" << _productionMode << "'" << endl;
@@ -279,6 +283,16 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 // 		_decayType    = WW;
 // 		defaultMinW   = 2 * muonMass;
 // 		break;
+	case 22:  // DVCS
+		_particleType = PHOTON;
+		_decayType    = NONE;
+		mass          = 0.0;
+		width         = 0.0;
+                defaultMinW   = 0.0; 
+                defaultMaxW   = 0.000001; 
+                _inputBranchingRatio = 1.0; 
+		break;
+
 	case 115:  // a_2(1320)
 		_particleType = A2;
 		_decayType    = SINGLEMESON;
@@ -580,6 +594,7 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 	// Photon limits in target frame: this is where the photon flux is well described
 	_targetMaxPhotonEnergy        = (_targetLorentzGamma - 10. ) *starlightConstants::mel;
 	_targetMinPhotonEnergy = mass;
+	if(mass==0.0) _targetMinPhotonEnergy = 0.01;//ZS DVCS
 	printInfo << "using the following " << *this;
 	
 	return true;
