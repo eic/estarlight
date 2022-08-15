@@ -1011,8 +1011,8 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 		case PHOTON:
 			//sigmagp_r=pow(Wgp,0.74);
 			//sigmagp_r=pow(Wgp,0.77);
-			sigmagp_r=exp(-3.0*log(Wgp));
-			if(_backwardsProduction)sigmagp_r=pow(Wgp,3.0);
+			sigmagp_r=exp(-0.74*log(Wgp));
+			if(_backwardsProduction)sigmagp_r=exp(-0.74*log(Wgp));
 			break;                                                      
 		default: cout<< "!!!  ERROR: Unidentified Vector Meson: "<< _particleType <<endl;
 		}                                                                  

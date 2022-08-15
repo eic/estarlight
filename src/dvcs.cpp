@@ -84,11 +84,11 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
 {
 	//     This subroutine calculates momentum and energy of vector meson for electroproduction (eSTARlight)
 	//     given W and photon 4-vector,   without interference.  No intereference in asymetric eX collisions
- 
-	double Epom,Pom_pz,pt2,phi1,phi2;
+ 	Q2 = 1.0*Q2;
+	double phi1;
 	double px1,py1;
 	double xtest;
-	double t2;
+	double deltak;
 
 	double target_px, target_py, target_pz, target_E;
 
@@ -108,47 +108,89 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
     transform (betax_cm,betay_cm,betaz_cm,Egam, px1, py1, gamma_pz, isbadevent);
       
 	e_phi = starlightConstants::pi+phi1;
-	
-	Epom = 0.5*Q2/(Egam + target_E);
 
-    L522vm:
-	while( e_phi > 2.*starlightConstants::pi ) e_phi-= 2.*starlightConstants::pi;
+    while( e_phi > 2.*starlightConstants::pi ) e_phi-= 2.*starlightConstants::pi;
 	//
-	if ( _bbs.targetBeam().A()==1 ) {
-	    //Use dsig/dt= exp(-_VMbslope*t) for heavy VM
-        double bslope_tdist = _VMbslope; 
-		xtest = _randy.Rndom(); 
-		t2 = (-1./bslope_tdist)*log(xtest);
-		pt2 = sqrt(1.*t2);
+	if ( _bbs.targetBeam().A()!=1 ) {cout<<"DVCS is NOT yet defined for non-protons!!!"<<endl; exit(1);}
+	   
+L116dvcs:	    
+	//Use dsig/dt= exp(-_VMbslope*t) for heavy VM
+    double bslope_tdist = _VMbslope; 
+	xtest = _randy.Rndom(); 
+	deltak = (-1./bslope_tdist)*log(xtest);
+	double u_or_t = -1.0*abs(deltak);
+	//cout<<"u_or_t: "<<u_or_t<<endl;
 
-	} else {
-	    cout<<"DVCS is NOT yet defined for non-protons!!!"<<endl;
-        exit(1);
-    }
 
-	phi2 = 2.*starlightConstants::pi*_randy.Rndom();
+	//rotate to put  gamma--> <--p  reaction along one axis
+	double theta_pgamma = atan(sqrt(target_px*target_px + target_py*target_py)/target_pz);	
+	double phi_pgamma = 0.0;
+	if(target_px > 0.0) phi_pgamma = atan(target_py/target_px);
+	else phi_pgamma = starlightConstants::pi - atan(target_py/abs(target_px));
+	//double target_pz_rot = sqrt(target_px*target_px + target_py*target_py + target_pz*target_pz);
+	//calculate scattering angle from u
+	double target_ptot = sqrt(target_px*target_px + target_py*target_py + target_pz*target_pz);
+	double costheta_scatter = 0.0;
+	double theta_scatter = 0.0;
+	double fsphoton_ptot = 0.0;
+	double backwards_forwards = 1.0;
 
+	//the variables in the following calculations are dummy variables introduced for brevity
+	if(_backwardsProduction)
+	{
+		backwards_forwards = -1.0;
+		double a = (0.5)*(pow(starlightConstants::protonMass,2.)- u_or_t -Q2);
+    	double b = Egam;
+    	double c = pow(starlightConstants::protonMass,2.);
+    	double d = u_or_t;
+    	double f = target_E;
+    	double g = sqrt(target_px*target_px + target_py*target_py + target_pz*target_pz);
+		costheta_scatter = (sqrt(f*f*g*g*pow((-8.0*a*a + 4.0*a*c - 4.0*a*d + 8.0*b*b*c),2) - 4.0*g*g*(4.0*a*a - 4.0*a*c + 4.0*a*d - 4.0*b*b*c + c*c - 2.0*c*d + d*d)*(4.0*a*a*f*f + b*b*(-c*c) + 2.0*b*b*c*d - 4.0*b*b*c*f*f - b*b*d*d)) - f*g*(-8.0*a*a + 4.0*a*c - 4.0*a*d + 8.0*b*b*c))/(2.0*g*g*(4.0*a*a - 4.0*a*c + 4.0*a*d - 4.0*b*b*c + c*c - 2.0*c*d + d*d));
+		theta_scatter = acos(costheta_scatter);
+		fsphoton_ptot = (pow(starlightConstants::protonMass,2.) - (u_or_t))/(2.0*(target_E - target_ptot*cos(theta_scatter)));
+	}
+	else{
+		double b = target_E;
+    	double c = u_or_t;
+    	double d = Q2;
+    	double f = Egam;
+    	double g = target_ptot;
+    	double h = pow(starlightConstants::protonMass,2.);
+		costheta_scatter = (-1.0*sqrt(f*f*g*g*pow((-8.0*b*b*h - 2.0*c*d - 4.0*c*h + 4.0*d*h + 8.0*h*h),2) - 4.0*g*g*(4.0*b*b*h - d*d - 4.0*d*h - 4.0*h*h)*(b*b*c*c + 2.0*b*b*c*d + b*b*d*d + 4.0*b*b*f*f*h - c*c*f*f + 4.0*c*f*f*h - 4.0*f*f*h*h)) - f*g*(-8.0*b*b*h - 2.0*c*d - 4.0*c*h + 4.0*d*h + 8.0*h*h))/(2.0*g*g*(4.0*b*b*h - d*d - 4.0*d*h - 4.0*h*h));
+		theta_scatter = acos(costheta_scatter);
+		fsphoton_ptot = (-1.0*u_or_t - Q2)/(2.0*(Egam - target_ptot*cos(theta_scatter)));
+	}
+	if(costheta_scatter>1.0){goto L116dvcs;}
 	//
-	t_px = pt2*cos(phi2);
-	t_py = pt2*sin(phi2);
-	// Used to return the pomeron pz to generator
-	// Compute scattered target kinematics p_(initial ion) = p_(pomeron) + p_(final ion)
-	double newion_E = target_E-Epom;
-	double newion_px = target_px - t_px;
-	double newion_py = target_py - t_py;
-	double newion_pz_squared = newion_E*newion_E - newion_px*newion_px - newion_py*newion_py - pow(_beamNucleus*starlightConstants::protonMass,2.);
-	if(newion_pz_squared<0)goto L522vm;
-	double newion_pz = -sqrt( newion_pz_squared );
-	Pom_pz = target_pz - newion_pz;
-	t_pz = Pom_pz;
-	// Compute vector sum Pt = Pt1 + Pt2 to find pt for the vector meson
-	px = px1 + t_px;
-	py = py1 + t_py;
 
-	t_E = Epom;
-	// Finally V.M. energy, pz and rapidity from photon + pommeron.
-	E = Egam + t_E;
-	pz = gamma_pz + t_pz;
+	//final-state photon:
+	double fsphoton_phi_rot = 2.*starlightConstants::pi*_randy.Rndom();
+	double fsphoton_px_rot = fsphoton_ptot*sin(theta_scatter)*cos(fsphoton_phi_rot);
+	double fsphoton_py_rot = fsphoton_ptot*sin(theta_scatter)*sin(fsphoton_phi_rot);
+	double fsphoton_pz_rot = backwards_forwards*fsphoton_ptot*cos(theta_scatter);
+	//final-state proton:
+	double newion_px_rot = -1.0*fsphoton_px_rot;
+	double newion_py_rot = -1.0*fsphoton_py_rot;
+	double newion_pz_rot = -1.0*fsphoton_pz_rot;
+	double newion_E = sqrt(newion_px_rot*newion_px_rot + newion_py_rot*newion_py_rot + newion_pz_rot*newion_pz_rot + pow(_beamNucleus*starlightConstants::protonMass,2.));
+	//rotate back into normal cm frame
+	double fsphoton_px = (fsphoton_px_rot*cos(theta_pgamma) + fsphoton_pz_rot*sin(theta_pgamma))*cos(phi_pgamma) - fsphoton_py_rot*sin(phi_pgamma);
+	double fsphoton_py = (fsphoton_px_rot*cos(theta_pgamma) + fsphoton_pz_rot*sin(theta_pgamma))*sin(phi_pgamma) + fsphoton_py_rot*cos(phi_pgamma);
+	double fsphoton_pz = fsphoton_pz_rot*cos(theta_pgamma) - fsphoton_px_rot*sin(theta_pgamma);
+	double newion_px = (newion_px_rot*cos(theta_pgamma) + newion_pz_rot*sin(theta_pgamma))*cos(phi_pgamma) - newion_py_rot*sin(phi_pgamma);
+	double newion_py = (newion_px_rot*cos(theta_pgamma) + newion_pz_rot*sin(theta_pgamma))*sin(phi_pgamma) + newion_py_rot*cos(phi_pgamma);
+	double newion_pz = newion_pz_rot*cos(theta_pgamma) - newion_px_rot*sin(theta_pgamma);
+	//
+	t_px = target_px - newion_px;
+	t_py = target_py - newion_py;
+	t_pz = target_pz - newion_pz;
+	t_E  = target_E  - newion_E;
+	//
+	px = fsphoton_px;
+	py = fsphoton_py;
+	pz = fsphoton_pz;
+	E  = fsphoton_ptot;
+
 	//transform back to e-ion CM frame
 	transform (-betax_cm,-betay_cm,-betaz_cm,target_E,target_px,target_py,target_pz,isbadevent);
 	transform (-betax_cm,-betay_cm,-betaz_cm,newion_E,newion_px,newion_py,newion_pz,isbadevent);
@@ -159,78 +201,6 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
     t_pz = target_pz-newion_pz;
     t_E  = target_E-newion_E;
 	Y = 0.5*std::log( (E+fabs(pz))/(E-fabs(pz)) );
-	//	cout << "pz_final = " << pz << endl;
-
-
-	// Backwards Production... updated by Zachary Sweger on 9/21/2021
-	if (_backwardsProduction) {
-	  double is_proton_E  = target_E;
-	  double is_proton_px = target_px;
-	  double is_proton_py = target_py;
-	  double is_proton_pz = target_pz;
-	  double is_gamma_E  = Egam;
-	  double is_gamma_px = px1;
-	  double is_gamma_py = py1;
-	  double is_gamma_pz = gamma_pz;
-	  double is_tot_E  = is_proton_E  + is_gamma_E;
-	  double is_tot_px = is_proton_px + is_gamma_px;
-	  double is_tot_py = is_proton_py + is_gamma_py;
-	  double is_tot_pz = is_proton_pz + is_gamma_pz;
-
-	  double fs_proton_E  = newion_E;
-	  double fs_proton_px = newion_px;
-	  double fs_proton_py = newion_py;
-	  double fs_proton_pz = newion_pz;
-	  
-	  double fs_vm_E  = E;
-	  double fs_vm_px = px;
-	  double fs_vm_py = py;
-	  double fs_vm_pz = pz;
-
-      int isbadevent = 0;
-	  double betax_cm = (is_tot_px/is_tot_E);
-      double betay_cm = (is_tot_py/is_tot_E);
-      double betaz_cm = (is_tot_pz/is_tot_E);
-      transform (betax_cm,betay_cm,betaz_cm,is_proton_E,is_proton_px,is_proton_py,is_proton_pz,isbadevent);
-      transform (betax_cm,betay_cm,betaz_cm,is_gamma_E, is_gamma_px, is_gamma_py, is_gamma_pz, isbadevent);
-      transform (betax_cm,betay_cm,betaz_cm,fs_proton_E,fs_proton_px,fs_proton_py,fs_proton_pz,isbadevent);
-      transform (betax_cm,betay_cm,betaz_cm,fs_vm_E,    fs_vm_px,    fs_vm_py,    fs_vm_pz,    isbadevent);
-
-      double u_fs_proton_px = -1.0*fs_proton_px;
-	  double u_fs_proton_py = -1.0*fs_proton_py;
-	  double u_fs_proton_pz = -1.0*fs_proton_pz;
-	  double u_fs_proton_E  = fs_proton_E;
-	  
-	  double u_fs_vm_px = -1.0*fs_vm_px;
-	  double u_fs_vm_py = -1.0*fs_vm_py;
-	  double u_fs_vm_pz = -1.0*fs_vm_pz;
-	  double u_fs_vm_E  = fs_vm_E;
-
-      betax_cm = -1.0*betax_cm;
-	  betay_cm = -1.0*betay_cm;
-	  betaz_cm = -1.0*betaz_cm;
-      transform (betax_cm,betay_cm,betaz_cm,is_proton_E,  is_proton_px,  is_proton_py,  is_proton_pz,  isbadevent);
-      transform (betax_cm,betay_cm,betaz_cm,is_gamma_E,   is_gamma_px,   is_gamma_py,   is_gamma_pz,   isbadevent);
-      transform (betax_cm,betay_cm,betaz_cm,u_fs_proton_E,u_fs_proton_px,u_fs_proton_py,u_fs_proton_pz,isbadevent);
-      transform (betax_cm,betay_cm,betaz_cm,u_fs_vm_E,    u_fs_vm_px,    u_fs_vm_py,    u_fs_vm_pz,    isbadevent);
-
-      px=u_fs_vm_px;
-      py=u_fs_vm_py;
-      pz=u_fs_vm_pz;
-      E =u_fs_vm_E;
-
-      t_px=-u_fs_proton_px;
-      t_py=-u_fs_proton_py;
-      t_pz=is_proton_pz-u_fs_proton_pz;
-      t_E =is_proton_E-u_fs_proton_E;
-
-	  //Calculate the rapidity
-	  Y = 0.5*std::log( (E+fabs(pz))/(E-fabs(pz)) );
-	  if(Y!=Y){
-	  	E=sqrt(px*px+py*py+pz*pz); 
-	  }
-	}
-	
 }
 
 
@@ -319,11 +289,10 @@ void Dvcs::pickEgamq2(double &cmsEgamma, double &targetEgamma,
 	  double m = (y_2 - y_1)/(x_2 - x_1);
 	  double c = y_1-m*x_1;
 	  double y = m*Q2+c;
-	  y=1.0*y;
 	  q2test = _randy.Rndom();
-	  //if( y < q2test ){
-	  //  continue;
-	  //}
+	  if( y < q2test ){
+	    continue;
+	  }
 	  // -- Generate electron and photon in Target frame
 	  E_prime = _eEnergy - targetEgamma;
 	  if(Q2>1E-6){
