@@ -79,13 +79,11 @@ void
 e_DVCSCrossSection::crossSectionCalculation(const double)  // _bwnormsave (unused)
 {
         // This subroutine calculates the ep DVCS cross section
-  cout<<"HEYYYYYYYYY"<<endl;
-        double dEgamma, minEgamma;
+    double dEgamma, minEgamma;
 	double ega[3] = {0};
 	double int_r,dR;
 	double int_r2, dR2;
 	int    iEgamma, nEgamma,beam;
-	
 	//Integration is done with exponential steps, in target frame
 	//nEgamma = _VMnumEgamma;
 	nEgamma = 1000;

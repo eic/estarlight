@@ -594,7 +594,7 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 	// Photon limits in target frame: this is where the photon flux is well described
 	_targetMaxPhotonEnergy        = (_targetLorentzGamma - 10. ) *starlightConstants::mel;
 	_targetMinPhotonEnergy = mass;
-	if(mass==0.0) _targetMinPhotonEnergy = 0.001;//ZS DVCS
+	if(mass==0.0) _targetMinPhotonEnergy = 0.0001;//ZS DVCS
 	printInfo << "using the following " << *this;
 	
 	return true;

@@ -84,8 +84,7 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
 {
 	//     This subroutine calculates momentum and energy of vector meson for electroproduction (eSTARlight)
 	//     given W and photon 4-vector,   without interference.  No intereference in asymetric eX collisions
- 	Q2 = 1.0*Q2;
-	double phi1;
+ 	double phi1;
 	double px1,py1;
 	double xtest;
 	double deltak;
@@ -112,16 +111,19 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
     while( e_phi > 2.*starlightConstants::pi ) e_phi-= 2.*starlightConstants::pi;
 	//
 	if ( _bbs.targetBeam().A()!=1 ) {cout<<"DVCS is NOT yet defined for non-protons!!!"<<endl; exit(1);}
+
+	int repetition = 0;
 	   
-L116dvcs:	    
+L116dvcs:	 
+	repetition+=1;
+	if(repetition>=20) {cout<<"A proper u or t could not be selected. Try increasing Q2"<<endl; exit(1);} 
+
 	//Use dsig/dt= exp(-_VMbslope*t) for heavy VM
     double bslope_tdist = _VMbslope; 
 	xtest = _randy.Rndom(); 
 	deltak = (-1./bslope_tdist)*log(xtest);
 	double u_or_t = -1.0*abs(deltak);
-	//cout<<"u_or_t: "<<u_or_t<<endl;
-
-
+	
 	//rotate to put  gamma--> <--p  reaction along one axis
 	double theta_pgamma = atan(sqrt(target_px*target_px + target_py*target_py)/target_pz);	
 	double phi_pgamma = 0.0;
@@ -134,7 +136,6 @@ L116dvcs:
 	double theta_scatter = 0.0;
 	double fsphoton_ptot = 0.0;
 	double backwards_forwards = 1.0;
-
 	//the variables in the following calculations are dummy variables introduced for brevity
 	if(_backwardsProduction)
 	{
@@ -145,7 +146,7 @@ L116dvcs:
     	double d = u_or_t;
     	double f = target_E;
     	double g = sqrt(target_px*target_px + target_py*target_py + target_pz*target_pz);
-		costheta_scatter = (sqrt(f*f*g*g*pow((-8.0*a*a + 4.0*a*c - 4.0*a*d + 8.0*b*b*c),2) - 4.0*g*g*(4.0*a*a - 4.0*a*c + 4.0*a*d - 4.0*b*b*c + c*c - 2.0*c*d + d*d)*(4.0*a*a*f*f + b*b*(-c*c) + 2.0*b*b*c*d - 4.0*b*b*c*f*f - b*b*d*d)) - f*g*(-8.0*a*a + 4.0*a*c - 4.0*a*d + 8.0*b*b*c))/(2.0*g*g*(4.0*a*a - 4.0*a*c + 4.0*a*d - 4.0*b*b*c + c*c - 2.0*c*d + d*d));
+		costheta_scatter = (sqrt(f*f*g*g*pow((-8.0*a*a + 4.0*a*c - 4.0*a*d + 8.0*b*b*c),2) - 4.0*g*g*(4.0*a*a - 4.0*a*c + 4.0*a*d - 4.0*b*b*c + c*c - 2.0*c*d + d*d)*(4.0*a*a*f*f - b*b*(c*c) + 2.0*b*b*c*d - 4.0*b*b*c*f*f - b*b*d*d)) - f*g*(-8.0*a*a + 4.0*a*c - 4.0*a*d + 8.0*b*b*c))/(2.0*g*g*(4.0*a*a - 4.0*a*c + 4.0*a*d - 4.0*b*b*c + c*c - 2.0*c*d + d*d));
 		theta_scatter = acos(costheta_scatter);
 		fsphoton_ptot = (pow(starlightConstants::protonMass,2.) - (u_or_t))/(2.0*(target_E - target_ptot*cos(theta_scatter)));
 	}
@@ -160,7 +161,7 @@ L116dvcs:
 		theta_scatter = acos(costheta_scatter);
 		fsphoton_ptot = (-1.0*u_or_t - Q2)/(2.0*(Egam - target_ptot*cos(theta_scatter)));
 	}
-	if(costheta_scatter>1.0){goto L116dvcs;}
+	if(abs(costheta_scatter)>1.0 || theta_scatter!=theta_scatter) goto L116dvcs;
 	//
 
 	//final-state photon:
@@ -172,7 +173,7 @@ L116dvcs:
 	double newion_px_rot = -1.0*fsphoton_px_rot;
 	double newion_py_rot = -1.0*fsphoton_py_rot;
 	double newion_pz_rot = -1.0*fsphoton_pz_rot;
-	double newion_E = sqrt(newion_px_rot*newion_px_rot + newion_py_rot*newion_py_rot + newion_pz_rot*newion_pz_rot + pow(_beamNucleus*starlightConstants::protonMass,2.));
+	double newion_E = sqrt(newion_px_rot*newion_px_rot + newion_py_rot*newion_py_rot + newion_pz_rot*newion_pz_rot + pow(starlightConstants::protonMass,2.));
 	//rotate back into normal cm frame
 	double fsphoton_px = (fsphoton_px_rot*cos(theta_pgamma) + fsphoton_pz_rot*sin(theta_pgamma))*cos(phi_pgamma) - fsphoton_py_rot*sin(phi_pgamma);
 	double fsphoton_py = (fsphoton_px_rot*cos(theta_pgamma) + fsphoton_pz_rot*sin(theta_pgamma))*sin(phi_pgamma) + fsphoton_py_rot*cos(phi_pgamma);
