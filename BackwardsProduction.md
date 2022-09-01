@@ -73,3 +73,7 @@ include/gammaavm.h
 include/starlightpythia.h
 include/pythiadecayer.h
 ```
+### Updated kinematics:
+```
+src/gammaavm.cpp
+```
