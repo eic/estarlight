@@ -316,6 +316,13 @@ add_custom_command (TARGET Starlib POST_BUILD COMMAND touch ARGS slight.txt)
 add_custom_command (TARGET Starlib POST_BUILD COMMAND cp ARGS slight.txt slight.txt.bak)
 add_custom_command (TARGET Starlib POST_BUILD COMMAND echo ARGS '' > slight.txt )
 
+# Installation of targets
+install(TARGETS e_starlight ${THIS_LIB}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
 
 message(STATUS "Cmake did not find any errors. run 'make' to build the project.")
 message(STATUS "On multi-core machines 'make -j#', where # is the number of parallel jobs, can speedup compilation considerably.")
