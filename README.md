@@ -38,7 +38,11 @@ cmake ~/the_path/estarlight
 ```
 (g)make
 ```
-  * The compilation will produce an executable to run: estarlight
+* The compilation will produce an executable to run: estarlight
+* Install the code to `CMAKE_INSTALL_PREFIX` (defaults to `/usr/local`)
+```
+(g)make install
+```
 
 * Set up the desired running conditions in the input file:
 ```
