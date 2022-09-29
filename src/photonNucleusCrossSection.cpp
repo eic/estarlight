@@ -746,8 +746,8 @@ photonNucleusCrossSection::integrated_Q2_dep(double const Egamma, double const _
   double ln_min = std::log(Q2_min);
   double ratio = std::log(Q2_max/Q2_min)/nstep;
   double g_int = 0;
-  double g_int2 = 0 ;
-  double g_int3 = 0;
+  //double g_int2 = 0 ;
+  //double g_int3 = 0;
   //cout<<"*** Lomnitz **** Energy "<<Egamma<<" limits "<<Q2_min*1E9<<" x 1E-9 -  "<<Q2_max<<endl;
   for ( int ii = 0 ; ii< nstep; ++ii){
     double x1 =  std::exp(ln_min+(double)ii*ratio);
@@ -755,8 +755,8 @@ photonNucleusCrossSection::integrated_Q2_dep(double const Egamma, double const _
     double x2 =  (x3+x1)/2.;
     //cout<<"ii : "<<x1<<" "<<x2<<" "<<x3<<endl;
     g_int += (x3-x1)*( g(Egamma,x3)+g(Egamma,x1) +4.*g(Egamma,x2));
-    g_int2 += (x3-x1)*( photonFlux(Egamma,x3)+photonFlux(Egamma,x1) +4.*photonFlux(Egamma,x2));
-    g_int3 += (x3-x1)*( getcsgA_Q2_dep(x3)+getcsgA_Q2_dep(x1) +4.*getcsgA_Q2_dep(x2));
+    //g_int2 += (x3-x1)*( photonFlux(Egamma,x3)+photonFlux(Egamma,x1) +4.*photonFlux(Egamma,x2));
+    //g_int3 += (x3-x1)*( getcsgA_Q2_dep(x3)+getcsgA_Q2_dep(x1) +4.*getcsgA_Q2_dep(x2));
   }
   //return g_int2*g_int3/36.; 
   //return g_int2/6.;
