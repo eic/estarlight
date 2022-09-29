@@ -38,7 +38,11 @@ cmake ~/the_path/estarlight
 ```
 (g)make
 ```
-  * The compilation will produce an executable to run: estarlight
+* The compilation will produce an executable to run: estarlight
+* Install the code to `CMAKE_INSTALL_PREFIX` (defaults to `/usr/local`)
+```
+(g)make install
+```
 
 * Set up the desired running conditions in the input file:
 ```
@@ -127,3 +131,4 @@ To compile eSTARlight with HepMC3 output enabled, use:
 ```
 cmake /pathto/estarlight -DENABLE_HEPMC3=ON -DHepMC3_DIR=/pathto/hepmc3/hepmc3-install
 ```
+NOTE: running `make install` on your eSTARlight build when using HepMC3 may result in errors on some systems. If this is the case, it is recommended to not install eSTARlight when using HepMC3 and simply run the code from the build directory.
