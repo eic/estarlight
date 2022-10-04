@@ -116,14 +116,15 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
 	   
 L116dvcs:	 
 	repetition+=1;
-	if(repetition>=20) {cout<<"A proper u or t could not be selected. Try increasing Q2"<<endl; exit(1);} 
+	if(repetition>=10000) {cout<<Egam+target_E<<endl;cout<<"A proper u or t could not be selected. Try increasing Q2"<<endl; exit(1);} 
 
 	//Use dsig/dt= exp(-_VMbslope*t) for heavy VM
     double bslope_tdist = _VMbslope; 
 	xtest = _randy.Rndom(); 
 	deltak = (-1./bslope_tdist)*log(xtest);
-	double u_or_t = -1.0*abs(deltak);
-	
+	double u_or_t =-1.0*abs(deltak);
+	//u_or_t = repetition*u_or_t;
+
 	//rotate to put  gamma--> <--p  reaction along one axis
 	double theta_pgamma = atan(sqrt(target_px*target_px + target_py*target_py)/target_pz);	
 	double phi_pgamma = 0.0;
@@ -131,38 +132,36 @@ L116dvcs:
 	else phi_pgamma = starlightConstants::pi - atan(target_py/abs(target_px));
 	//double target_pz_rot = sqrt(target_px*target_px + target_py*target_py + target_pz*target_pz);
 	//calculate scattering angle from u
-	double target_ptot = sqrt(target_px*target_px + target_py*target_py + target_pz*target_pz);
+	double ptot = sqrt(target_px*target_px + target_py*target_py + target_pz*target_pz); //this is the same for both the target and photon
 	double costheta_scatter = 0.0;
 	double theta_scatter = 0.0;
 	double fsphoton_ptot = 0.0;
 	double backwards_forwards = 1.0;
+	double mp2 = pow(starlightConstants::protonMass,2.);
+	double E1 = target_E;
+	double E2 = Egam;
 	//the variables in the following calculations are dummy variables introduced for brevity
 	if(_backwardsProduction)
 	{
 		backwards_forwards = -1.0;
-		double a = (0.5)*(pow(starlightConstants::protonMass,2.)- u_or_t -Q2);
-    	double b = Egam;
-    	double c = pow(starlightConstants::protonMass,2.);
-    	double d = u_or_t;
-    	double f = target_E;
-    	double g = sqrt(target_px*target_px + target_py*target_py + target_pz*target_pz);
-		costheta_scatter = (sqrt(f*f*g*g*pow((-8.0*a*a + 4.0*a*c - 4.0*a*d + 8.0*b*b*c),2) - 4.0*g*g*(4.0*a*a - 4.0*a*c + 4.0*a*d - 4.0*b*b*c + c*c - 2.0*c*d + d*d)*(4.0*a*a*f*f - b*b*(c*c) + 2.0*b*b*c*d - 4.0*b*b*c*f*f - b*b*d*d)) - f*g*(-8.0*a*a + 4.0*a*c - 4.0*a*d + 8.0*b*b*c))/(2.0*g*g*(4.0*a*a - 4.0*a*c + 4.0*a*d - 4.0*b*b*c + c*c - 2.0*c*d + d*d));
+		double G = mp2 - u_or_t - Q2;
+		double D1 = -2.0*(G*G - G*mp2 + G*u_or_t - 4.0*E2*E2*mp2);
+  		double D2 = G*G - 2.0*G*mp2 + 2.0*G*u_or_t - 4.0*E2*E2*mp2 + mp2*mp2 - 2.0*mp2*u_or_t + u_or_t*u_or_t;
+  		double D3 = G*G*E1*E1 - E2*E2*mp2*mp2 + 2.0*E2*E2*mp2*u_or_t - 4.0*E2*E2*mp2*E1*E1 - E2*E2*u_or_t*u_or_t;
+		costheta_scatter = (-E1*D1 + sqrt(E1*E1*D1*D1 - 4.0*D2*D3))/(2.0*ptot*D2);
 		theta_scatter = acos(costheta_scatter);
-		fsphoton_ptot = (pow(starlightConstants::protonMass,2.) - (u_or_t))/(2.0*(target_E - target_ptot*cos(theta_scatter)));
+		fsphoton_ptot = (pow(starlightConstants::protonMass,2.) -  u_or_t)/(2.0*(E1 - ptot*cos(theta_scatter)));
 	}
 	else{
-		double b = target_E;
-    	double c = u_or_t;
-    	double d = Q2;
-    	double f = Egam;
-    	double g = target_ptot;
-    	double h = pow(starlightConstants::protonMass,2.);
-		costheta_scatter = (-1.0*sqrt(f*f*g*g*pow((-8.0*b*b*h - 2.0*c*d - 4.0*c*h + 4.0*d*h + 8.0*h*h),2) - 4.0*g*g*(4.0*b*b*h - d*d - 4.0*d*h - 4.0*h*h)*(b*b*c*c + 2.0*b*b*c*d + b*b*d*d + 4.0*b*b*f*f*h - c*c*f*f + 4.0*c*f*f*h - 4.0*f*f*h*h)) - f*g*(-8.0*b*b*h - 2.0*c*d - 4.0*c*h + 4.0*d*h + 8.0*h*h))/(2.0*g*g*(4.0*b*b*h - d*d - 4.0*d*h - 4.0*h*h));
+		double C1 = 2.0*(-4.0*E1*E1*mp2 - u_or_t*Q2 - 2.0*u_or_t*mp2 + 2.0*Q2*mp2 + 4.0*mp2*mp2);
+		double C2 = 4.0*E1*E1*mp2 - Q2*Q2 - 4.0*Q2*mp2 - 4.0*mp2*mp2;
+		double C3 = E1*E1*(u_or_t*u_or_t + 2.0*u_or_t*Q2 + Q2*Q2 + 4.0*E2*E2*mp2) + E2*E2*(4.0*u_or_t*mp2 - 4.0*mp2*mp2 - u_or_t*u_or_t);
+		costheta_scatter = (-E2*C1 - sqrt(E2*E2*C1*C1 - 4.0*C2*C3))/(2.0*ptot*C2);
 		theta_scatter = acos(costheta_scatter);
-		fsphoton_ptot = (-1.0*u_or_t - Q2)/(2.0*(Egam - target_ptot*cos(theta_scatter)));
+		fsphoton_ptot = (-u_or_t - Q2)/(2.0*(E2 - ptot*cos(theta_scatter)));
 	}
-	if(abs(costheta_scatter)>1.0 || theta_scatter!=theta_scatter) goto L116dvcs;
-	//
+	if(abs(costheta_scatter)>1.0 || theta_scatter!=theta_scatter) {cout<<costheta_scatter<<endl;goto L116dvcs;}
+
 
 	//final-state photon:
 	double fsphoton_phi_rot = 2.*starlightConstants::pi*_randy.Rndom();

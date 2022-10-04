@@ -213,7 +213,7 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	case PHOTON:
 	  _slopeParameter=5.45;
 	  _vmPhotonCoupling=0.0;
-	  _vmQ2Power_c1 = 1.54;
+	  _vmQ2Power_c1 = 4.0;
 	  _vmQ2Power_c2 = 0.0; // [GeV^{-2}]
 	  _ANORM=0.0;
 	  _BNORM=0.0;
@@ -221,7 +221,7 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _channelMass  = 0.0;
 	  _width        = 0.0;
 	  if(_backwardsProduction){
-	  	_slopeParameter = 5.45;  // [(GeV/c)^{-2}]
+	  	_slopeParameter = 21.8;  // [(GeV/c)^{-2}]
 	  }
 	  break;
 	default:
@@ -469,8 +469,7 @@ photonNucleusCrossSection::getcsgA_Q2_dep(const double Q2)
   double const n = vmQ2Power(Q2);
   double thiscsgA_Q2_dep = 0.0;
   if(_productionMode!=E_DVCS) thiscsgA_Q2_dep = std::pow(mv2/(mv2+Q2),n);
-  else if(Q2<2) thiscsgA_Q2_dep = exp(1.0-Q2);     //VCS
-  else thiscsgA_Q2_dep  = 1.07*std::pow(1.0/Q2,n); //DVCS
+  else thiscsgA_Q2_dep = std::pow(1.0/(Q2+7.67),n); //DVCS
   return thiscsgA_Q2_dep;
 }
 
@@ -767,8 +766,8 @@ photonNucleusCrossSection::integrated_Q2_dep(double const Egamma, double const _
   double ln_min = std::log(Q2_min);
   double ratio = std::log(Q2_max/Q2_min)/nstep;
   double g_int = 0;
-  double g_int2 = 0 ;
-  double g_int3 = 0;
+  //double g_int2 = 0 ;
+  //double g_int3 = 0;
   //cout<<"*** Lomnitz **** Energy "<<Egamma<<" limits "<<Q2_min*1E9<<" x 1E-9 -  "<<Q2_max<<endl;
   for ( int ii = 0 ; ii< nstep; ++ii){
     double x1 =  std::exp(ln_min+(double)ii*ratio);
@@ -776,8 +775,8 @@ photonNucleusCrossSection::integrated_Q2_dep(double const Egamma, double const _
     double x2 =  (x3+x1)/2.;
     //cout<<"ii : "<<x1<<" "<<x2<<" "<<x3<<endl;
     g_int += (x3-x1)*( g(Egamma,x3)+g(Egamma,x1) +4.*g(Egamma,x2));
-    g_int2 += (x3-x1)*( photonFlux(Egamma,x3)+photonFlux(Egamma,x1) +4.*photonFlux(Egamma,x2));
-    g_int3 += (x3-x1)*( getcsgA_Q2_dep(x3)+getcsgA_Q2_dep(x1) +4.*getcsgA_Q2_dep(x2));
+    //g_int2 += (x3-x1)*( photonFlux(Egamma,x3)+photonFlux(Egamma,x1) +4.*photonFlux(Egamma,x2));
+    //g_int3 += (x3-x1)*( getcsgA_Q2_dep(x3)+getcsgA_Q2_dep(x1) +4.*getcsgA_Q2_dep(x2));
   }
   //return g_int2*g_int3/36.; 
   //return g_int2/6.;
@@ -789,7 +788,7 @@ photonNucleusCrossSection::integrated_Q2_dep(double const Egamma, double const _
 double 
 photonNucleusCrossSection::integrated_x_section(double const Egamma, double const _min, double const _max)
 {
-  //Integration over full limits gives more accurate result
+	//Integration over full limits gives more accurate result
   double Q2_min =  std::pow(starlightConstants::mel*Egamma,2.0)/(_electronEnergy*(_electronEnergy-Egamma));
   //double Q2_max = 2.*Egamma/_targetRadii - _wMax*_wMax;
   double Q2_max  = 4.*_electronEnergy*(_electronEnergy-Egamma);
@@ -1009,10 +1008,8 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			sigmagp_r*=1.E-10*2.1*exp(0.74*log(Wgp)); 
 			break;
 		case PHOTON:
-			//sigmagp_r=pow(Wgp,0.74);
-			//sigmagp_r=pow(Wgp,0.77);
 			sigmagp_r=exp(0.74*log(Wgp));
-			if(_backwardsProduction)sigmagp_r=exp(0.74*log(Wgp));
+			if(_backwardsProduction)sigmagp_r=170.0*exp(-4.0*log(Wgp)); //1.7 barns
 			break;                                                      
 		default: cout<< "!!!  ERROR: Unidentified Vector Meson: "<< _particleType <<endl;
 		}                                                                  
