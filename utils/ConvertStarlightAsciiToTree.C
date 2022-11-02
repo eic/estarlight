@@ -40,12 +40,16 @@ struct source_electron
 };
 TLorentzVector* make_beam_particle(double lorentz, int Z, int A,int dir){
   double mass;
-  if( std::abs(Z) == 1 )
+  if( std::abs(A) == 0 )
+  	{cout << "Considering the electron mass." <<endl;
     mass = 0.000510998928; //Electron GeV/c^2
-  else
+  }
+  else{
     mass = A*0.938272046; //A*proton GeV/c^2
+  cout << "Considering the proton mass."<<endl; }
   double E = lorentz*mass;
   double pz = std::sqrt(E*E-mass*mass);
+  cout<<"Mass = "<<mass<<endl;
   TLorentzVector* to_ret = new TLorentzVector(0,0,dir*pz, E);
   return to_ret;
   
@@ -251,6 +255,7 @@ void ConvertStarlightAsciiToTree(const char* inFileName  = "slight.out",
 		else if (particleCode == 11|| particleCode==12) {mass = 0.493677;} // charged kaon
 		else if (particleCode == 10 || particleCode == 16)  {mass = 0.497614;} // neutral kaon
 		else if (particleCode == 14)	{mass = 0.93827231;} // proton
+		else if (particleCode == 1) {mass = 0;} //photon
 		else {
 			cout << "unknown daughter particle (ID = " << particleCode << "), please modify code to accomodate" << endl;
 			mass = -1.0;
