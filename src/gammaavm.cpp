@@ -1061,20 +1061,20 @@ void Gammaavectormeson::pickwEgamq2(double &W, double &cmsEgamma, double &target
 	  Q2 = std::exp(ln_min+xQ2*ratio);
 	  IQ2 = int(_VMnumQ2*xQ2);	
 	  // Load from look-up table. Use linear interpolation to evaluate at Q2
-		double Q2_bin_0_1 = std::exp(ln_min+1*ratio/_VMnumQ2) - (std::exp(ln_min+0*ratio/_VMnumQ2));
-		double x_1 = std::exp(ln_min+IQ2*ratio/_VMnumQ2);
-		double x_2 = std::exp(ln_min+(1+IQ2)*ratio/_VMnumQ2);
-		double x_3 = std::exp(ln_min+(2+IQ2)*ratio/_VMnumQ2);
-		double scale_max = 0.0001;
-		for(int ii = 0; ii < _VMnumQ2; ii++){
-			double x_2_ii = std::exp(ln_min+(1+ii)*ratio/_VMnumQ2);
-			double x_1_ii = std::exp(ln_min+ii*ratio/_VMnumQ2);
-			if((photon_flux[ii+2]*(x_2_ii-x_1_ii)/Q2_bin_0_1 )>scale_max){
-				scale_max = (photon_flux[ii+2]*(x_2_ii-x_1_ii)/Q2_bin_0_1);
-			}
-		}
-		double y_1 = photon_flux[IQ2+2] *(x_2-x_1)/Q2_bin_0_1/scale_max;
-		double y_2 = photon_flux[IQ2+3] *(x_3-x_2)/Q2_bin_0_1/scale_max;
+	  double Q2_bin_0_1 = std::exp(ln_min+1*ratio/_VMnumQ2) - (std::exp(ln_min+0*ratio/_VMnumQ2));
+	  double x_1 = std::exp(ln_min+IQ2*ratio/_VMnumQ2);
+	  double x_2 = std::exp(ln_min+(1+IQ2)*ratio/_VMnumQ2);
+	  double x_3 = std::exp(ln_min+(2+IQ2)*ratio/_VMnumQ2);
+	  double scale_max = 0.0001;
+	  for(int ii = 0; ii < _VMnumQ2; ii++){
+	  	double x_2_ii = std::exp(ln_min+(1+ii)*ratio/_VMnumQ2);
+	  	double x_1_ii = std::exp(ln_min+ii*ratio/_VMnumQ2);
+	  	if((photon_flux[ii+2]*(x_2_ii-x_1_ii)/Q2_bin_0_1 )>scale_max){
+	  		scale_max = (photon_flux[ii+2]*(x_2_ii-x_1_ii)/Q2_bin_0_1);
+	  	}
+	  }
+	  double y_1 = photon_flux[IQ2+2] *(x_2-x_1)/Q2_bin_0_1/scale_max;
+	  double y_2 = photon_flux[IQ2+3] *(x_3-x_2)/Q2_bin_0_1/scale_max;
 	  double m = (y_2 - y_1)/(x_2 - x_1);
 	  double c = y_1-m*x_1;
 	  double y = m*Q2+c;
