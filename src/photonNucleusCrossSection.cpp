@@ -221,7 +221,8 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _channelMass  = 0.0;
 	  _width        = 0.0;
 	  if(_backwardsProduction){
-	  	_slopeParameter = 21.8;  // [(GeV/c)^{-2}]
+	  	_slopeParameter = 2.4;  // Model 1 [(GeV/c)^{-2}]
+	  	//_slopeParameter = 21.8;  // Model 2 [(GeV/c)^{-2}]
 	  }
 	  break;
 	default:
@@ -469,7 +470,7 @@ photonNucleusCrossSection::getcsgA_Q2_dep(const double Q2)
   double const n = vmQ2Power(Q2);
   double thiscsgA_Q2_dep = 0.0;
   if(_productionMode!=E_DVCS) thiscsgA_Q2_dep = std::pow(mv2/(mv2+Q2),n);
-  else thiscsgA_Q2_dep = std::pow(1.0/(Q2+7.67),n); //DVCS
+  else thiscsgA_Q2_dep = std::pow(1.0/(Q2+2.77),n); //DVCS
   return thiscsgA_Q2_dep;
 }
 
@@ -1009,7 +1010,10 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			break;
 		case PHOTON:
 			sigmagp_r=exp(0.74*log(Wgp));
-			if(_backwardsProduction)sigmagp_r=170.0*exp(-4.0*log(Wgp)); //1.7 barns
+			//if(_backwardsProduction)sigmagp_r=170.0*exp(-4.0*log(Wgp)); //1.7 barns
+			if(_backwardsProduction)sigmagp_r=(1.E-4)*1.5*pow(Wgp*Wgp-protonMass*protonMass,-2.0);
+			//if(_backwardsProduction)sigmagp_r=thresholdScaling*(1.E-4)*3.2*pow(Wgp*Wgp-protonMass*protonMass,-2.0);
+			if(Wgp<2.0) sigmagp_r=0.0;
 			break;                                                      
 		default: cout<< "!!!  ERROR: Unidentified Vector Meson: "<< _particleType <<endl;
 		}                                                                  

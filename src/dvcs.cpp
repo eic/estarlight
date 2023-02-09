@@ -87,7 +87,8 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
  	double phi1;
 	double px1,py1;
 	double xtest;
-	double deltak;
+	double u;
+	double t;
 
 	double target_px, target_py, target_pz, target_E;
 
@@ -105,7 +106,6 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
     double betaz_cm = ((gamma_pz+target_pz)/(Egam+target_E));
     transform (betax_cm,betay_cm,betaz_cm,target_E,target_px,target_py,target_pz,isbadevent);
     transform (betax_cm,betay_cm,betaz_cm,Egam, px1, py1, gamma_pz, isbadevent);
-      
 	e_phi = starlightConstants::pi+phi1;
 
     while( e_phi > 2.*starlightConstants::pi ) e_phi-= 2.*starlightConstants::pi;
@@ -114,16 +114,8 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
 
 	int repetition = 0;
 	   
-L116dvcs:	 
-	repetition+=1;
-	if(repetition>=10000) {cout<<Egam+target_E<<endl;cout<<"A proper u or t could not be selected. Try increasing Q2"<<endl; exit(1);} 
-
-	//Use dsig/dt= exp(-_VMbslope*t) for heavy VM
-    double bslope_tdist = _VMbslope; 
-	xtest = _randy.Rndom(); 
-	deltak = (-1./bslope_tdist)*log(xtest);
-	double u_or_t =-1.0*abs(deltak);
-	//u_or_t = repetition*u_or_t;
+ 
+	L116dvcs:
 
 	//rotate to put  gamma--> <--p  reaction along one axis
 	double theta_pgamma = atan(sqrt(target_px*target_px + target_py*target_py)/target_pz);	
@@ -137,31 +129,53 @@ L116dvcs:
 	double theta_scatter = 0.0;
 	double fsphoton_ptot = 0.0;
 	double backwards_forwards = 1.0;
-	double mp2 = pow(starlightConstants::protonMass,2.);
 	double E1 = target_E;
 	double E2 = Egam;
-	//the variables in the following calculations are dummy variables introduced for brevity
+	double mp2 = pow(starlightConstants::protonMass,2.);
+	
+	// For backward DVCS, u does not start at 0 and become increasingly negative like t does. 
+	//   Instead, u starts at mp2 and drops to 0, then becomes increasingly negative. 
+	//   Therefore, the backwards limit occurs at the maximum u value which is closest to mp2
+	//   and the forward limit occurs when at the minimum u value when u is closer to negative infinity 
+	double umin  = (E1*Q2+E2*(2.0*mp2+Q2))*(-ptot-E1)/(mp2+Q2)+mp2; //forwards limit
+	double umax  = (E1*Q2+E2*(2.0*mp2+Q2))*(+ptot-E1)/(mp2+Q2)+mp2; //backwards limit
+
+	//shift these to just be negative
+	double shifted_umin = umin-mp2;
+	double shifted_umax = umax-mp2; 
+
+	//Use dsig/du= exp(-_VMbslope*u)
+	double bslope_udist = _VMbslope; 
+	double xmin = exp(bslope_udist*shifted_umax);
+    double xmax = exp(bslope_udist*shifted_umin);
+    xtest = xmin+(xmax-xmin)*_randy.Rndom(); 
+	u = mp2+(1./bslope_udist)*log(xtest);
+
+	//Use dsig/dt= exp(-_VMbslope*t)
+	double bslope_tdist = _VMbslope; 
+	t = mp2+(1./bslope_tdist)*log(xtest);
+	 
+	repetition+=1;
+
+
+	if(repetition>=10000) {cout<<"W="<<Egam+target_E<<", Q2="<<Q2<<", Egam="<<Egam<<", u="<<u<<", t="<<t<<", ptot="<<ptot<<endl;
+		cout<<"A proper u or t could not be selected. Try increasing Q2"<<endl; exit(1);
+	}
+
 	if(_backwardsProduction)
 	{
 		backwards_forwards = -1.0;
-		double G = mp2 - u_or_t - Q2;
-		double D1 = -2.0*(G*G - G*mp2 + G*u_or_t - 4.0*E2*E2*mp2);
-  		double D2 = G*G - 2.0*G*mp2 + 2.0*G*u_or_t - 4.0*E2*E2*mp2 + mp2*mp2 - 2.0*mp2*u_or_t + u_or_t*u_or_t;
-  		double D3 = G*G*E1*E1 - E2*E2*mp2*mp2 + 2.0*E2*E2*mp2*u_or_t - 4.0*E2*E2*mp2*E1*E1 - E2*E2*u_or_t*u_or_t;
-		costheta_scatter = (-E1*D1 + sqrt(E1*E1*D1*D1 - 4.0*D2*D3))/(2.0*ptot*D2);
+		costheta_scatter = E1/ptot + ((u-mp2)*(mp2+Q2)/ptot)/(E1*Q2 + E2*(2.0*mp2+Q2));
 		theta_scatter = acos(costheta_scatter);
-		fsphoton_ptot = (pow(starlightConstants::protonMass,2.) -  u_or_t)/(2.0*(E1 - ptot*cos(theta_scatter)));
+		fsphoton_ptot = (mp2 - u)/(2.0*(E1 - ptot*cos(theta_scatter)));
 	}
 	else{
-		double C1 = 2.0*(-4.0*E1*E1*mp2 - u_or_t*Q2 - 2.0*u_or_t*mp2 + 2.0*Q2*mp2 + 4.0*mp2*mp2);
-		double C2 = 4.0*E1*E1*mp2 - Q2*Q2 - 4.0*Q2*mp2 - 4.0*mp2*mp2;
-		double C3 = E1*E1*(u_or_t*u_or_t + 2.0*u_or_t*Q2 + Q2*Q2 + 4.0*E2*E2*mp2) + E2*E2*(4.0*u_or_t*mp2 - 4.0*mp2*mp2 - u_or_t*u_or_t);
-		costheta_scatter = (-E2*C1 - sqrt(E2*E2*C1*C1 - 4.0*C2*C3))/(2.0*ptot*C2);
+		costheta_scatter = (E2 + ((mp2+Q2)*(Q2+t))/(E1*Q2 + E2*(2.0*mp2+Q2)))/ptot;
 		theta_scatter = acos(costheta_scatter);
-		fsphoton_ptot = (-u_or_t - Q2)/(2.0*(E2 - ptot*cos(theta_scatter)));
+		fsphoton_ptot = (-Q2 - t)/(2.0*(E2 - ptot*cos(theta_scatter)));
 	}
-	if(abs(costheta_scatter)>1.0 || theta_scatter!=theta_scatter) {cout<<costheta_scatter<<endl;goto L116dvcs;}
 
+	if(abs(costheta_scatter)>1.0 || theta_scatter!=theta_scatter)  goto L116dvcs;
 
 	//final-state photon:
 	double fsphoton_phi_rot = 2.*starlightConstants::pi*_randy.Rndom();
@@ -282,10 +296,24 @@ void Dvcs::pickEgamq2(double &cmsEgamma, double &targetEgamma,
 	  Q2 = std::exp(ln_min+xQ2*ratio);
 	  IQ2 = int(_VMnumQ2*xQ2);	
 	  // Load from look-up table. Use linear interpolation to evaluate at Q2
-	  double y_1 = photon_flux[IQ2+2];
+	  /*double y_1 = photon_flux[IQ2+2];
 	  double y_2 = photon_flux[IQ2+3];
 	  double x_1 = std::exp(ln_min+IQ2*ratio/_VMnumQ2);
+	  double x_2 = std::exp(ln_min+(1+IQ2)*ratio/_VMnumQ2);*/
+	  double Q2_bin_0_1 = std::exp(ln_min+1*ratio/_VMnumQ2) - (std::exp(ln_min+0*ratio/_VMnumQ2));
+	  double x_1 = std::exp(ln_min+IQ2*ratio/_VMnumQ2);
 	  double x_2 = std::exp(ln_min+(1+IQ2)*ratio/_VMnumQ2);
+	  double x_3 = std::exp(ln_min+(2+IQ2)*ratio/_VMnumQ2);
+	  double scale_max = 0.0001;
+	  for(int ii = 0; ii < _VMnumQ2; ii++){
+		double x_2_ii = std::exp(ln_min+(1+ii)*ratio/_VMnumQ2);
+		double x_1_ii = std::exp(ln_min+ii*ratio/_VMnumQ2);
+		if((photon_flux[ii+2]*(x_2_ii-x_1_ii)/Q2_bin_0_1 )>scale_max){
+			scale_max = (photon_flux[ii+2]*(x_2_ii-x_1_ii)/Q2_bin_0_1);
+		}
+	  }
+	  double y_1 = photon_flux[IQ2+2] *(x_2-x_1)/Q2_bin_0_1/scale_max;
+	  double y_2 = photon_flux[IQ2+3] *(x_3-x_2)/Q2_bin_0_1/scale_max;
 	  double m = (y_2 - y_1)/(x_2 - x_1);
 	  double c = y_1-m*x_1;
 	  double y = m*Q2+c;
@@ -348,6 +376,7 @@ eXEvent Dvcs::e_produceEvent()
 		   Q2, gamma_pz, gamma_pt, //photon infor in CMS frame
 		   e_E, e_theta);	 //electron info in target frame  
 	  //
+	  //cout<<"this W = "<<sqrt(cmsEgamma*)
 	  momenta(cmsEgamma, Q2, gamma_pz, gamma_pt, //input
 		  rapidity, E, momx, momy, momz, //final-state photon
 		  t_px, t_py, t_pz, t_E, //pomeron
