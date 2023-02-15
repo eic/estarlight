@@ -39,7 +39,7 @@
 #include "beambeamsystem.h"
 #include "inputParameters.h"
 
-class photonNucleusCrossSection {
+class photonNucleusCrossSection{
 
 public:
 
@@ -87,6 +87,7 @@ public:
 	double nepoint(const double Egamma,
 	               const double bmin);
 
+
 	double getPhotonNucleusSigma () const {return _photonNucleusSigma;}
 	void   setPhotonNucleusSigma (double sigma) {_photonNucleusSigma = sigma;}
 	
@@ -98,9 +99,12 @@ protected:
 	const double _wMax;
 	const double _yMax;
 
+
+
 	const double _beamLorentzGamma;
 
 	double _photonNucleusSigma; 
+
 
 	int    _printDef; 
         int    _impulseSelected;
@@ -113,6 +117,8 @@ private:
 	// copied from inputParameters
 	double                               _protonEnergy;
 	double                               _electronEnergy;
+	double                               _totalEnergy_lab;
+	double                               _totalEnergy_COM;
 	starlightConstants::particleTypeEnum _particleType;
 	int                                  _beamBreakupMode;     ///< breakup mode for beam particles
 	bool _backwardsProduction;
@@ -135,6 +141,8 @@ private:
 	double _maxPhotonEnergy;  ///< max photon energy in lab frame [GeV] (for vectormesons only)
 	double _cmsMinPhotonEnergy;
 	double _targetRadii;
+	double _maxW_GA;		  ///< max W_GA energy
+	double _minW_GA; 		  ///< min W_GA energy
 	
 };
 

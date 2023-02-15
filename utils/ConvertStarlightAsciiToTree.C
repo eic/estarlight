@@ -77,12 +77,13 @@ void ConvertStarlightAsciiToTree(const char* inFileName  = "slight.out",
 	std::map<string, int> set_up;
 	double photon_setup[5];
 	//
-	Float_t        q2, Egamma, vertex_t;
+	Float_t        q2, W, Egamma, vertex_t;
 	outTree->Branch("beam1","TLorentzVector", &beam1,            32000, -1);	
 	outTree->Branch("beam2","TLorentzVector", &beam2,            32000, -1);	
 	//
 	outTree->Branch("Egamma",         &Egamma, "Egamma/F");
 	outTree->Branch("Q2",         &q2, "q2/F");
+	outTree->Branch("W",          &W, "W/F");
 	outTree->Branch("t",         &vertex_t, "vertex_t/F");
 	outTree->Branch("Target","TLorentzVector", &target,            32000, -1);
 	outTree->Branch("source",    "TLorentzVector", &source,            32000, -1);
@@ -215,7 +216,11 @@ void ConvertStarlightAsciiToTree(const char* inFileName  = "slight.out",
 		*source = TLorentzVector(px, py, pz, E);
 
 		lineStream.clear();
-		//
+		// Four-momentum of the gamma-ion system started as four-momentum of the target.
+		double pxtot = tpx; 
+		double pytot = tpy;	
+		double pztot = tpz;	
+		double Etot = tE;
 		for (int i = 0; i < nmbTracks; ++i) {
 			// read tracks
 			int    particleCode;
@@ -228,13 +233,20 @@ void ConvertStarlightAsciiToTree(const char* inFileName  = "slight.out",
 			R__ASSERT(label == "TRACK:");
 			Double_t daughterMass = IDtoMass(particleCode);
 			if (daughterMass < 0) {break;}
+			/*Adding up the momenta and energies of every daughter particle produced to get the total four-momentum.*/
 			const double E = sqrt(  momentum[0] * momentum[0] + momentum[1] * momentum[1]
 			                      + momentum[2] * momentum[2] + daughterMass * daughterMass);
 			new ( (*daughterParticles)[i] ) TLorentzVector(momentum[0], momentum[1], momentum[2], E);
 			*parentParticle += *(static_cast<TLorentzVector*>(daughterParticles->At(i)));
-
+			// Distributing the components of the four-momentum of the system to 3d momentum vector and Energy.
+			pxtot += momentum[0];
+			pytot += momentum[1];
+			pztot += momentum[2];
+			Etot += E;
 			lineStream.clear();
 		}
+		W = sqrt(Etot * Etot - pxtot * pxtot - pytot * pytot - pztot * pztot); //Lorentz invariant.
+		
 		daughterParticles->Compress();
 		outTree->Fill();
 	}
