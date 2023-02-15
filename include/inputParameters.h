@@ -293,8 +293,6 @@ public:
 	 
 	void setProtonEnergy        (double v)    { _protonEnergy = v;            }  ///< sets proton energy 
 	void setElectronEnergy      (double v)    { _electronEnergy = v;          }  ///< sets electron energy
-	void setTotalEnergylab      (double v)    { _totalEnergy_lab =v;          }  ///< sets total lab energy
-	void setTotalEnergyCOM      (double v)    { _totalEnergy_COM =v;          }  ///< sets total COM energy
 	template<typename T>
 	inline bool setParameter(std::string expression);
 	
