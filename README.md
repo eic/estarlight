@@ -59,15 +59,15 @@ ELECTRON_BEAM_GAMMA = 9785 # 5GeV electrons from eRHIC
 ELECTRON_BEAM_GAMMA = 19569 #10GeV electrons from eRHIC
 ELECTRON_BEAM_GAMMA = 35225 #18GeV electrons from eRHIC
 ```
-  * Note: The constraints of the center-of-mass energy of the vitrual photon and the proton is set by:
+  * Note: The constraints on the center-of-mass energy of the vitrual photon and ion is set by:
 ```
 W_GA_MAX = Max value of W_gp that user can set and wants to use (GeV)
 W_GA_MIN = Min value of W_gp that user can set and wants to use (GeV)
 ```
  * For example:
  ```
- W_GA_MAX = 30 # W_gp will have a maximum value of 30 GeV. If W has not stopped sampling until 30 GeV, samples will be cut off promptly after 30 GeV is reached.
- W_GA_MIN = 2 # W_gp will start to sample from the minimum value of 2 GeV. Please note W_GA_MIN should not be greater than the center-of-mass energy of the electron and ion beams, which is the total energy supplied. It also has a threshold (energy of the products) where W would begin to sample when W_GA_MIN is set to be lower than the threshold. 
+ W_GA_MAX = 30 # W_gp will have a maximum value of 30 GeV.
+ W_GA_MIN = 2 # W_gp will start to sample from the minimum value of 2 GeV. W_GA_MIN should not be greater than the center-of-mass energy of the electron and ion beams.
 ```
   * For exclusive backward (u-channel) production, use:
 ```
