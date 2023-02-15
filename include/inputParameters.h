@@ -364,8 +364,6 @@ private:
 	parameter<double, VALIDITY_CHECK>          _ptBinWidthInterference;  ///< width of p_T bins for interference calculation [GeV/c]
 	parameter<double, VALIDITY_CHECK>          _protonEnergy;
 	parameter<double, VALIDITY_CHECK>          _electronEnergy;
-	parameter<double, VALIDITY_CHECK>          _totalEnergy_lab;		 ///<total energy in lab frame [GeV]
-	parameter<double, VALIDITY_CHECK>          _totalEnergy_COM;		 ///<total energy in the center-of-mass frame [GeV]
 	parameter<double, VALIDITY_CHECK>          _minGammaEnergy;          ///< minimum gamma energy in case of photo nuclear processes [GeV]
 	parameter<double, VALIDITY_CHECK>          _maxGammaEnergy;          ///< maximum gamma energy in case of photo nuclear processes [GeV]
 	parameter<double, VALIDITY_CHECK>          _minGammaQ2;              ///< minimum gamma Q2 in case of photo nuclear processes
