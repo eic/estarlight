@@ -102,7 +102,6 @@ protected:
 
 	double _photonNucleusSigma; 
 
-
 	int    _printDef; 
         int    _impulseSelected;
 	int    _quantumGlauber;  // from input parameter; 1 for Quantum Glauber, 0 for classical Glauber
@@ -114,8 +113,6 @@ private:
 	// copied from inputParameters
 	double                               _protonEnergy;
 	double                               _electronEnergy;
-	double                               _totalEnergy_lab;
-	double                               _totalEnergy_COM;
 	starlightConstants::particleTypeEnum _particleType;
 	int                                  _beamBreakupMode;     ///< breakup mode for beam particles
 	bool _backwardsProduction;
