@@ -14,7 +14,7 @@ TARGET_BEAM_GAMMA = 293.2 #275 GeV protons from eRHIC
 W_MAX = -1   #Max value of w from HERA
 W_MIN = -1    #Min value of w from HERA
 W_N_BINS = 50    #Bins i w
-W_GA_MAX = -1  #Max value of W_gp
+W_GA_MAX = -1  #Max value of W_gp (virtual photon+ion COM energy)
 W_GA_MIN = -1  #Min value of W_gp
 EGA_N_BINS = 400
 CUT_PT = 0 #Cut in pT? 0 = (no, 1 = yes)
