@@ -238,9 +238,7 @@ public:
 	starlightConstants::interactionTypeEnum interactionType      () const { return _interactionType; }  ///< returns interaction type
 	double protonEnergy                () const { return _protonEnergy.value(); }
 	double electronEnergy              () const { return _electronEnergy.value(); }
-	double totalEnergyLab              () const { return _totalEnergy_lab.value(); }
-	double totalEnergyCOM              () const { return _totalEnergy_COM.value(); }
-        double inputBranchingRatio         () const { return _inputBranchingRatio; }
+	double inputBranchingRatio         () const { return _inputBranchingRatio; }
 	double targetRadius                () const { return _targetR; }
 
         void setBaseFileName          (std::string v )  {  _baseFileName = v;     }
