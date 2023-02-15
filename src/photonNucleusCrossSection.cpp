@@ -55,8 +55,6 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _bbs               (bbsystem                                    ),
 	  _protonEnergy      (inputParametersInstance.protonEnergy()      ),
 	  _electronEnergy    (inputParametersInstance.electronEnergy()    ),
-	  _totalEnergy_lab   (inputParametersInstance.totalEnergyLab()    ),
-	  _totalEnergy_COM   (inputParametersInstance.totalEnergyCOM()    ),
 	  _particleType      (inputParametersInstance.prodParticleType()  ),
 	  _beamBreakupMode   (inputParametersInstance.beamBreakupMode()   ),
 	  _backwardsProduction(inputParametersInstance.backwardsProduction()),
