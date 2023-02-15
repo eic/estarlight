@@ -87,7 +87,6 @@ public:
 	double nepoint(const double Egamma,
 	               const double bmin);
 
-
 	double getPhotonNucleusSigma () const {return _photonNucleusSigma;}
 	void   setPhotonNucleusSigma (double sigma) {_photonNucleusSigma = sigma;}
 	
@@ -98,8 +97,6 @@ protected:
 	const double _wMin;
 	const double _wMax;
 	const double _yMax;
-
-
 
 	const double _beamLorentzGamma;
 
