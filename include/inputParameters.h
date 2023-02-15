@@ -319,11 +319,8 @@ private:
 	parameter<double, VALIDITY_CHECK>          _targetBeamLorentzGamma;       ///< Lorentz gamma factor of beam 2 in collider frame
 	parameter<double, VALIDITY_CHECK>          _maxW;                    ///< maximum mass W of produced hadronic system [GeV/c^2]
 	parameter<double, VALIDITY_CHECK>          _minW;                    ///< minimum mass W of produced hadronic system; if set to -1 default value is taken [GeV/c^2]
-	
 	parameter<double, VALIDITY_CHECK>          _maxW_GA;                 ///< maximum mass W of produced virtual photon and arbitrary nucleus system, has no maximum limit [GeV/c^2]
 	parameter<double, VALIDITY_CHECK>          _minW_GA;                 ///< minimum mass W of produced virtual photon and arbitrary nucleus system, should be no greater than COF energy of source + traget or code will terminate [GeV/c^2]
-
-
 	parameter<unsigned int, VALIDITY_CHECK>    _nmbWBins;                ///< number of W bins in lookup table
 	parameter<double, VALIDITY_CHECK>          _maxRapidity;             ///< maximum absolute value of rapidity
 	parameter<unsigned int, VALIDITY_CHECK>    _nmbRapidityBins;         ///< number of rapidity bins in lookup table
