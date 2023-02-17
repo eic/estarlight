@@ -135,8 +135,8 @@ private:
 	double _maxPhotonEnergy;  ///< max photon energy in lab frame [GeV] (for vectormesons only)
 	double _cmsMinPhotonEnergy;
 	double _targetRadii;
-	double _maxW_GA;		  ///< max W_GA energy
-	double _minW_GA; 		  ///< min W_GA energy
+	double _maxW_GP;		  ///< max W_GP energy
+	double _minW_GP; 		  ///< min W_GP energy
 	
 };
 

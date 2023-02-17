@@ -192,8 +192,8 @@ public:
 	double       cmsMinPhotonEnergy       () const { return _cmsMinPhotonEnergy;          }  ///< returns maximum photon energy 
 	double       maxW                  () const { return _maxW.value();                   }  ///< returns maximum mass W of produced hadronic system [GeV/c^2]
 	double       minW                  () const { return _minW.value();                   }  ///< returns minimum mass W of produced hadronic system [GeV/c^2]
-	double       maxW_GA               () const { return _maxW_GA.value();                }  ///< returns maximum W of produced virtual photon and arbitrary nucleus system [GeV/c^2]
-	double       minW_GA               () const { return _minW_GA.value();                }  ///< returns minimum W of produced virtual photon and arbitrary nuclues system [GeV/c^2]
+	double       maxW_GP               () const { return _maxW_GP.value();                }  ///< returns maximum W of produced virtual photon and nucleon system [GeV/c^2]
+	double       minW_GP               () const { return _minW_GP.value();                }  ///< returns minimum W of produced virtual photon and nucleon system [GeV/c^2]
 	unsigned int nmbWBins              () const { return _nmbWBins.value();               }  ///< returns number of W bins in lookup table
 	double       maxRapidity           () const { return _maxRapidity.value();            }  ///< returns maximum absolute value of rapidity
 	unsigned int nmbRapidityBins       () const { return _nmbRapidityBins.value();        }  ///< returns number of rapidity bins in lookup table
@@ -251,8 +251,8 @@ public:
 	//void setMaxPhotonEnergy       (double v)  {  _maxPhotonEnergy = v ;       }  ///< sets maximim photon energy
 	void setMaxW                  (double v)  {  _maxW = v;                   }  ///< sets maximum mass W of produced hadronic system [GeV/c^2]
 	void setMinW                  (double v)  {  _minW = v;                   }  ///< sets minimum mass W of produced hadronic system [GeV/c^2]
-	void setmaxW_GA                  (double v)  {  _maxW_GA = v;                   }  ///< sets maximum mass W of produced virtual photon and arbitrary nucleus system [GeV/c^2]
-	void setminW_GA                  (double v)  {  _minW_GA = v;                   }  ///< sets minimum mass W of produced virtual photon and arbitrary nucleus system [GeV/c^2]
+	void setmaxW_GP                  (double v)  {  _maxW_GP = v;                   }  ///< sets maximum mass W of produced virtual photon and nucleon system [GeV/c^2]
+	void setminW_GP                  (double v)  {  _minW_GP = v;                   }  ///< sets minimum mass W of produced virtual photon and nucleon system [GeV/c^2]
 	void setNmbWBins              (unsigned int v)  {  _nmbWBins = v;         }  ///< sets number of W bins in lookup table
 	void setMaxRapidity           (double v)  {  _maxRapidity = v;            }  ///< sets maximum absolute value of rapidity
 	void setNmbRapidityBins       (unsigned int v)  {  _nmbRapidityBins = v;  }  ///< sets number of rapidity bins in lookup table
@@ -319,8 +319,8 @@ private:
 	parameter<double, VALIDITY_CHECK>          _targetBeamLorentzGamma;       ///< Lorentz gamma factor of beam 2 in collider frame
 	parameter<double, VALIDITY_CHECK>          _maxW;                    ///< maximum mass W of produced hadronic system [GeV/c^2]
 	parameter<double, VALIDITY_CHECK>          _minW;                    ///< minimum mass W of produced hadronic system; if set to -1 default value is taken [GeV/c^2]
-	parameter<double, VALIDITY_CHECK>          _maxW_GA;                 ///< maximum mass W of produced virtual photon and arbitrary nucleus system, has no maximum limit [GeV/c^2]
-	parameter<double, VALIDITY_CHECK>          _minW_GA;                 ///< minimum mass W of produced virtual photon and arbitrary nucleus system, should be no greater than COF energy of source + traget or code will terminate [GeV/c^2]
+	parameter<double, VALIDITY_CHECK>          _maxW_GP;                 ///< maximum mass W of produced virtual photon and nucleon system, has no maximum limit [GeV/c^2]
+	parameter<double, VALIDITY_CHECK>          _minW_GP;                 ///< minimum mass W of produced virtual photon and nucleon system, should be no greater than COM energy of source + traget or code will terminate [GeV/c^2]
 	parameter<unsigned int, VALIDITY_CHECK>    _nmbWBins;                ///< number of W bins in lookup table
 	parameter<double, VALIDITY_CHECK>          _maxRapidity;             ///< maximum absolute value of rapidity
 	parameter<unsigned int, VALIDITY_CHECK>    _nmbRapidityBins;         ///< number of rapidity bins in lookup table
