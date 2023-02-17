@@ -912,7 +912,7 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 	// cross section. Wgp is the gamma-proton CM energy.
 	// Unit for cross section: fm**2
 	//If W_gp is not in the allowed region, i.e. W_GP_MIN < W_gp < W_GP_MAX, do not sample.
-  if(Wgp < _minW_GP || Wgp > _maxW_GP) return 0;
+  	if(Wgp < _minW_GP || Wgp > _maxW_GP) return 0;
 	double sigmagp_r=0.;
 
 	// Near the threshold CM energy (between WgpMin and WgpMax), 
