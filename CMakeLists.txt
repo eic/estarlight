@@ -243,6 +243,7 @@ set(SOURCES
   src/eventchannel.cpp
   src/gammaavm.cpp
   src/dvcs.cpp
+  src/pi0.cpp
   src/gammagammasingle.cpp
   src/photonNucleusCrossSection.cpp
   src/wideResonanceCrossSection.cpp
@@ -264,6 +265,7 @@ set(SOURCES
   src/e_wideResonanceCrossSection.cpp
   src/e_narrowResonanceCrossSection.cpp
   src/e_DVCSCrossSection.cpp
+  src/e_Pi0CrossSection.cpp
   src/e_starlight.cpp
   src/e_starlightStandalone.cpp
   )

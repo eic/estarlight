@@ -225,6 +225,20 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  	//_slopeParameter = 21.8;  // Model 2 [(GeV/c)^{-2}]
 	  }
 	  break;
+	case PIONNEUTRAL:
+	  _slopeParameter=5.45;
+	  _vmPhotonCoupling=0.0;
+	  _vmQ2Power_c1 = 4.0;
+	  _vmQ2Power_c2 = 0.0; // [GeV^{-2}]
+	  _ANORM=0.0;
+	  _BNORM=0.0;
+	  _defaultC=0.0;
+	  _channelMass  = starlightConstants::pionNeutralMass;
+	  _width        = 0.0;
+	  if(_backwardsProduction){
+	  	_slopeParameter = 4.2;  // [(GeV/c)^{-2}]
+	  }
+	  break;
 	default:
 		cout <<"No sigma constants parameterized for pid: "<<_particleType
 		     <<" GammaAcrosssection"<<endl;
@@ -469,8 +483,8 @@ photonNucleusCrossSection::getcsgA_Q2_dep(const double Q2)
   double const mv2 = getChannelMass()*getChannelMass();
   double const n = vmQ2Power(Q2);
   double thiscsgA_Q2_dep = 0.0;
-  if(_productionMode!=E_DVCS) thiscsgA_Q2_dep = std::pow(mv2/(mv2+Q2),n);
-  else thiscsgA_Q2_dep = std::pow(1.0/(Q2+2.77),n); //DVCS
+  if(_productionMode!=E_DVCS && _productionMode!=E_PI0) thiscsgA_Q2_dep = std::pow(mv2/(mv2+Q2),n);
+  else thiscsgA_Q2_dep = std::pow(1.0/(Q2+2.77),n); //DVCS & pi0 production
   return thiscsgA_Q2_dep;
 }
 
@@ -1014,6 +1028,13 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			if(_backwardsProduction)sigmagp_r=(1.E-4)*1.5*pow(Wgp*Wgp-protonMass*protonMass,-2.0);
 			//if(_backwardsProduction)sigmagp_r=thresholdScaling*(1.E-4)*3.2*pow(Wgp*Wgp-protonMass*protonMass,-2.0);
 			if(Wgp<2.0) sigmagp_r=0.0;
+			break;       
+		case PIONNEUTRAL:
+			sigmagp_r=exp(0.74*log(Wgp));
+			//if(_backwardsProduction)sigmagp_r=170.0*exp(-4.0*log(Wgp)); //1.7 barns
+			if(_backwardsProduction)sigmagp_r=(1.E-4)*1.26*pow(Wgp*Wgp-protonMass*protonMass,-2.8);
+			//if(_backwardsProduction)sigmagp_r=thresholdScaling*(1.E-4)*3.2*pow(Wgp*Wgp-protonMass*protonMass,-2.0);
+			if(Wgp<2.0) sigmagp_r=0.0;
 			break;                                                      
 		default: cout<< "!!!  ERROR: Unidentified Vector Meson: "<< _particleType <<endl;
 		}                                                                  
@@ -1181,7 +1202,7 @@ photonNucleusCrossSection::breitWigner(const double W,
 		ppi0=abs((_channelMass*_channelMass - pionNeutralMass * pionNeutralMass)/(2.0*W));
 	}
   
- 	if( _particleType==PHOTON ){  
+ 	if( _particleType==PHOTON || _particleType==PIONNEUTRAL ){  
 		nrbw_r=0.;
 		return nrbw_r;
 	}

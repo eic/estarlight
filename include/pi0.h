@@ -31,8 +31,8 @@
 ///////////////////////////////////////////////////////////////////////////
 
 
-#ifndef DVCS_H
-#define DVCS_H
+#ifndef PI0_H
+#define PI0_H
 
 
 #include <vector>
@@ -47,12 +47,12 @@
 //Now here for eSTARlight
 #include "photonNucleusCrossSection.h"
 
-class Dvcs : public eventChannel
+class Pi0 : public eventChannel
 {
   
  public:
-  Dvcs(const inputParameters& ipnut, beamBeamSystem& bbsystem);
-  virtual ~Dvcs();
+  Pi0(const inputParameters& ipnut, beamBeamSystem& bbsystem);
+  virtual ~Pi0();
   
   eXEvent e_produceEvent();
 
@@ -63,6 +63,10 @@ class Dvcs : public eventChannel
 	       double &rapidity, double &E,double &px,double &py,double &pz,
 	       double &t_px, double &t_py, double &t_pz, double &t_E,
 	       double &e_phi,int &tcheck);
+  void twoPhotonDecay(double  px0, double  py0, double  pz0,
+                           double& px1, double& py1, double& pz1,
+                           double& px2, double& py2, double& pz2,
+                           int&    iFbadevent);
   double _VMbslope;              
   double pseudoRapidity(double px, double py, double pz);
   double UfromCosTheta(double cosTheta, double W, double Q2);
@@ -90,13 +94,13 @@ class Dvcs : public eventChannel
   bool _backwardsProduction;
 };
 
-class e_Dvcs : public Dvcs
+class e_Pi0 : public Pi0
 {
  public:
-  e_Dvcs(const inputParameters& input, beamBeamSystem& bbsystem);
-  virtual ~e_Dvcs();
+  e_Pi0(const inputParameters& input, beamBeamSystem& bbsystem);
+  virtual ~e_Pi0();
 };
 
 
 
-#endif  // GAMMAAVM_H
+#endif  // GAMMAPI0_H

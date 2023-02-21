@@ -22,10 +22,10 @@
 // File and Version Information:
 // $Rev:: 1                           $: revision of last commit
 // $Author:: zsweger                  $: author of last commit
-// $Date:: 2022-07-29                #$: date of last commit
+// $Date:: 2023-02-10                 #$: date of last commit
 //
 // Description:
-//    Created DVCS
+//    Created pi0
 //
 //
 ///////////////////////////////////////////////////////////////////////////
@@ -36,14 +36,14 @@
 #include <cassert>
 #include <cmath>
 
-#include "dvcs.h"
-#include "e_DVCSCrossSection.h"
+#include "pi0.h"
+#include "e_Pi0CrossSection.h"
 
 using namespace std;
 
 
 //______________________________________________________________________________
-Dvcs::Dvcs(const inputParameters& inputParametersInstance, beamBeamSystem& bbsystem):eventChannel(inputParametersInstance, bbsystem), _phaseSpaceGen(0)
+Pi0::Pi0(const inputParameters& inputParametersInstance, beamBeamSystem& bbsystem):eventChannel(inputParametersInstance, bbsystem), _phaseSpaceGen(0)
 {
 	_VMnumega=inputParametersInstance.nmbEnergyBins();
 	_VMnumQ2=inputParametersInstance.nmbGammaQ2Bins(); 
@@ -67,7 +67,7 @@ Dvcs::Dvcs(const inputParameters& inputParametersInstance, beamBeamSystem& bbsys
 
 
 //______________________________________________________________________________
-Dvcs::~Dvcs()
+Pi0::~Pi0()
 {
 	if (_phaseSpaceGen)
 		delete _phaseSpaceGen;
@@ -76,22 +76,28 @@ Dvcs::~Dvcs()
 }
 
 //______________________________________________________________________________
-double Dvcs::UfromCosTheta(double cosTheta, double W, double Q2){
+double Pi0::UfromCosTheta(double cosTheta, double W, double Q2){
     double mp2 = pow(starlightConstants::protonMass,2.);
-    double u = mp2 - (mp2+W*W+Q2 + cosTheta*sqrt((mp2+W*W+Q2)*(mp2+W*W+Q2) - 4.0*W*W*mp2))*(W*W-mp2)/(2.0*W*W);
+    double mpi2 = pow(starlightConstants::pionNeutralMass,2);
+    double G_1 = W*W+mp2+Q2;
+    double G_2 = W*W-mpi2+mp2;
+    double u = mp2+mpi2 - (G_1*(mpi2+W*W-mp2) + cosTheta * sqrt( (G_1*G_1 - 4.0*W*W*mp2) * (G_2*G_2-4.0*W*W*mp2) ))/(2.0*W*W);
     return u;
 }
 
 //______________________________________________________________________________
-double Dvcs::cosThetaFromU(double u, double W, double Q2){
+double Pi0::cosThetaFromU(double u, double W, double Q2){
     double mp2 = pow(starlightConstants::protonMass,2.);
-    double G = mp2+Q2+W*W;
-    double cosTheta = -1.0*(G+2.0*W*W*(u-mp2)/(W*W-mp2))/sqrt(G*G-4.0*W*W*mp2);
+    double mpi2 = pow(starlightConstants::pionNeutralMass,2);
+    double G_1 = W*W+mp2+Q2;
+    double G_2 = W*W-mpi2+mp2;
+    //double cosTheta = (W*W*(mpi2-Q2-W*W-2.0*(u-mp2))+(mp2+Q2)*(mpi2-mp2))/sqrt((G_1*G_1-4.0*W*W*mp2)*(G_2*G_2-4.0*W*W*mp2));
+    double cosTheta = -1.0*(2.0*W*W*(u-mp2-mpi2) + G_1*(W*W+mpi2-mp2))/sqrt((G_1*G_1-4.0*W*W*mp2)*(G_2*G_2-4.0*W*W*mp2));
     return cosTheta;
 }
 
 //______________________________________________________________________________
-double Dvcs::TfromCosTheta(double cosTheta, double W, double Q2){
+double Pi0::TfromCosTheta(double cosTheta, double W, double Q2){
     double mp2 = pow(starlightConstants::protonMass,2.);
     double G = mp2+Q2+W*W;
     double t = -Q2+((W*W-mp2)*(G-2.0*W*W+cosTheta*sqrt(G*G - 4.0*W*W*mp2)))/(2.0*W*W);
@@ -99,17 +105,67 @@ double Dvcs::TfromCosTheta(double cosTheta, double W, double Q2){
 }
 
 //______________________________________________________________________________
-double Dvcs::cosThetaFromT(double t, double W, double Q2){
+double Pi0::cosThetaFromT(double t, double W, double Q2){
     double mp2 = pow(starlightConstants::protonMass,2.);
     double G = mp2+Q2+W*W;
     double cosTheta = -1.0*(G-2.0*W*W*(1.0+(t+Q2)/(W*W-mp2)))/sqrt(G*G-4.0*W*W*mp2);
     return cosTheta;
 }
 
+//______________________________________________________________________________                                               
+void Pi0::twoPhotonDecay(double  px0, double  py0, double  pz0,
+                         double& px1, double& py1, double& pz1,
+                         double& px2, double& py2, double& pz2,
+                         int&    iFbadevent)
+{
+	// This routine decays a pi0 into two photons
+	double pi0Mass = starlightConstants::pionNeutralMass;
+	double pmag;
+	double phi,theta,Ecm;
+	double betax,betay,betaz;
+	double E1=0.0,E2=0.0;
+
+	pmag = pi0Mass/2.0;
+	
+	  
+	//  pick an orientation, based on the spin
+	//  phi has a flat distribution in 2*pi
+	phi = _randy.Rndom()*2.*starlightConstants::pi;
+                                                                                                                
+	//  find theta, the angle between one of the outgoing particles and
+	//  the beamline, in the frame of the two photons
+    //cout<<"spin element: "<<spin_element<<endl;
+	double cosTheta=2.0*_randy.Rndom() - 1.0;
+	theta = acos(cosTheta);
+
+	//  compute unboosted momenta
+	px1 = sin(theta)*cos(phi)*pmag;
+	py1 = sin(theta)*sin(phi)*pmag;
+	pz1 = cos(theta)*pmag;
+	px2 = -px1;
+	py2 = -py1;
+	pz2 = -pz1;
+
+	Ecm = sqrt(pi0Mass*pi0Mass+px0*px0+py0*py0+pz0*pz0);
+	E1 = sqrt(px1*px1+py1*py1+pz1*pz1);
+	E2 = sqrt(px2*px2+py2*py2+pz2*pz2);
+
+	betax = -(px0/Ecm);
+	betay = -(py0/Ecm);
+	betaz = -(pz0/Ecm);
+
+	transform (betax,betay,betaz,E1,px1,py1,pz1,iFbadevent);
+	transform (betax,betay,betaz,E2,px2,py2,pz2,iFbadevent);
+
+	if(iFbadevent == 1)
+	   return;
+
+}
+
 
 //______________________________________________________________________________
-void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //input conditions
-				double &Y,double &E,double &px,double &py,double &pz,  //return final-state photon
+void Pi0::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //input conditions
+				double &Y,double &E,double &px,double &py,double &pz,  //return final-state pi0
 				double &t_px, double &t_py, double &t_pz, double &t_E, //return pomeron
 				double &e_phi,int &tcheck) //return electron (angle already known by Q2)
 {
@@ -141,12 +197,12 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
 
     while( e_phi > 2.*starlightConstants::pi ) e_phi-= 2.*starlightConstants::pi;
 	//
-	if ( _bbs.targetBeam().A()!=1 ) {cout<<"DVCS is NOT yet defined for non-protons!!!"<<endl; exit(1);}
+	if ( _bbs.targetBeam().A()!=1 ) {cout<<"Pi0 is NOT yet defined for non-protons!!!"<<endl; exit(1);}
 
 	int repetition = 0;
 	   
  
-	L116dvcs:
+	L116Pi0:
 
 	//rotate to put  gamma--> <--p  reaction along one axis
 	double theta_pgamma = atan(sqrt(target_px*target_px + target_py*target_py)/target_pz);	
@@ -162,7 +218,7 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
 	double mp2 = pow(starlightConstants::protonMass,2.);
 	double W = target_E+Egam;
 
-	// For backward DVCS, u does not start at 0 and become increasingly negative like t does. 
+	// For backward Pi0, u does not start at 0 and become increasingly negative like t does. 
 	//   Instead, u starts at mp2 and drops to 0, then becomes increasingly negative. 
 	//   Therefore, the backwards limit occurs at the maximum u value which is closest to mp2
 	//   and the forward limit occurs when at the minimum u value when u is closer to negative infinity 
@@ -191,19 +247,13 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
 		cout<<"A proper u or t could not be selected. Try increasing Q2"<<endl; exit(1);
 	}
 
-	if(_backwardsProduction)
-	{
-		costheta_scatter = cosThetaFromU(u,W,Q2);
-		theta_scatter = acos(costheta_scatter);
-		fsphoton_ptot = (mp2 - u)/(2.0*(target_E + ptot*cos(theta_scatter)));
-	}
-	else{
-		costheta_scatter = cosThetaFromT(t,W,Q2);
-		theta_scatter = acos(costheta_scatter);
-		fsphoton_ptot = (-Q2 - t)/(2.0*(Egam - ptot*cos(theta_scatter)));
-	}
+	double mpi2 = (starlightConstants::pionNeutralMass)*(starlightConstants::pionNeutralMass);
+	if(_backwardsProduction) costheta_scatter = cosThetaFromU(u,W,Q2);
+	else costheta_scatter = cosThetaFromT(t,W,Q2);
+	theta_scatter = acos(costheta_scatter);
+	fsphoton_ptot = sqrt((W*W+mp2-mpi2)*(W*W+mp2-mpi2)-4.0*W*W*mp2)/(2.0*W);
 
-	if(abs(costheta_scatter)>1.0 || theta_scatter!=theta_scatter)  goto L116dvcs;
+	if(abs(costheta_scatter)>1.0 || theta_scatter!=theta_scatter)  goto L116Pi0;
 
 	//final-state photon:
 	double fsphoton_phi_rot = 2.*starlightConstants::pi*_randy.Rndom();
@@ -215,6 +265,7 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
 	double newion_py_rot = -1.0*fsphoton_py_rot;
 	double newion_pz_rot = -1.0*fsphoton_pz_rot;
 	double newion_E = sqrt(newion_px_rot*newion_px_rot + newion_py_rot*newion_py_rot + newion_pz_rot*newion_pz_rot + pow(starlightConstants::protonMass,2.));
+	
 	//rotate back into normal cm frame
 	double fsphoton_px = (fsphoton_px_rot*cos(theta_pgamma) + fsphoton_pz_rot*sin(theta_pgamma))*cos(phi_pgamma) - fsphoton_py_rot*sin(phi_pgamma);
 	double fsphoton_py = (fsphoton_px_rot*cos(theta_pgamma) + fsphoton_pz_rot*sin(theta_pgamma))*sin(phi_pgamma) + fsphoton_py_rot*cos(phi_pgamma);
@@ -231,7 +282,7 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
 	px = fsphoton_px;
 	py = fsphoton_py;
 	pz = fsphoton_pz;
-	E  = fsphoton_ptot;
+	E  = sqrt(fsphoton_ptot*fsphoton_ptot + mpi2);
 
 	//transform back to e-ion CM frame
 	transform (-betax_cm,-betay_cm,-betaz_cm,target_E,target_px,target_py,target_pz,isbadevent);
@@ -248,7 +299,7 @@ void Dvcs::momenta(double Egam,double Q2, double gamma_pz, double gamma_pt, //in
 
 
 //______________________________________________________________________________
-double Dvcs::pseudoRapidity(double px, double py, double pz)
+double Pi0::pseudoRapidity(double px, double py, double pz)
 {
 	double pT = sqrt(px*px + py*py);
 	double p = sqrt(pz*pz + pT*pT);
@@ -260,25 +311,25 @@ double Dvcs::pseudoRapidity(double px, double py, double pz)
 
 
 //______________________________________________________________________________
-e_Dvcs::e_Dvcs(const inputParameters& input, beamBeamSystem& bbsystem):Dvcs(input, bbsystem)
+e_Pi0::e_Pi0(const inputParameters& input, beamBeamSystem& bbsystem):Pi0(input, bbsystem)
 {
-	cout<<"Reading in luminosity tables. e_Dvcs()"<<endl;
+	cout<<"Reading in luminosity tables. e_Pi0()"<<endl;
 	e_read();
-	cout<<"Creating and calculating crosssection. e_Dvcs()"<<endl;
-	e_DVCSCrossSection sigma(input, bbsystem);
+	cout<<"Creating and calculating crosssection. e_Pi0()"<<endl;
+	e_Pi0CrossSection sigma(input, bbsystem);
 	sigma.crossSectionCalculation(_bwnormsave);
 	setTotalChannelCrossSection(sigma.getPhotonNucleusSigma());
 	_VMbslope=sigma.slopeParameter(); 
 }
 
 //______________________________________________________________________________
-e_Dvcs::~e_Dvcs()
+e_Pi0::~e_Pi0()
 { }
 
 
 
 //______________________________________________________________________________
-void Dvcs::pickEgamq2(double &cmsEgamma, double &targetEgamma, 
+void Pi0::pickEgamq2(double &cmsEgamma, double &targetEgamma, 
 				 double &Q2, double &gamma_pz, double &gamma_pt,//photon in target frame
 				 double &E_prime, double &theta_e //electron
 				 )
@@ -382,7 +433,7 @@ void Dvcs::pickEgamq2(double &cmsEgamma, double &targetEgamma,
 
 
 //______________________________________________________________________________
-eXEvent Dvcs::e_produceEvent()
+eXEvent Pi0::e_produceEvent()
 {
 	// The new event type
 	eXEvent event;
@@ -396,6 +447,7 @@ eXEvent Dvcs::e_produceEvent()
 	double momx=0.,momy=0.,momz=0.;
 	double targetEgamma = 0, cmsEgamma = 0 ;
 	double gamma_pz = 0 , gamma_pt = 0, e_theta = 0;
+	double px2=0.,px1=0.,py2=0.,py1=0.,pz2=0.,pz1=0.;
 	double e_E=0., e_phi=0;
 	double t_px =0, t_py=0., t_pz=0, t_E;
 	bool accepted = false;
@@ -406,33 +458,37 @@ eXEvent Dvcs::e_produceEvent()
 	  //
 	  //cout<<"this W = "<<sqrt(cmsEgamma*)
 	  momenta(cmsEgamma, Q2, gamma_pz, gamma_pt, //input
-		  rapidity, E, momx, momy, momz, //final-state photon
+		  rapidity, E, momx, momy, momz, //final-state pi0
 		  t_px, t_py, t_pz, t_E, //pomeron
 		  e_phi,tcheck); //electron
 	  //
 	  _nmbAttempts++;
 
-	  double pt1chk = sqrt(momx*momx+momy*momy);
-	  double eta1 = pseudoRapidity(momx, momy, momz);
+	  twoPhotonDecay(momx,momy,momz,
+		       px1,py1,pz1,px2,py2,pz2,iFbadevent);
+	  double pt1chk = sqrt(px1*px1+py1*py1);
+	  double eta1 = pseudoRapidity(px1, py1, pz1);
+	  double pt2chk = sqrt(px2*px2+py2*py2);
+	  double eta2 = pseudoRapidity(px2, py2, pz2);
                         
 
 	  if(_ptCutEnabled && !_etaCutEnabled){
-	    if(pt1chk > _ptCutMin && pt1chk < _ptCutMax){
+	    if(pt1chk > _ptCutMin && pt1chk < _ptCutMax &&  pt2chk > _ptCutMin && pt2chk < _ptCutMax){
 	      accepted = true;
 	      _nmbAccepted++;
 	    }
 	  }
 	  else if(!_ptCutEnabled && _etaCutEnabled){
-	    if(eta1 > _etaCutMin && eta1 < _etaCutMax ){
+	    if(eta1 > _etaCutMin && eta1 < _etaCutMax && eta2 > _etaCutMin && eta2 < _etaCutMax){
 	      accepted = true;
 	      _nmbAccepted++;
 	    }
 	  }
 	  else if(_ptCutEnabled && _etaCutEnabled){
-	    if(pt1chk > _ptCutMin && pt1chk < _ptCutMax ){
-	      if(eta1 > _etaCutMin && eta1 < _etaCutMax ){
-	      	accepted = true;
-		    _nmbAccepted++;
+	    if(pt1chk > _ptCutMin && pt1chk < _ptCutMax &&  pt2chk > _ptCutMin && pt2chk < _ptCutMax){
+	      if(eta1 > _etaCutMin && eta1 < _etaCutMax && eta2 > _etaCutMin && eta2 < _etaCutMax){
+		accepted = true;
+		_nmbAccepted++;
 	      }
 	    }
 	  }
@@ -456,10 +512,13 @@ eXEvent Dvcs::e_produceEvent()
 	  (gamma).Boost(boostVector);
 	  event.addGamma(gamma, targetEgamma, Q2);  
 
-	  // - Saving final-state photon
-	  double E_final_photon = sqrt(momx*momx+momy*momy+momz*momz); 
-	  starlightParticle particle1(momx, momy, momz, E_final_photon, starlightConstants::UNKNOWN, 22, 0);
+	  // - Saving final-state photons
+	  double E_final_photon1 = sqrt(px1*px1+py1*py1+pz1*pz1); 
+	  starlightParticle particle1(px1, py1, pz1, E_final_photon1, starlightConstants::UNKNOWN, 22, 0);
 	  event.addParticle(particle1);
+	  double E_final_photon2 = sqrt(px2*px2+py2*py2+pz2*pz2); 
+	  starlightParticle particle2(px2, py2, pz2, E_final_photon2, starlightConstants::UNKNOWN, 22, 0);
+	  event.addParticle(particle2);
 
 
 	  // - Scattered target and transfered momenta at target vertex

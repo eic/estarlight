@@ -52,6 +52,7 @@
 #include "gammagammasingle.h"
 #include "gammaavm.h"
 #include "dvcs.h"
+#include "pi0.h"
 #include "twophotonluminosity.h"
 #include "gammaaluminosity.h"
 #include "gammaeluminosity.h"
@@ -126,6 +127,7 @@ e_starlight::init()
 		break;		
 	  */
 	case E_DVCS: // for now, use the same luminosity for DVCS that is used for photonpomeron channels
+	case E_PI0: // Also for pi0
 	case E_PHOTONPOMERONNARROW:  // narrow and wide resonances use
 	case E_PHOTONPOMERONWIDE:    // the same luminosity function
 		if (!lumTableIsValid) {
@@ -320,6 +322,24 @@ e_starlight::createEventChannel()
 					return true;
 				else {
 					printWarn << "cannot construct DVCS event channel." << endl;
+					return false;
+				}
+			}
+
+
+			printWarn << "interaction type '" << _inputParameters->interactionType() << "' "
+			          << "cannot be used with particle type '" << _inputParameters->prodParticleType() << "'. "
+			          << "cannot create event channel." << endl;
+			return false;
+		}
+	case PIONNEUTRAL:
+		{
+			if (_inputParameters->interactionType() == E_PI0) {
+				_eventChannel = new e_Pi0(*_inputParameters, *_beamSystem);
+				if (_eventChannel)
+					return true;
+				else {
+					printWarn << "cannot construct PI0 event channel." << endl;
 					return false;
 				}
 			}

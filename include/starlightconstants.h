@@ -60,6 +60,7 @@ namespace starlightConstants
 	static const double muonMass = 0.1056583715;         // [GeV/c^2]
 	static const double tauMass  = 1.77682;              // [GeV/c^2]
 	
+	static const double piBr2Photon = 0.988;             // Branching ratio for 2photon (set to 98.8%)
 	static const double f0Mass = 0.990;                  // [GeV/c^2]
 	static const double f0Width = 0.100;                 // [GeV/c^2]
 	static const double f0BrPiPi = 1.0;                  // Branching ratio for pipi (set to 100%)
@@ -88,6 +89,7 @@ namespace starlightConstants
         static const double a2PartialggWidth = 1.0E-6;       // [GeV/c^2]
         static const double f2PrimePartialggWidth = 0.081E-6;// [GeV/c^2]
         static const double zoverz03PartialggWidth = 0.1E-6; // [GeV/c^2]
+
 
         static const double f0Spin = 0.0;
         static const double etaSpin = 0.0;
@@ -184,7 +186,8 @@ namespace starlightConstants
 		PSIFAMILY       = 3,
 		LEPTONPAIR      = 4,
 		SINGLEMESON     = 5,
-		NONE            = 6
+		TWOPHOTON       = 6,
+		NONE            = 7
 	};
 
 	enum interactionTypeEnum {
@@ -199,7 +202,8 @@ namespace starlightConstants
 		PHOTONUCLEARSINGLEPAPY = 8,
 		E_PHOTONPOMERONNARROW = 12,
 		E_PHOTONPOMERONWIDE = 13,
-		E_DVCS = 14
+		E_DVCS = 14,
+		E_PI0 = 15
 	};
 
         enum systemTypeEnum{

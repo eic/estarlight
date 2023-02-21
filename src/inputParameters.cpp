@@ -262,6 +262,10 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 	case 14:
 		_interactionType = E_DVCS;
 		break;
+
+	case 15:
+		_interactionType = E_PI0;
+		break;
 	  
 	default:
 		printWarn << "unknown production mode '" << _productionMode << "'" << endl;
@@ -291,6 +295,15 @@ inputParameters::configureFromFile(const std::string &_configFileName)
                 defaultMinW   = 0.0; 
                 defaultMaxW   = 0.000001; 
                 _inputBranchingRatio = 1.0; 
+		break;
+	case 111:  // PI0
+		_particleType = PIONNEUTRAL;
+		_decayType    = TWOPHOTON;
+		mass          = starlightConstants::pionNeutralMass;
+		width         = 0.0;
+                defaultMinW   = mass; 
+                defaultMaxW   = mass + 0.000001; 
+                _inputBranchingRatio = starlightConstants::piBr2Photon;
 		break;
 
 	case 115:  // a_2(1320)
