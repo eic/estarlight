@@ -47,6 +47,7 @@ class eXEvent
    public:
 
       eXEvent();
+      eXEvent(const eXEvent&) = default;
       eXEvent(starlightConstants::event &ev);
       ~eXEvent();
 

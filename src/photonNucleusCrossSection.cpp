@@ -65,7 +65,9 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  _maxQ2             (inputParametersInstance.maxGammaQ2()        ),
 	  _maxPhotonEnergy   (inputParametersInstance.cmsMaxPhotonEnergy()),
 	  _cmsMinPhotonEnergy(inputParametersInstance.cmsMinPhotonEnergy()),
-	  _targetRadii       (inputParametersInstance.targetRadius()      )
+	  _targetRadii       (inputParametersInstance.targetRadius()      ),
+	  _maxW_GP           (inputParametersInstance.maxW_GP()              ),
+	  _minW_GP           (inputParametersInstance.minW_GP()              )
 {
         // new options - impulse aproximation (per Joakim) and Quantum Glauber (per SK) SKQG
         _impulseSelected = inputParametersInstance.impulseVM();
@@ -944,7 +946,8 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 	// Function for the gamma-proton --> VectorMeson
 	// cross section. Wgp is the gamma-proton CM energy.
 	// Unit for cross section: fm**2
-  
+	//If W_gp is not in the allowed region, i.e. W_GP_MIN < W_gp < W_GP_MAX, do not sample.
+  	if(Wgp < _minW_GP || Wgp > _maxW_GP) return 0;
 	double sigmagp_r=0.;
 
 	// Near the threshold CM energy (between WgpMin and WgpMax), 

@@ -58,6 +58,8 @@ inputParameters::inputParameters()
 	  _targetBeamLorentzGamma     ("TARGET_BEAM_GAMMA",0),
 	  _maxW                  ("W_MAX",0),
 	  _minW                  ("W_MIN",0),
+	  _maxW_GP           	 ("W_GP_MAX", 0,NOT_REQUIRED), 
+	  _minW_GP          	 ("W_GP_MIN", 0,NOT_REQUIRED), 
 	  _nmbWBins              ("W_N_BINS",0),
 	  _maxRapidity           ("RAP_MAX",9,NOT_REQUIRED),
 	  _nmbRapidityBins       ("RAP_N_BINS",100,NOT_REQUIRED),
@@ -110,7 +112,10 @@ inputParameters::inputParameters()
 	
 	_ip.addParameter(_maxW);
 	_ip.addParameter(_minW);
-	
+
+	_ip.addParameter(_maxW_GP);
+	_ip.addParameter(_minW_GP);
+
 	_ip.addParameter(_nmbWBins);
 
 	_ip.addParameter(_maxRapidity);
@@ -194,6 +199,8 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 	double _totalEnergy_lab = 1.0*_electronEnergy_lab + _ionEnergy_lab;
 	double _totalPz_lab = _ionPz_lab + _electronPz_lab;
 	_rap_CM = (1.0/2.0)*log((_totalEnergy_lab + _totalPz_lab)/(_totalEnergy_lab - _totalPz_lab));
+	double _totalEnergy_COM;
+	_totalEnergy_COM = sqrt((_totalEnergy_lab) * (_totalEnergy_lab) - (_totalPz_lab) * (_totalPz_lab)); //This is Lorentz invariant.
 
 	_beamLorentzGamma = cosh(_rap_CM-rap2);
 	_targetLorentzGamma = cosh(rap1-rap2);
@@ -592,6 +599,26 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 		return false;
 	}
 
+	if (_minW_GP.value() == -1)
+		_minW_GP = 0;
+	if (_maxW_GP.value() == -1)
+		_maxW_GP = 1e7;
+	if ( _maxW_GP.value() <= _minW_GP.value() ) {
+		printWarn << "maxW_GA must be greater than minW_GP" << endl;
+		printWarn <<"The value of minW_GP is " << _minW_GP << endl;
+		printWarn <<"The value of maxW_GP is " << _maxW_GP << endl;
+		return false;
+	}
+	if(_minW_GP.value() > _totalEnergy_COM) { 
+	/* If the minimum COM energy of gamma and nucleon is set by user 
+	to be greater than the total energy supply by electron and target, code will terminate. */
+  	printWarn << "ERROR: The current input minimum CoM energy (_minW_GP) is: "<< _minW_GP 
+  	<< " which is larger than the total center-of-mass energy of the electron-ion system: " 
+  	<<_totalEnergy_COM << endl;
+  	cout<<"Exiting now..." << endl;
+ 	return false;
+  	}
+
 	// Sanity check on Q2 range in case it is specified by user
 	if( _minGammaQ2.value() != 0 || _maxGammaQ2.value() != 0){
 	  if( _minGammaQ2.value() <0 || _maxGammaQ2.value() <=_minGammaQ2.value() )
@@ -675,6 +702,8 @@ inputParameters::write(ostream& out) const
 	    << "BEAM_GAMMA"    << beamLorentzGamma     () <<endl
 	    << "W_MAX"         << maxW                 () <<endl
 	    << "W_MIN"         << minW                 () <<endl
+	    << "W_GP_MAX"      << maxW_GP              () <<endl
+	    << "W_GP_MIN"      << minW_GP              () <<endl
 	    << "W_N_BINS"      << nmbWBins             () <<endl
 	    << "RAP_MAX"       << maxRapidity          () <<endl
 	    << "RAP_N_BINS"    << nmbRapidityBins      () <<endl
