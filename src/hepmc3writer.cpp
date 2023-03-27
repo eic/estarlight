@@ -126,8 +126,7 @@ int hepMC3Writer::writeEvent(const eXEvent &event, int eventnumber)
                ion_lorentzVec.GetPz(),
                ion_lorentzVec.GetE());
 
-  //  PDG code for protons is 2212; not clear what to do for ions, but use proton ID for now  SRK August 8, 2021
-  HepMC3::GenParticlePtr hepmc3_ion = std::make_shared<HepMC3::GenParticle>( hepmc3_ion_four_vector, 2212, 1 );  
+  HepMC3::GenParticlePtr hepmc3_ion = std::make_shared<HepMC3::GenParticle>( hepmc3_ion_four_vector, targetBeam_pdg_id_, 1 );  
 
   hepmc3_ion_vertex_to_write->add_particle_out( hepmc3_ion );
 
