@@ -35,6 +35,7 @@
 #include <fstream>
 #include <cassert>
 #include <cmath>
+#include <sstream>
 
 #include "gammaavm.h"
 //#include "photonNucleusCrossSection.h"
@@ -1124,8 +1125,11 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	int iFbadevent=0;
 	int tcheck=0;
 	starlightConstants::particleTypeEnum ipid = starlightConstants::UNKNOWN;
-        starlightConstants::particleTypeEnum vmpid = starlightConstants::UNKNOWN; 
-	// at present 4 prong decay is not implemented
+    starlightConstants::particleTypeEnum vmpid = starlightConstants::UNKNOWN; 
+	// at present 4 prong decay is implemented
+	double ptCutMin2 = _ptCutMin*_ptCutMin;//used for ptCut comparison without using square roots - to reduce processing time
+	double ptCutMax2 = _ptCutMax*_ptCutMax;//same as above
+
 	double comenergy = 0.;
 	double rapidity = 0.;
 	double Q2 = 0;
@@ -1137,6 +1141,103 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	double e_E=0., e_phi=0;
 	double t_px =0, t_py=0., t_pz=0, t_E;
 	bool accepted = false;
+	
+	if (_VMpidtest == starlightConstants::FOURPRONG) {
+	double mom[3] ={0,0,0};
+	lorentzVector decayVecs[4];
+	bool accepted;
+	double rapidity = 0;
+	do {
+	tcheck = 0;//reinitialized after every loop cycle - to avoid infinite loop
+	iFbadevent = 0;//same as above.
+	//pickwy(comenergy, rapidity); 
+	pickwEgamq2(comenergy,cmsEgamma, targetEgamma, 
+		   Q2, gamma_pz, gamma_pt, //photon infor in CMS frame
+		   e_E, e_theta);
+	
+	//Vector meson is created and its four momentum is determined below
+	//if (_VMinterferencemode == 0)
+	 momenta(comenergy,cmsEgamma, Q2, gamma_pz, gamma_pt, //input
+		  rapidity, E, mom[0], mom[1], mom[2], //VM
+		  t_px, t_py, t_pz, t_E, //pomeron
+		  e_phi,tcheck);
+		  
+	 _nmbAttempts++;
+	 accepted = true;//re-initialized after every loop cycle -to avoid infinite loop
+	
+	if(tcheck != 0 || !fourBodyDecay(ipid,E,comenergy,mom,decayVecs,iFbadevent))
+	{//if either vector meson creation, or further decay into four pions, is impossible
+	accepted = false;
+	continue;//this skips the etaCut and ptCut checks.
+	}
+	
+	if (_ptCutEnabled) {
+	for (int i = 0; i < 4; i++) {
+	double pt_chk2 = 0;
+	pt_chk2 += pow( decayVecs[i].GetPx() , 2);
+	pt_chk2 += pow( decayVecs[i].GetPy() , 2);// compute transverse momentum (squared) for the particle, for ptCut checks.
+	
+	if (pt_chk2 < ptCutMin2 || pt_chk2 > ptCutMax2) {//if particle does not fall into ptCut range.
+	accepted = false;
+	break;//skips checking other daughter particles
+	}
+	}
+	}
+	if (_etaCutEnabled) {
+	for (int i = 0; i < 4; i++) {
+	double eta_chk = pseudoRapidity(
+	decayVecs[i].GetPx(),
+	decayVecs[i].GetPy(),
+	decayVecs[i].GetPz()
+	);
+	//computes the pseudorapidity in the laboratory frame.
+	if (eta_chk < _etaCutMin || eta_chk > _etaCutMax) {//if this particle does not fall into range
+	accepted = false;
+	break;//skips checking other daughter particles
+	}
+	}
+	}
+	if (accepted and (tcheck == 0)) {
+	_nmbAccepted++;//maintain counts of accepted events.
+	}
+	
+	} while (!accepted || tcheck != 0);//repeats loop if VM creation, decay, ptcut or etaCut criterias are not fulfilled. Important to avoid situations where events produced is less than requested.
+	if (iFbadevent==0&&tcheck==0) {
+	  double e_ptot = sqrt(e_E*e_E - starlightConstants::mel*starlightConstants::mel);
+	  double e_px = e_ptot*sin(e_theta)*cos(e_phi);
+	  double e_py = e_ptot*sin(e_theta)*sin(e_phi);
+	  double e_pz = e_ptot*cos(e_theta);
+	  lorentzVector electron(e_px, e_py, e_pz, e_E);
+	  event.addSourceElectron(electron);
+	  // - Generated photon - target frame
+	  double gamma_x = gamma_pt*cos(e_phi+starlightConstants::pi);
+	  double gamma_y = gamma_pt*sin(e_phi+starlightConstants::pi);
+	  lorentzVector gamma(gamma_x,gamma_y,gamma_pz,cmsEgamma);
+	  vector3 boostVector(0, 0, tanh(_rap_CM));
+	  (gamma).Boost(boostVector);
+	  event.addGamma(gamma, targetEgamma, Q2);
+
+	double md = getDaughterMass(ipid);
+	//adds daughters as particles into the output event.
+	for (unsigned int i = 0; i < 4; ++i) {
+	starlightParticle daughter(decayVecs[i].GetPx(),
+	                          decayVecs[i].GetPy(),
+	                          decayVecs[i].GetPz(),
+	  sqrt(decayVecs[i].GetPx()*decayVecs[i].GetPx()+decayVecs[i].GetPy()*decayVecs[i].GetPy()+decayVecs[i].GetPz()*decayVecs[i].GetPz()+md*md),//energy
+	  md,  // _mass
+	  ipid*(2*(i/2)-1),   // make half of the particles pi^+, half pi^-
+	  (2*(i/2)-1));//charge
+	event.addParticle(daughter);
+	}
+	// - Scattered target and transfered momenta at target vertex
+	  double target_pz =  - _beamNucleus*sqrt(_pEnergy*_pEnergy - pow(starlightConstants::protonMass,2.) ) - t_pz;
+	  //Sign of t_px in following equation changed to fix sign error and conserve p_z.  Change made by Spencer Klein based on a bug report from Ya-Ping Xie.  Nov. 14, 2019
+	  lorentzVector target(-t_px, -t_py, target_pz, _beamNucleus*_pEnergy - t_E);
+	  double t_var = t_E*t_E - t_px*t_px - t_py*t_py - t_pz*t_pz;
+	  event.addScatteredTarget(target, t_var);
+	}
+	}
+else {
 	do{
 	  pickwEgamq2(comenergy,cmsEgamma, targetEgamma, 
 		   Q2, gamma_pz, gamma_pt, //photon infor in CMS frame
@@ -1259,6 +1360,7 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	  double t_var = t_E*t_E - t_px*t_px - t_py*t_py - t_pz*t_pz;
 	  event.addScatteredTarget(target, t_var);
 	}
+}
 	return event;
 
 }
