@@ -255,9 +255,9 @@ photonNucleusCrossSection::getcsgA(const double targetEgamma,
 	double W = _channelMass; //new change, channel mass center used for the t min integration.
 	  
 	//     DATA FOR GAUSS INTEGRATION
-	double xg[6] = {0, 0.1488743390, 0.4333953941, 0.6794095683, 0.8650633667, 0.9739065285};
-	double ag[6] = {0, 0.2955242247, 0.2692667193, 0.2190863625, 0.1494513492, 0.0666713443};
-	NGAUSS = 6;
+	double xg[16] = {0, 0.0514718426, 0.153869914, 0.2546369262, 0.352704726, 0.4470337695, 0.5366241481, 0.620526183, 0.697850495, 0.7677774321, 0.829565762, 0.8825605358, 0.9262000474, 0.960021865, 0.9836681233, 0.9968934841};
+	double ag[16] = {0, 0.1028526529, 0.10176239, 0.09959342059, 0.096368737, 0.0921225222, 0.086899787, 0.0807558952, 0.0737559747, 0.0659742299, 0.05749315622, 0.0484026728, 0.038799193, 0.0287847079, 0.018466468, 0.0079681925};
+	NGAUSS = 16;
 	
 	//       Note: The photon energy passed to this function is now in the target frame. The rest of the calculations are done in the
 	//       CMS frame. The next lines boost the photon into the CM frame.
@@ -371,9 +371,12 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
 	int NGAUSS; 
   
 	//     DATA FOR GAUSS INTEGRATION
-	double xg[6] = {0, 0.1488743390, 0.4333953941, 0.6794095683, 0.8650633667, 0.9739065285};
-	double ag[6] = {0, 0.2955242247, 0.2692667193, 0.2190863625, 0.1494513492, 0.0666713443};
-	NGAUSS = 6;
+	double xg[16] = {0, 0.0514718426, 0.153869914, 0.2546369262, 0.352704726, 0.4470337695, 0.5366241481, 0.620526183, 0.697850495, 0.7677774321, 0.829565762, 0.8825605358, 0.9262000474, 0.960021865, 0.9836681233, 0.9968934841};
+	double ag[16] = {0, 0.1028526529, 0.10176239, 0.09959342059, 0.096368737, 0.0921225222, 0.086899787, 0.0807558952, 0.0737559747, 0.0659742299, 0.05749315622, 0.0484026728, 0.038799193, 0.0287847079, 0.018466468, 0.0079681925};
+	NGAUSS = 16;
+	//double xg[6] = {0, 0.1488743390, 0.4333953941, 0.6794095683, 0.8650633667, 0.9739065285};
+	//double ag[6] = {0, 0.2955242247, 0.2692667193, 0.2190863625, 0.1494513492, 0.0666713443};
+	//NGAUSS = 6;
   
 	//       Find gamma-proton CM energy
 	Wgp = sqrt( 2.*(protonMass*Egamma)
@@ -416,12 +419,12 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
                   if( beam==1 ){
  		     csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                   }else if(beam==2){
- 		     csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);	
-  		  }else{
+ 		     csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);
+        	}else{
 		     cout<<"Something went wrong here, beam= "<<beam<<endl; 
                   }
-               }
-
+				  }           
+			    
 	       t    = ax * (-xg[k]) + bx;
                if( A_1 <= 1 && A_2 != 1){ 
 			  csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);
@@ -431,11 +434,12 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
                   if( beam==1 ){
  			    csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                   }else if(beam==2){
- 			    csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);	
+ 			    csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);
   		  }else{
 			    cout<<"Something went wrong here, beam= "<<beam<<endl; 
                   }
-	       }
+				 }
+				  
 	   }
 	   csgA = 0.5 * (tmax - tmin) * csgA;
 	   csgA = Av * csgA;
@@ -988,7 +992,16 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			sigmagp_r*=1.E-10*2.1*exp(0.74*log(Wgp)); 
 			break;
 		default: cout<< "!!!  ERROR: Unidentified Vector Meson: "<< _particleType <<endl;
-		}                                                                  
+		}
+
+	static bool called = false;
+	if(!called){
+		called = true;
+		//double value = 3.0;
+	    cout<< "nuclear radius is: " << _bbs.targetBeam(). nuclearRadius() << endl;
+        cout<< "rho0 is: " << _bbs.targetBeam(). rho0() << endl;
+
+	}                                                                
 	return sigmagp_r;
 }
 
