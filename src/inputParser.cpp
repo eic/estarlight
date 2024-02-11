@@ -236,7 +236,6 @@ void inputParser::printParameterInfo(std::ostream &out)
 bool inputParser::validateParameters(std::ostream& errOut)
 {
 
-    int nNonCriticalMissing = 0;
     int nCriticalMissing = 0;
 
     std::map<std::string, _parameter<int> >::iterator intIt;
@@ -253,10 +252,6 @@ bool inputParser::validateParameters(std::ostream& errOut)
                 errOut << "Could not find parameter: " << intIt->second._name << " which is required. Please specify this parameter in the config file!" << std::endl;
                 nCriticalMissing++;
             }
-            else
-            {
-                nNonCriticalMissing++;
-            }
         }
     }
     for (floatIt = _floatParameters.begin(); floatIt != _floatParameters.end(); ++floatIt)
@@ -267,10 +262,6 @@ bool inputParser::validateParameters(std::ostream& errOut)
             {
                 errOut << "Could not find parameter: " << floatIt->second._name << " which is required. Please specify this parameter in the config file!" << std::endl;
                 nCriticalMissing++;
-            }
-            else
-            {
-                nNonCriticalMissing++;
             }
         }
     }
@@ -283,10 +274,6 @@ bool inputParser::validateParameters(std::ostream& errOut)
                 errOut << "Could not find parameter: " << doubleIt->second._name << " which is required. Please specify this parameter in the config file!" << std::endl;
                 nCriticalMissing++;
             }
-            else
-            {
-                nNonCriticalMissing++;
-            }
         }
     }
     for (boolIt = _boolParameters.begin(); boolIt != _boolParameters.end(); ++boolIt)
@@ -297,10 +284,6 @@ bool inputParser::validateParameters(std::ostream& errOut)
             {
                 errOut << "Could not find parameter: " << boolIt->second._name << " which is required. Please specify this parameter in the config file!" << std::endl;
                 nCriticalMissing++;
-            }
-            else
-            {
-                nNonCriticalMissing++;
             }
         }
     }
