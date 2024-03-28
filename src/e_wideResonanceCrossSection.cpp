@@ -88,7 +88,7 @@ e_wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 	nW   = 100;
 	dW   = (_wideWmax-_wideWmin)/double(nW);
 	// For Egamma integration
-	nEgamma = 1000;
+	nEgamma = 100;
 	dEgamma = std::log(_targetMaxPhotonEnergy/_targetMinPhotonEnergy)/nEgamma;
 	minEgamma = std::log(_targetMinPhotonEnergy);
 	
@@ -123,8 +123,13 @@ e_wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 	for(iW=0;iW<=nW-1;iW++){
     
 		W = _wideWmin + double(iW)*dW + 0.5*dW;
-		int nQ2 = 1000;
+		int nQ2 = 100;
 		for(iEgamma = 0 ; iEgamma < nEgamma; ++iEgamma){    // Integral over photon energy
+		  // Displaying the percentage progress
+		  float ratio = float(iW)/float(nW)  + 1/float(nW)*float(iEgamma)/float(nEgamma);
+		 printf("calculating cross section :%3.2f %%\r",float(ratio *100.0));
+		  
+		  
 		  // Target frame photon energies
 		  ega[0] = exp(minEgamma + iEgamma*dEgamma );
 		  ega[1] = exp(minEgamma + (iEgamma+1)*dEgamma );
@@ -153,9 +158,9 @@ e_wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 		      double q2_12 = (q2_2+q2_1)/2.;
 		      //			
 		      // Integrating cross section
-		      full_int[iEgaInt] += (q2_2-q2_1)*( g(ega[iEgaInt],q2_1)*getcsgA(ega[iEgaInt],q2_1,beam)
-							 + g(ega[iEgaInt],q2_2)*getcsgA(ega[iEgaInt],q2_2,beam)
-							 + 4.*g(ega[iEgaInt],q2_12)*getcsgA(ega[iEgaInt],q2_12,beam) );	      
+		      full_int[iEgaInt] += (q2_2-q2_1)*( g(ega[iEgaInt],q2_1)*e_getcsgA(ega[iEgaInt],q2_1,W,beam)
+							 + g(ega[iEgaInt],q2_2)*e_getcsgA(ega[iEgaInt],q2_2,W,beam)
+							 + 4.*g(ega[iEgaInt],q2_12)*e_getcsgA(ega[iEgaInt],q2_12,W,beam) );	      
 		      // Effective flux
 		      dndE[iEgaInt] +=(q2_2-q2_1)*( getcsgA_Q2_dep(q2_1)*photonFlux(ega[iEgaInt],q2_1)
 						    +getcsgA_Q2_dep(q2_2)*photonFlux(ega[iEgaInt],q2_2)
