@@ -38,8 +38,11 @@ cmake ~/the_path/estarlight
 ```
 (g)make
 ```
-* The compilation will produce an executable to run: estarlight
-* Install the code to `CMAKE_INSTALL_PREFIX` (defaults to `/usr/local`)
+* The compilation will produce an executable in your build directory.
+If you want the  code to be globally accessible on the computer, run
+`CMAKE_INSTALL_PREFIX` (defaults to `/usr/local`) and then make install.  This will probably
+not be possible on large installations like Perlmutter. Alternately,
+you can run the executable in your build directory.
 ```
 (g)make install
 ```
