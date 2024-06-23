@@ -1126,7 +1126,7 @@ eXEvent Gammaavectormeson::e_produceEvent()
 	int tcheck=0;
 	starlightConstants::particleTypeEnum ipid = starlightConstants::UNKNOWN;
     starlightConstants::particleTypeEnum vmpid = starlightConstants::UNKNOWN; 
-	// at present 4 prong decay is implemented
+	// at present 4 prong decay is implemented (rhoprime(1450))
 	double ptCutMin2 = _ptCutMin*_ptCutMin;//used for ptCut comparison without using square roots - to reduce processing time
 	double ptCutMax2 = _ptCutMax*_ptCutMax;//same as above
 
