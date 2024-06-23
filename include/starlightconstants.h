@@ -102,8 +102,8 @@ namespace starlightConstants
         static const double rho0Mass  = 0.769;               // [GeV/c^2]
 	static const double rho0Width = 0.1517;              // [GeV/c^2]
 	static const double rho0BrPiPi = 1.0;                // Branching ratio pi+pi-
-        static const double rho0PrimeMass  = 1.540;          // [GeV/c^2]
-	static const double rho0PrimeWidth = 0.570;          // [GeV/c^2]
+        static const double rho0PrimeMass  = 1.465;          // [GeV/c^2]
+	static const double rho0PrimeWidth = 0.4;          // [GeV/c^2]
 	static const double rho0PrimeBrPiPi = 1.0;           // Branching ratio pi+pi- (set to 100%)
         static const double OmegaMass  = 0.78265;            // [GeV/c^2]
 	static const double OmegaWidth = 0.00849;            // [GeV/c^2]
