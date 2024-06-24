@@ -386,15 +386,14 @@ inputParameters::configureFromFile(const std::string &_configFileName)
 		defaultMaxW         = mass + 5 * width;  // use the same 1.5GeV max mass as ZEUS
 		_inputBranchingRatio = starlightConstants::rho0BrPiPi; 
 		break;
-	case 999:  // pi+pi-pi+pi- phase space decay
+	case 999:  // rho'(1450)-> pi+pi-pi+pi- phase space decay
 		_particleType = FOURPRONG;
 		_decayType    = WIDEVMDEFAULT;
 		mass          = starlightConstants::rho0PrimeMass;
 		width         = starlightConstants::rho0PrimeWidth;		
 		defaultMinW   = 4 * pionChargedMass;
-        defaultMaxW   = 10.0;	    
-		//defaultMaxW     = sqrt(electronBeamLorentzGamma()*targetBeamLorentzGamma())*2*(starlightConstants::hbarc)/(pow(float(targetBeamA()),1./6.)); // JES 6.17.2015 to avoid problems with no default
-    	_inputBranchingRatio = 1.0; 
+                defaultMaxW   = mass + 5 * width;	    
+    	        _inputBranchingRatio = starlightConstants::rho0PrimeBrPiPi; 
 		break;
 
 	case 223:  // omega(782)
