@@ -61,22 +61,25 @@ void nucleus::init()
 		{
 		  _Radius = 6.624;
 		  _rho0 = 0.160696;
+		  _woodSaxonSkinDepth = 0.53; // fixed for 2pF model	
 		}
 		break;
 	case 79:
 		{
 		  _Radius = 6.38;
 		  _rho0 = 0.169551;
+	          _woodSaxonSkinDepth = 0.53; // fixed for 2pF model
 		}
 		break;
 	case 29:
 		{
                   _Radius = 4.214;
 		  _rho0 = 0.173845;
+	          _woodSaxonSkinDepth = 0.53; // fixed for 2pF model
 		}
 		break;
 	case 1: 
-		{
+	    {
 		  //is this a proton or deuteron
 		  if(_A==1){
 		    _Radius = 0.7;
@@ -87,15 +90,14 @@ void nucleus::init()
 		    _Radius = 0.;
 		    _rho0 = -1.0;
 		  }
-		else
-		{
+		else{
 			_Radius = 2.127; // Measured rms radius for deuteron
 			_rho0 = _A;
-		}
-	}
-	break;
+	     }
+	    }
+	    break;
 	case -1:
-	{
+	    {
 		  //is this a anti-proton
 		  if(_A==1){
 		    _Radius = 0.7;
@@ -108,132 +110,72 @@ void nucleus::init()
 		  }
 		  else {
 		    _Radius = 2.1;
-		}
-	}
-	break;
+		    _rho0 = _A;	  
+	     }
+	    }
+	    break;
 	case 2: 
-	{
-		// Helium-4 (sum of gaussian model)
-		_a = rkHel;
-		_c = skHel;
-		_v = 0.81649;
+	    {
+	    // Helium-4 (sum of gaussian model) https://doi.org/10.1016/0092-640X(87)90013-1
+		_a = rkHel;   // Ri values from Table V
+	        _b = tkHel;   // Qi values from Table V
+		_c = skHel;   // Ai coefficients calculated
+		_v = 0.81649; //width of Gaussians calculated
 		_rho0 = 2.0;
 		_Radius = 1.676;
-	}
-	break;
-	case 3: 
-	{
-		// Lithium-7 (Harmonic Oscillator Model)
-		_Radius = 1.77;
-		_g = 0.327;
-		_rho0 = 0.1520360869; // determined by normalization
-	}
-	break;
+	    }
+	    break;
 	case 4: 
-	{
-		// Beryllium(9/10)
-		if (_A == 9)
-		{
-			//Harmonic Oscillator Model
-			_Radius = 1.791;
-			_g = 0.611;
-			_rho0 = 0.1467396; // determined by normalization
-		}
-		else
-		{
-			_Radius = 2.357; //measured rms radius
-			_rho0 = _A;
-		}
-	}
-	break;
+	    {
+	    // Beryllium(10)
+		_Radius = 2.357; //measured rms radius
+		_rho0 = _A;
+	    }
+	    break;
 	case 5: 
-	{
-		// Boron(10/11)
-		if (_A == 10)
-		{ 
-			//Harmonic Oscillator Model
-			_Radius = 1.71;
-			_g = 0.837;
-			_rho0 = 0.159172948; // determined by normalization
-		}
-		else
-		{
-			_Radius = 2.42;
-			_rho0 = _A;
-		}
-	}
-	break;
+	    {
+	    // Boron(11)
+		_Radius = 2.42; //measured rms radius
+		_rho0 = _A;
+	    }
+	    break;
 	case 6: 
-	{
-		// Carbon(12/13)
-		if (_A == 13)
-		{
-			//Harmonic Oscillator Model
-			_Radius = 1.635;
-			_g = 1.403;
-			_rho0 = 0.1719882747; // determined by normalization
-		}
-		else
-		{
-			//sum of gaussian model
-			_a = qkCarb;
-			_c = pkCarb;
-			_v = 0.97978;
-			_rho0 = 2.0;
-			_Radius = 2.469;
-		}
-	}
-	break;
+	    {
+	    // Carbon(12) sum of gaussian model
+		 _a = qkCarb;
+	         _b = okCarb;
+		 _c = pkCarb;
+		 _v = 0.97978;
+		 _rho0 = 2.0;
+		 _Radius = 2.469;
+	    }
+	    break;
 	case 7: 
-	{
-		// Nitrogen(14)
+            {
+	    // Nitrogen(14)(3pF model)
 		_Radius = 2.570;
 		_woodSaxonSkinDepth = 0.5052;
 		_w = -0.180;	   // 3pF fermi model wine parameter
 		_rho0 = 0.1790484; // determined by normalization
-	}
-	break;
+	    }
+	    break;
 	case 8:
-	{
-		// This is for oxygen(sum of gaussian model)
-		_a = xkOxyg;		
-		_c = ykOxyg;
-		_v = 1.061437;
-		_rho0 = 2.0;
-		_Radius = 2.711;
-
-		//_Radius = 2.608;
-		//_woodSaxonSkinDepth = 0.513;
-		//_w= -0.051; // 3pF fermi model wine parameter
-		//_rho0 = 0.16536; // determined by normalization
-	}
-	break;
-	case 10: 
-	{
-		// This is for neon-20
-		_Radius = 2.791;
-		_woodSaxonSkinDepth = 0.698;
-		_w = -0.168;	   // 3pF fermi model wime parameter
-		_rho0 = 0.1798707; // determined by normalization
-	}
-	break;
-	case 12: 
-	{
-		// This is for magnesium-24
-		_Radius = 3.108;
-		_woodSaxonSkinDepth = 0.607;
-		_w = -0.163;		// 3pF fermi model wime parameter
-		_rho0 = 0.16981488; // determined by normalization
-	}
-	break;
-		// default:
-		// printWarn << "density not defined for projectile with Z = " << _Z << ". using defaults." << endl;
-		//       _Radius = 1.2*pow(_A, 1. / 3.);
-		//_rho0 = 0.138/(1.13505-0.0004283*_A);  //This matches the radius above
-		// if( _Z < 7 ){
+	    {
+	    //Oxygen(16)(3pF model)
+		_Radius = 2.608;
+		_woodSaxonSkinDepth = 0.513;
+		_w= -0.051; // 3pF fermi model wine parameter
+		_rho0 = 0.16536; // determined by normalization
+	     }
+	     break;
+default:
+	     printWarn << "density not defined for projectile with Z = " << _Z << ". using defaults." << endl;
+             _Radius = 1.2*pow(_A, 1. / 3.);
+	     _rho0 = 0.138/(1.13505-0.0004283*_A);  //This matches the radius above
+	      if( _Z < 7 ){
 		// This is for Gaussian form factors/densities
-		//_rho0 = _A;
-		//}
+		_rho0 = _A;
+	    }
 	}
 }
 
@@ -246,9 +188,9 @@ nucleus::~nucleus()
 double
 nucleus::rws(const double r) const
 {
-	if (((_Z == 2) && (_A == 4)) || ((_Z == 6) && (_A == 12)) || (_Z == 8))
+	if (((_Z == 2) && (_A == 4)) || ((_Z == 6) && (_A == 12)))
 	{
-		// Sum of Gaussian Model
+		// Sum of Gaussian Model https://doi.org/10.1016/0092-640X(87)90013-1
 		double _P = 0.0;
 		for (int i = 0; i < 12; i++) {
 		    _P += _c[i] * (exp(-1.0 * pow((r -_a[i]) /_v, 2)) + exp(-1.0 * pow((r +_a[i]) /_v, 2)));    
@@ -261,14 +203,10 @@ nucleus::rws(const double r) const
 		double norm = (3. / (2. * starlightConstants::pi)) * sqrt((3. / (2. * starlightConstants::pi)));
 		norm = norm / (nuclearRadius() * nuclearRadius() * nuclearRadius());
 		return norm * exp(-((3. / 2.) * r * r) / (nuclearRadius() * nuclearRadius()));
-		// if( _Z <7 ){
-		//  Harmonic Oscillator Model for light nuclei
-		// double y=exp(-(r*r/nuclearRadius()/nuclearRadius()));
-		// return y*(1.0 +g()*r*r/nuclearRadius()/nuclearRadius());
 	}
-	else if (_Z == 7)
+	else if (_Z == 7 || _Z == 8)
 	{
-		// 3-parameter-Fermi Model (3pF)
+		// 3-parameter-Fermi Model (3pF) https://doi.org/10.1016/0092-640X(87)90013-1
 		double x = exp(-(r - nuclearRadius()) / woodSaxonSkinDepth());
 		return x * (1.0 + w() * r * r / nuclearRadius() / nuclearRadius()) / (1.0 + x);
 		// expression adjusted to avoid problems on some machines if r is too large
@@ -291,7 +229,20 @@ nucleus::formFactor(const double t) const
 		const double rec = 1. / (1. + t / 0.71);
 		return rec * rec;
 	}
-
+        // form factor for nuclei following sum of gaussian model https://arxiv.org/pdf/hep-ph/0608035
+	if (((_Z == 2) && (_A == 4)) || ((_Z == 6) && (_A == 12)))
+	{
+		double _F = 0.0;
+		const double q = sqrt(t);
+		for (int i = 0; i < 12; i++) {
+		    double qai = q * _a[i] / hbarc;
+		    double term1 = std::cos(qai);
+		    double term2 = (2 * _a[i] * hbarc/(_v*_v * q)) * (std::sin(qai));
+		    _F += (_b[i]/(1 + (2*_a[i] *_a[i]/(_v *_v)))) * (term1 + term2);     
+		}
+		return std::exp(-q * q *_v * _v/ (4 * hbarc * hbarc)) * _F;
+	}
+	
 	if (_Z < 7)
 	{
 		// Gaussian form factor for light nuclei
