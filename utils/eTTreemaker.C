@@ -70,7 +70,7 @@ void eTTreemaker(TString slightname="slight.out")
   if (!getline(inFile,line)) {cout <<" Error reading BEAM_1 line"<<endl;}
   countLines++;
   lineStream=stringstream(line);
-  lineStream>>label>>i1>>i2>>gamma_e;  // BEAM_1 is the electron
+  lineStream>>label>>/*i1>>i2>>*/gamma_e;  // BEAM_1 is the electron
   cout<<"Electron Lorentz boost is "<<gamma_e<<endl;
 	
   if (!getline(inFile,line)) {cout <<" Error reading BEAM_2 line"<<endl;}
@@ -89,7 +89,7 @@ void eTTreemaker(TString slightname="slight.out")
   // begin event loop here.  eSTARlight events have the format:
   // Event card, Vertex card, photon card, source card, track 1 card, track 2 card
   
-   while (inFile.good())
+  while (inFile.good())
       {
  
 	if (!getline(inFile,line)) {break;}
@@ -118,7 +118,7 @@ void eTTreemaker(TString slightname="slight.out")
 	lineStream=stringstream(line);
 	lineStream>>label >> targx >> targy >> targz >> targE;
 	
-       	if (!getline(inFile,line)) {break;}
+  if (!getline(inFile,line)) {break;}
 	lineStream=stringstream(line);
 	lineStream>>label >> sx >> sy >> sz >> sE;
 		
@@ -136,18 +136,23 @@ void eTTreemaker(TString slightname="slight.out")
 	lineStream>>label>>pcode>>p2x>>p2y>>p2z>>i1>>i2>>i3>>pdgpid2;
 
 	// get the final state masses  should be particle anti-particle, so pdgcodes should be opposite
-	if (pdgpid1 != -pdgpid2)
-	  { cout<<"Error pdgpid codes don't match"<<pdgpid1<<" "<<pdgpid2<<endl;
+	if(abs(pdgpid1)==22 && (pdgpid1 != pdgpid2)){
+			cout<<"Error pdgpid codes don't match "<<pdgpid1<<" "<<pdgpid2<<endl;
+	    exit(-1);
+	}
+	else if (abs(pdgpid1)!=22 && pdgpid1 != -pdgpid2)
+	  { cout<<"Error pdgpid codes don't match "<<pdgpid1<<" "<<pdgpid2<<endl;
 	    exit(-1);
 	  }
 
 	double pdgabs=abs(pdgpid1);
 	mfinal=0.;
-	if (pdgabs == 211) mfinal=0.139;
-	if (pdgabs == 11) mfinal=0.000511;
-	if (pdgabs == 13) mfinal=0.105;
-	if (pdgabs == 321) mfinal=0.494;
-	if (mfinal ==0)
+	if (pdgabs == 211) mfinal=0.139; //pi+
+	if (pdgabs == 11) mfinal=0.000511; //electron
+	if (pdgabs == 13) mfinal=0.105; //muon
+	if (pdgabs == 321) mfinal=0.494; //K+
+	if (pdgabs == 22) mfinal=0; //photon
+	else if (mfinal ==0)
 	  {cout<<" Error final mass=0.  pdgabs="<<pdgabs<<endl;
 	    exit(-1);
 	  }
@@ -155,12 +160,12 @@ void eTTreemaker(TString slightname="slight.out")
 	// Now do needed kinematics computations
 	double p1=sqrt(p1x*p1x+p1y*p1y+p1z*p1z);
 	double e1=sqrt(p1*p1+mfinal*mfinal);
-        p1prap=0.5*log((p1+p1z)/(p1-p1z));
+  p1prap=0.5*log((p1+p1z)/(p1-p1z));
 	p1pt=sqrt(p1x*p1x+p1y*p1y);
 
-        double p2=sqrt(p2x*p2x+p2y*p2y+p2z*p2z);
+  double p2=sqrt(p2x*p2x+p2y*p2y+p2z*p2z);
 	double e2=sqrt(p2*p2+mfinal*mfinal);
-        p2prap=0.5*log((p2+p2z)/(p2-p2z));
+  p2prap=0.5*log((p2+p2z)/(p2-p2z));
 	p2pt=sqrt(p2x*p2x+p2y*p2y);
 	
 	eTheta = TMath::ATan(TMath::Sqrt(sx*sx+sy*sy)/sz);
@@ -202,5 +207,3 @@ void eTTreemaker(TString slightname="slight.out")
    NTfile->Close();
 
 }
-		   
-    
