@@ -63,7 +63,7 @@ class eventFileWriter : public fileWriter
       int writeEvent(eXEvent &event, int eventnumber);
 
       /** Write an eX event to file in LUND format */
-      int writeEventLUND(eXEvent &event, int eventnumber);
+      int writeEventLUND(eXEvent &event, inputParameters &param, int eventnumber);
 
       /** Set if we want to write full pythia information */
       void writeFullPythiaInfo(bool v) { _writeFullPythia = v; }

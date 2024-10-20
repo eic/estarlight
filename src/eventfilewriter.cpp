@@ -104,7 +104,9 @@ int eventFileWriter::writeInitLUND(inputParameters &_p)
   _targetBeam_four_vector_ ={0,0,_targetBeam_pz,_targetBeam_E};
   _electronBeam_pdg_id_ = 11;
   int nuclear_pid = _p.targetBeamA()*10 + _p.targetBeamZ()*10000 + 1000000000;// Form 100ZZZAAAl; l=0
-  _targetBeam_pdg_id_ = ( _p.targetBeamA() > 1 ) ? nuclear_pid : 2212; //Everything is a proton right now
+  _targetBeam_pdg_id_=nuclear_pid;
+  // The following line was a temporary fix to make eSTARlight compatible with the ePIC simulations which could not handle the full nuclear_PIDs.  Removed Oct. 20. 2024
+  //_targetBeam_pdg_id_ = ( _p.targetBeamA() > 1 ) ? nuclear_pid : 2212; //Everything is a proton right now
   
   return 0;
 }
@@ -186,7 +188,7 @@ int eventFileWriter::writeEvent(eXEvent &event, int eventnumber)
 
 
 //______________________________________________________________________________
-int eventFileWriter::writeEventLUND(eXEvent &event, int eventnumber)
+int eventFileWriter::writeEventLUND(eXEvent &event, inputParameters &pin, int eventnumber)
 {
     _fileStream << "0         "<<eventnumber<<"         0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0"<<std::endl;
     _fileStream<<"============================================"<<std::endl;
@@ -200,7 +202,7 @@ int eventFileWriter::writeEventLUND(eXEvent &event, int eventnumber)
     uint numberOfIons = event.getTarget()->size();
     uint numberOfGammas = event.getGammaEnergies()->size();
 
-    auto sp0 = std::setw(8);//column widths
+    auto sp0 = std::setw(12);//column widths.  Change from 8 to 12 on Oct.20, 2024 at Wanchang's request to accommodate heavy nuclei ID's.
     auto sp1 = std::setw(14);
 
     double electronmass = sqrt(_electronBeam_four_vector_[3]*_electronBeam_four_vector_[3] - _electronBeam_four_vector_[2]*_electronBeam_four_vector_[2] - _electronBeam_four_vector_[1]*_electronBeam_four_vector_[1] - _electronBeam_four_vector_[0]*_electronBeam_four_vector_[0]);
@@ -233,9 +235,10 @@ int eventFileWriter::writeEventLUND(eXEvent &event, int eventnumber)
     }
 
     //FIXME This is only set up for protons right now
+     int nuclear_pid = pin.targetBeamA()*10 + pin.targetBeamZ()*10000 + 1000000000;// Form 100ZZZAAAl; l=0
     for( uint itarget = 0 ; itarget < numberOfIons; ++itarget){
       lorentzVector target = event.getTarget()->at(itarget); 
-      _fileStream <<particleIndex <<sp0<<1 <<sp0<<2212<<"       "<<2<<"       "<<lineNumberOfFirstIonDaughter<<"       "<<lineNumberOfLastIonDaughter<<"  " <<sp1<<target.GetPx()<<"  " <<sp1<<target.GetPy()<<"  " <<sp1<<target.GetPz()<<"  " <<sp1<<target.GetE()<<"   "<<sp1<<ionmass<<"       0       0       0"<<std::endl;
+      _fileStream <<particleIndex <<sp0<<1 <<sp0<<nuclear_pid <<"       "<<2<<"       "<<lineNumberOfFirstIonDaughter<<"       "<<lineNumberOfLastIonDaughter<<"  " <<sp1<<target.GetPx()<<"  " <<sp1<<target.GetPy()<<"  " <<sp1<<target.GetPz()<<"  " <<sp1<<target.GetE()<<"   "<<sp1<<ionmass<<"       0       0       0"<<std::endl;
       particleIndex++;
     }
 

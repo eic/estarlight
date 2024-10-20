@@ -146,7 +146,7 @@ e_starlightStandalone::run()
 			reflectEvent(event);
 			fileWriter.writeEvent(event, iEvent);
 			if(_inputParameters->lundFullEventRecord()){
-				fileWriterLUND.writeEventLUND(event, iEvent);
+			  fileWriterLUND.writeEventLUND(event, *_inputParameters,iEvent);
 			}
 		}
 	}
