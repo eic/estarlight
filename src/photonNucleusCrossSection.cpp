@@ -101,12 +101,12 @@ photonNucleusCrossSection::photonNucleusCrossSection(const inputParameters& inpu
 	  break;
 	case FOURPRONG:
 	  _slopeParameter      = 11.0;
-	  _vmPhotonCoupling      = 2.02;
+	  _vmPhotonCoupling      = 3.64; //arXiv:2005.13624
 	  _vmQ2Power_c1 = 2.09;
 	  _vmQ2Power_c2 = 0.0073; // [GeV^{-2}]
 	  _ANORM       = -2.75;
 	  _BNORM       = 0;  
-	  _defaultC    = 11.0;
+	  _defaultC    = 1.0;
 	  _channelMass  = starlightConstants::rho0PrimeMass;
 	  _width        = starlightConstants::rho0PrimeWidth;
 	  break;
@@ -257,9 +257,9 @@ photonNucleusCrossSection::getcsgA(const double targetEgamma,
 	double W = _channelMass; //new change, channel mass center used for the t min integration.
 	  
 	//     DATA FOR GAUSS INTEGRATION
-	double xg[6] = {0, 0.1488743390, 0.4333953941, 0.6794095683, 0.8650633667, 0.9739065285};
-	double ag[6] = {0, 0.2955242247, 0.2692667193, 0.2190863625, 0.1494513492, 0.0666713443};
-	NGAUSS = 6;
+	double xg[16] = {0, 0.0514718426, 0.153869914, 0.2546369262, 0.352704726, 0.4470337695, 0.5366241481, 0.620526183, 0.697850495, 0.7677774321, 0.829565762, 0.8825605358, 0.9262000474, 0.960021865, 0.9836681233, 0.9968934841};
+	double ag[16] = {0, 0.1028526529, 0.10176239, 0.09959342059, 0.096368737, 0.0921225222, 0.086899787, 0.0807558952, 0.0737559747, 0.0659742299, 0.05749315622, 0.0484026728, 0.038799193, 0.0287847079, 0.018466468, 0.0079681925};
+	NGAUSS = 16;
 	
 	//       Note: The photon energy passed to this function is now in the target frame. The rest of the calculations are done in the
 	//       CMS frame. The next lines boost the photon into the CM frame.
@@ -373,10 +373,10 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
 	int NGAUSS; 
   
 	//     DATA FOR GAUSS INTEGRATION
-	double xg[6] = {0, 0.1488743390, 0.4333953941, 0.6794095683, 0.8650633667, 0.9739065285};
-	double ag[6] = {0, 0.2955242247, 0.2692667193, 0.2190863625, 0.1494513492, 0.0666713443};
-	NGAUSS = 6;
-  
+	double xg[16] = {0, 0.0514718426, 0.153869914, 0.2546369262, 0.352704726, 0.4470337695, 0.5366241481, 0.620526183, 0.697850495, 0.7677774321, 0.829565762, 0.8825605358, 0.9262000474, 0.960021865, 0.9836681233, 0.9968934841};
+	double ag[16] = {0, 0.1028526529, 0.10176239, 0.09959342059, 0.096368737, 0.0921225222, 0.086899787, 0.0807558952, 0.0737559747, 0.0659742299, 0.05749315622, 0.0484026728, 0.038799193, 0.0287847079, 0.018466468, 0.0079681925};
+	NGAUSS = 16;
+	
 	//       Find gamma-proton CM energy
 	Wgp = sqrt( 2.*(protonMass*Egamma)
 		    +protonMass*protonMass + Q2);
@@ -418,12 +418,12 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
                   if( beam==1 ){
  		     csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                   }else if(beam==2){
- 		     csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);	
-  		  }else{
+ 		     csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);
+        	}else{
 		     cout<<"Something went wrong here, beam= "<<beam<<endl; 
                   }
-               }
-
+				  }           
+			    
 	       t    = ax * (-xg[k]) + bx;
                if( A_1 <= 1 && A_2 != 1){ 
 			  csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);
@@ -433,11 +433,12 @@ photonNucleusCrossSection::e_getcsgA(const double Egamma, double Q2,
                   if( beam==1 ){
  			    csgA = csgA + ag[k] * _bbs.electronBeam().formFactor(t) * _bbs.electronBeam().formFactor(t);
                   }else if(beam==2){
- 			    csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);	
+ 			    csgA = csgA + ag[k] * _bbs.targetBeam().formFactor(t) * _bbs.targetBeam().formFactor(t);
   		  }else{
 			    cout<<"Something went wrong here, beam= "<<beam<<endl; 
                   }
-	       }
+				 }
+				  
 	   }
 	   csgA = 0.5 * (tmax - tmin) * csgA;
 	   csgA = Av * csgA;
@@ -926,11 +927,20 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 		{ 
 		case RHO:
 		case RHOZEUS:
-		case FOURPRONG:
 			WgpMax = 1.8;
 			WgpMin = 1.60; //this is the cutoff threshold for rho production. But rho has large width so it's lower
 			if(Wgp<WgpMax) thresholdScaling=(Wgp-WgpMin)/(WgpMax-WgpMin);
 			sigmagp_r=thresholdScaling*1.E-4*(5.0*exp(0.22*log(Wgp))+26.0*exp(-1.23*log(Wgp)));
+			//This is based on the omega cross section:
+			//https://arxiv.org/pdf/2107.06748.pdf
+			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.14*pow(Wgp,-2.7);
+			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.206*pow(((Wgp*Wgp-protonMass*protonMass)/(2.0*protonMass)),-2.7);
+			break;
+	        case FOURPRONG:
+			WgpMax = 3.6;
+			WgpMin = 3.2;
+			if(Wgp<WgpMax) thresholdScaling=(Wgp-WgpMin)/(WgpMax-WgpMin);
+			sigmagp_r=thresholdScaling*1.E-4*(0.16*exp(0.41*log(Wgp))+23.0*exp(-1.4*log(Wgp))); //arXiv:2005.13624
 			//This is based on the omega cross section:
 			//https://arxiv.org/pdf/2107.06748.pdf
 			if(_backwardsProduction)sigmagp_r=thresholdScaling*1.E-4*0.14*pow(Wgp,-2.7);
@@ -991,7 +1001,7 @@ photonNucleusCrossSection::sigmagp(const double Wgp)
 			sigmagp_r*=1.E-10*2.1*exp(0.74*log(Wgp)); 
 			break;
 		default: cout<< "!!!  ERROR: Unidentified Vector Meson: "<< _particleType <<endl;
-		}                                                                  
+		}                                                              
 	return sigmagp_r;
 }
 
