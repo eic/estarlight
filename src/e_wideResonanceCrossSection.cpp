@@ -125,6 +125,11 @@ e_wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 		W = _wideWmin + double(iW)*dW + 0.5*dW;
 		int nQ2 = 1000;
 		for(iEgamma = 0 ; iEgamma < nEgamma; ++iEgamma){    // Integral over photon energy
+		  // Displaying the percentage progress
+		  float ratio = float(iW)/float(nW)  + 1/float(nW)*float(iEgamma)/float(nEgamma);
+		 printf("calculating cross section :%3.2f %%\r",float(ratio *100.0));
+		  
+		  
 		  // Target frame photon energies
 		  ega[0] = exp(minEgamma + iEgamma*dEgamma );
 		  ega[1] = exp(minEgamma + (iEgamma+1)*dEgamma );
