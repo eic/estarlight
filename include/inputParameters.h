@@ -229,6 +229,8 @@ public:
 	bool         backwardsProduction   () const { return _backwardsProduction.value();    }  ///< returns if backwards production
 	int	     xsecCalcMethod        () const { return _xsecCalcMethod.value();         }  ///< returns the method used for the x-sec calculation
         double       axionMass             () const { return _axionMass.value();              }  ///< returns axion mass //AXION HACK
+        double       rho0PrimeBrFourProng             () const { return _rho0PrimeBrFourProng.value();              }  ///< returns axion mass //AXION HACK
+        double       rho0PrimeCoupling             () const { return _rho0PrimeCoupling.value();              }  ///< returns axion mass //AXION HACK
 	int          bslopeDefinition      () const { return _bslopeDefinition.value();       }  ///< returns the definition of b-slope
 	double       bslopeValue           () const { return _bslopeValue.value();            }  ///< returns the value of b-slope
 	int          impulseVM             () const { return _impulseVM.value();              }  ///< returns the impulseVM value
@@ -282,6 +284,8 @@ public:
 	void setBackwardsProduction   (bool v)  {  _backwardsProduction = v;      }  ///< sets backwards production
 	void setXsecCalcMethod        (int v)  {  _xsecCalcMethod = v;            }  ///< sets the method used for the x-sec calculation
 	void setAxionMass        (double v)  {  _axionMass = v;                   }  ///< sets axion mass    //AXION HACK
+	void setRho0PrimeBrFourProng        (double v)  {  _rho0PrimeBrFourProng = v;                   }  ///< sets axion mass    //AXION HACK
+	void setRho0PrimeCoupling        (double v)  {  _rho0PrimeCoupling = v;                   }  ///< sets axion mass    //AXION HACK
 	void setbslopeDefinition      (int v)  {  _bslopeDefinition = v;          }  ///< sets the definition of b slope
         void setbslopeValue           (double v)  {  _bslopeValue = v;            }  ///< sets the value of b slope
 	void setimpulseVM             (int v)  {  _impulseVM = v;                 }  ///< sets the value of _impulseVM
@@ -370,6 +374,8 @@ private:
 	parameter<bool, NO_VALIDITY_CHECK>         _backwardsProduction;     ///
 	parameter<unsigned int, VALIDITY_CHECK>    _xsecCalcMethod;	     ///< Select x-sec calc method. (0 is standard starlight method, 1 must be used for assym. collisions (e.g. p-A), but is slow)	
         parameter<double, VALIDITY_CHECK>          _axionMass;               ///Axion mass//AXION HACK
+        parameter<double, VALIDITY_CHECK>          _rho0PrimeBrFourProng;               ///Axion mass//AXION HACK
+        parameter<double, VALIDITY_CHECK>          _rho0PrimeCoupling;               ///Axion mass//AXION HACK
         parameter<unsigned int, VALIDITY_CHECK>    _bslopeDefinition;        ///< Optional parameter to set different values of slope parameter
         parameter<double, VALIDITY_CHECK>          _bslopeValue;             ///< Value of slope parameter when _bslopeDefinition is set to 1
         parameter<unsigned int, VALIDITY_CHECK>    _impulseVM;               ///< Optional parameter to use impulse approximation (no nuclear effects) for VM cross section.
