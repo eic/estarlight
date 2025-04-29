@@ -116,6 +116,7 @@ private:
 	starlightConstants::particleTypeEnum _particleType;
 	int                                  _beamBreakupMode;     ///< breakup mode for beam particles
 	bool _backwardsProduction;
+	double _rho0PrimeBrFourProng;	
         int                                  _productionMode; 
 	int                                  _sigmaNucleus; 
 
@@ -137,7 +138,6 @@ private:
 	double _targetRadii;
 	double _maxW_GP;		  ///< max W_GP energy
 	double _minW_GP; 		  ///< min W_GP energy
-	
 };
 
 
