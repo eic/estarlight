@@ -54,7 +54,7 @@ int inputParser::parseFile(std::string filename)
     }
     
     int lineSize = 256;
-    char tmp[lineSize];
+    char tmp[256];      // change from tmp[lineSize] to tmp[256] to satisfy a newer compiler.  SRK May 2, 2025
     int nParameters = 0;
     while (!infile.getline(tmp, lineSize).eof())
     {
